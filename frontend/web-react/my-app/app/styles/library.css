@@ -1,0 +1,74 @@
+h2 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+  color: var(--button);
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.table_header {
+  display: grid;
+  grid-template-columns: 50px 2fr 1.2fr 0.8fr;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #aaa;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 50px 2fr 1.2fr 0.8fr; /* 4 cột */
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--button);
+  border-radius: 6px;
+}
+
+.row.active {
+  background: rgba(88, 196, 220, 0.2);
+  color: var(--button);
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.col_index {
+  text-align: center;
+}
+
+.col_title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+.col_artist,
+.col_duration {
+  font-size: 13px;
+}
+
+.col_title img {
+  width: 42px;
+  height: 42px;
+  border-radius: 4px;
+  object-fit: cover;
+}

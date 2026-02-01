@@ -1,0 +1,130 @@
+.section {
+  padding: 120px 200px;
+}
+
+/* Nút Add User */
+.add {
+  background-color: var(--button);
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.25s ease;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.add:hover {
+  background-color: rgb(247, 95, 143);
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.tableHead {
+  display: grid;
+  grid-template-columns: 50px 2fr 1.2fr 0.8fr 1fr 1fr;
+  align-items: center;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  background-color: #1a1a1a;
+  text-transform: uppercase;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 50px 2fr 1.2fr 0.8fr 1fr 1fr;
+  align-items: center;
+  padding: 12px 20px;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  background-color: rgba(88, 175, 223, 0.1);
+}
+
+/* Hover hàng mượt */
+.row {
+  transition: background-color 0.25s ease;
+}
+
+.row:hover {
+  background: #f9fbff;
+}
+
+/* Button Edit */
+.rowOption {
+  display: flex;
+  gap: 5px;
+}
+
+.edit,
+.delete {
+  font-weight: bold;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.edit {
+  background-color: rgb(88, 196, 220);
+}
+
+.edit:hover {
+  background-color: #4fbad4;
+  transform: scale(1.05);
+}
+
+.delete {
+  background: #eb3b5a;
+}
+
+.delete:hover {
+  background: #d63031;
+  transform: scale(1.05);
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  min-width: 70px;
+  transition: all 0.3s ease;
+}
+
+.active {
+  background-color: rgba(40, 167, 69, 0.15);
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.inactive {
+  background-color: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+/* Hover badge nhẹ */
+.status:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}

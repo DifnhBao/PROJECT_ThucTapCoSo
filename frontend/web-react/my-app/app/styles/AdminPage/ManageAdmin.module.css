@@ -1,0 +1,51 @@
+.tableHead {
+  display: grid;
+  grid-template-columns: 50px 2fr 1.5fr 1fr 1fr;
+  align-items: center;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #aaa;
+  background-color: #1a1a1a;
+  text-transform: uppercase;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 50px 2fr 1.5fr 1fr 1fr;
+  align-items: center;
+  padding: 12px 20px;
+  text-align: left;
+  font-size: 14px;
+  color: black;
+  background-color: rgba(88, 175, 223, 0.1);
+}
+
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  width: 70px;
+  transition: all 0.3s ease;
+}
+
+.active {
+  background-color: rgba(40, 167, 69, 0.15);
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.inactive {
+  background-color: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+/* Hover badge nhẹ */
+.status:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}

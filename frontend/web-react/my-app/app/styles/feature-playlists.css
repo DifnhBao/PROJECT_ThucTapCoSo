@@ -1,0 +1,255 @@
+.explore-container {
+  color: #fff;
+}
+
+.title {
+  margin: 20px 0 10px 0;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+}
+
+.scroll-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  scroll-behavior: smooth;
+  padding-bottom: 8px;
+}
+
+.scroll-row::-webkit-scrollbar {
+  height: 0;
+}
+.scroll-row::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.scroll-row .card {
+  flex: 0 0 260px;
+  width: 260px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  /* background-color: var(--background-color); */
+}
+
+.card:hover {
+  background-color: var(--card-hover);
+  transition: transform 0.3s;
+}
+
+.card img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.card_artist img {
+  border-radius: 50%;
+  object-fit: fill;
+}
+
+.card h3 {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.card h3:hover {
+  text-decoration: underline;
+}
+.card p {
+  font-size: 12px;
+  font-weight: 550;
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* list playlist */
+.playlist-detail {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #fff;
+  overflow: hidden;
+}
+
+.playlist-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.playlist-bg > div,
+.playlist-bg > img {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.playlist-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.playlist-bg {
+  animation: fadeIn 0.6s ease;
+}
+
+/* Overlay làm tối + blur */
+.playlist-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.85)
+  );
+  backdrop-filter: blur(20px);
+}
+
+/* Lớp phủ mờ đen dần xuống */
+/* .playlist-detail .overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0.8),
+    #000 100%
+  );
+  z-index: 0;
+} */
+
+/* Đảm bảo nội dung nổi lên trên overlay */
+.playlist-header,
+.detail-view,
+.back-button {
+  position: relative;
+  z-index: 1;
+}
+
+/* Back button */
+
+.back-button {
+  background-color: #ffffff29;
+  color: white;
+  border: none;
+  height: 40px;
+  width: 120px;
+  border-radius: 50px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  transform: scale(1.05);
+  color: rgb(88 196 220);
+  font-weight: bold;
+}
+
+/* Header hiển thị ảnh và thông tin playlist */
+
+.playlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 60px 80px;
+}
+
+.playlist-info {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.playlist-cover {
+  width: 240px;
+  height: 240px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.playlist-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.playlist-type {
+  font-size: 15px;
+  color: #b3b3b3;
+}
+
+.playlist-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.playlist-artists {
+  font-size: 16px;
+  color: #e0e0e0;
+}
+
+.playlist-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.playlist-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  color: #ccc;
+}
+
+.playlist-icons .icon {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.playlist-icons .icon:hover {
+  transform: scale(1.2);
+  color: #fff;
+}
+
+.playlist-icons .count {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.playlist-icons .more {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 50%;
+}
+
+.play-playlists {
+  background-color: #00bcd4;
+  border: none;
+  color: white;
+  font-size: 16px;
+  padding: 12px 28px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.play-playlists:hover {
+  background-color: #00a4b8;
+  transform: scale(1.05);
+}

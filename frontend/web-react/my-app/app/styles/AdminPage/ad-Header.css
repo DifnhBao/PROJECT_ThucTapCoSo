@@ -1,0 +1,77 @@
+/* ===== Header ===== */
+.header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.header-left img {
+  height: 100px;
+  width: auto;
+  display: block;
+  cursor: pointer;
+}
+
+.header-left h2 {
+  cursor: pointer;
+}
+
+/* Chia 3 phần: trái - giữa - phải */
+.header-left,
+.header-center,
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+/* Phần giữa chiếm toàn bộ khoảng trống và căn giữa */
+.header-center {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Trái và phải giữ kích thước tự nhiên */
+.header-left {
+  flex: 0 0 auto;
+}
+
+.header-right {
+  flex: 0 0 auto;
+  gap: 10px;
+}
+
+.header-right span {
+  color: var(--button);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* ===== Nút đăng xuất ===== */
+.logout-from-dashboard {
+  height: 35px;
+  text-decoration: none;
+  margin-left: 10px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #ddd;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-from-dashboard:hover {
+  background: red;
+  color: white;
+  transform: scale(1.05);
+}

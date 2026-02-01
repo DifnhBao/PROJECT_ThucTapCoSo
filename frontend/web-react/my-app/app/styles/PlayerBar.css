@@ -1,0 +1,277 @@
+/* ========== FOOTER PLAYER ========== */
+.info {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  background: #212121;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 10;
+}
+
+.info-player {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.background-singer {
+  width: 5vw;
+  height: 5vw;
+  min-width: 50px;
+  min-height: 50px;
+  background: gray;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.background-singer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.info-song a {
+  display: block;
+  text-decoration: none;
+}
+
+.song-tittle {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 15vw;
+  display: block;
+}
+
+.artist-name {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #bdbdbd;
+}
+
+.info-player button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  color: rgb(189, 189, 189);
+  margin-left: 16px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Nút trái tim (like) */
+.like-icon i {
+  font-size: 22px;
+  color: #bdbdbd;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.like-icon.liked i {
+  color: #e74c3c; /* đỏ */
+}
+
+.like-icon:active i {
+  transform: scale(0.9);
+}
+
+/* Nút 3 chấm ngang */
+.expand-icon i {
+  font-size: 22px;
+}
+
+.Other-options-popup {
+  position: absolute;
+  left: 165px;
+  bottom: 70px;
+
+  width: 200px;
+  background: #292929;
+  border-radius: 12px;
+  padding: 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+
+  color: white;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.15s ease-out;
+}
+
+.Other-options-popup button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  width: 150px;
+
+  padding: 5px 0;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.player-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  gap: 10px;
+}
+
+.control {
+  display: flex;
+  gap: 25px;
+  font-size: 18px;
+}
+
+.play {
+  background: none;
+  border: none;
+  color: rgb(170, 168, 168);
+  font-size: 20px;
+}
+
+.play-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: black;
+}
+
+/* #playBtn i {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Khi chuyển sang trạng thái playing -> đổi icon */
+#playBtn.playing i {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+#playBtn.playing i::before {
+  content: "\f04c";
+  opacity: 1;
+  transform: scale(1);
+}
+.control button {
+  cursor: pointer;
+  transition: 0.2;
+}
+
+.control .play:hover,
+.volume:hover {
+  transform: scale(1.2s);
+  color: white;
+}
+
+.control button:hover,
+.volume:hover {
+  transform: scale(1.05);
+}
+
+.like-icon:active,
+.expand-icon:active,
+.control i:active,
+.volume:hover {
+  transform: scale(0.95);
+}
+
+.run {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: #8f8f8f;
+  width: 100%;
+}
+
+.run .seek-bar {
+  flex: 1;
+  width: 500px;
+  height: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  -webkit-appearance: none;
+  border-radius: 10px;
+}
+
+.run .seek-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1px;
+  height: 20px;
+  background-color: var(--button);
+  box-shadow: -400px 0 0 400px var(--button);
+}
+
+.current-time,
+.music-time {
+  width: 40px;
+  text-align: center;
+}
+
+.vol {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.volume {
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.vol .seek-volume {
+  /* height: 4px;
+  cursor: pointer;
+  -webkit-appearance: none; */
+
+  flex: 1;
+  /* width: 500px; */
+  height: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  -webkit-appearance: none;
+  border-radius: 10px;
+}
+
+.vol .seek-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1px;
+  height: 20px;
+  background-color: var(--button);
+  box-shadow: -400px 0 0 400px var(--button);
+}
+
+.home-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}

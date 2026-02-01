@@ -1,0 +1,187 @@
+/* toàn vùng stats */
+.section {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 120px 200px;
+  /* overflow-y: auto; */
+}
+
+/* hàng trên: cards + charts */
+.statsContainer {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* ---------- CỘT TRÁI (3 card) ---------- */
+.Scards {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+  /* chiếm ~1 phần */
+  min-width: 260px;
+}
+
+.Scard {
+  background: #1e2736;
+  /* nền card tối */
+  color: #fff;
+  padding: 18px 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  position: relative;
+  overflow: hidden;
+}
+
+/* tiêu đề nhỏ (Total Users...) */
+.S-card h3 {
+  margin: 0;
+  font-size: 14px;
+  color: #b6c3c7;
+  /* chữ tiêu đề hơi nhạt */
+  font-weight: 600;
+}
+
+/* số lớn */
+.bigNumber {
+  display: block;
+  margin-top: 10px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+}
+
+/* chữ tăng trưởng */
+.growth {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #3ddc97;
+  /* accent xanh lá/sea */
+}
+
+/* ---------- CỘT PHẢI (2 charts) ---------- */
+.Scharts {
+  display: flex;
+  gap: 20px;
+  flex: 1.8;
+  /* chiếm rộng hơn bên trái */
+  align-items: flex-start;
+}
+
+/* chung cho mỗi chart box */
+.chartBox {
+  background: #1e2736;
+  color: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Line chart to hơn, donut nhỏ hơn */
+.chartBox:first-child {
+  flex: 3;
+  min-height: 260px;
+}
+
+.chartBox:last-child {
+  flex: 1;
+  min-height: 260px;
+  max-width: 260px;
+  align-self: flex-start;
+}
+
+.chartBoxH3 {
+  margin: 0 0 12px 0;
+  color: #b6c3c7;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* đảm bảo canvas chiếm không gian box */
+.SlineChart,
+.circleChart {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* để line chart hiển thị tỉ lệ do Chart.js maintainAspectRatio:false */
+.Scharts .chartBox:first-child canvas {
+  height: 260px !important;
+}
+
+.chartBox:last-child canvas {
+  height: 220px !important;
+}
+
+/* ---------- BẢNG (full-width phía dưới) ---------- */
+.tableBox {
+  margin-top: 20px;
+  background: #1e2736;
+  border-radius: 12px;
+  padding: 16px;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tableBox h3 {
+  margin: 0 0 12px 0;
+  color: #b6c3c7;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.tableBox table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.tableBox th,
+.tableBox td {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 14px;
+  color: #e6eef0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.tableBox tr:nth-child(even) {
+  background: rgba(37, 48, 67, 0.35);
+  /* xen kẽ */
+}
+
+.tableBox tr:hover {
+  background: rgba(47, 62, 85, 0.45);
+}
+
+/* nhỏ màn hình: đổi thành cột dọc */
+@media (max-width: 900px) {
+  .statsContainer {
+    flex-direction: column;
+  }
+
+  .Scharts {
+    flex-direction: row;
+    /* charts vẫn ngang nhưng vì container dọc, sẽ hiển thị nằm ngang */
+    gap: 12px;
+  }
+
+  .Scharts .chartBox:last-child {
+    max-width: none;
+    align-self: stretch;
+  }
+
+  .Scharts .chartBox:first-child,
+  .Scharts .chartBox:last-child {
+    min-height: 200px;
+    flex: 1;
+  }
+}

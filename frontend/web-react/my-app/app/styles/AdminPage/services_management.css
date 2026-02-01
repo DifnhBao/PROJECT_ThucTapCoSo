@@ -1,0 +1,133 @@
+.services-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    font-weight: bold;
+}
+
+.services-table th,
+.services-table td {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 14px;
+    color: #ddd;
+    background-color: rgba(88, 175, 223, 0.1);
+}
+
+.services-table thead {
+    background-color: #222;
+}
+
+.services-table tr:nth-child(even) {
+    background-color: #181818;
+}
+
+/* Hover hàng mượt */
+.services-table tbody tr {
+    transition: background-color 0.25s ease;
+}
+
+.services-table tbody tr:hover {
+    background-color: rgba(88, 175, 223, 0.15);
+}
+
+/* Edit slider check-box */
+.switch {
+    position: relative;
+    display: inline-block;
+    height: 24px;
+    width: 50px;
+}
+
+.switch input {
+    opacity: 0;
+    /*Độ trong suốt*/
+    height: 0;
+    width: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #aaa;
+    transition: 0.4s;
+    border-radius: 24px;
+}
+
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+.switch input:checked+.slider {
+    background-color: #4fbad4;
+}
+
+.switch input:checked+.slider::before {
+    transform: translateX(26px);
+}
+
+
+/* Button Edit */
+.services-table .edit-btn,
+.services-table .delete-btn {
+    font-weight: bold;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.services-table .edit-btn {
+    background-color: rgb(88, 196, 220);
+}
+
+.services-table .edit-btn:hover {
+    background-color: #4fbad4;
+    transform: scale(1.05);
+}
+
+.services-table .delete-btn {
+    background-color: #dc3545;
+}
+
+.services-table .delete-btn:hover {
+    background-color: #e04f5f;
+    transform: scale(1.05);
+}
+
+
+
+/* Nút Add User */
+.add-btn {
+    background-color: rgba(88, 175, 223, 0.1);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-weight: bold;
+}
+
+.add-btn:hover {
+    background-color: rgb(88, 196, 220);
+    transform: scale(1.05);
+}

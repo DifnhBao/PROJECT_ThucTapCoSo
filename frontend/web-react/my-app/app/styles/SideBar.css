@@ -1,0 +1,49 @@
+/* ========== SIDEBAR ========== */
+
+.menu {
+  position: relative;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: width 0.3s ease;
+}
+
+.menu nav {
+  display: flex;
+}
+
+.menu nav a {
+  color: white;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 10px;
+  letter-spacing: 0.3px;
+}
+
+.menu nav a {
+  display: flex;
+  font-weight: 400;
+  font-size: 16px;
+  text-transform: capitalize;
+  color: #666;
+  gap: 10px;
+  padding: 12px 20px;
+  text-decoration: none;
+  transition: 0.3s;
+  border-radius: 5px;
+  margin: 4px 8px;
+  transition: all 0.3s ease 0s;
+}
+
+.menu .icon {
+  font-size: 18px;
+}
+
+.menu nav a:hover {
+  color: var(--color-text-select);
+}
+
+.menu nav a.active {
+  color: var(--color-text-select);
+}

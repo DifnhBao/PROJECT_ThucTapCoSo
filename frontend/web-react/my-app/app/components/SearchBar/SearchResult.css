@@ -1,0 +1,18 @@
+.search-result {
+  padding: 12px 20px;
+  font-size: 1.05rem;
+  transition: 0.15s;
+  border-radius: 10px;
+  margin: 3px 5px;
+}
+
+.search-result:hover {
+  background-color: #ffffff29;
+  /* color: var(--button); */
+  cursor: pointer;
+}
+
+.highlight {
+  color: var(--button);
+  font-weight: 600;
+}

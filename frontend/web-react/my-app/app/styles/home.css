@@ -1,0 +1,306 @@
+/* --- Biến CSS (Tùy chọn, để dễ quản lý màu sắc) --- */
+:root {
+  --color-dark: #121212; /* Nền tối */
+  --color-pink: #ff007f; /* Màu hồng nổi bật */
+  --color-light-pink: #ff3399; /* Màu hồng nhạt */
+  --color-white: #ffffff;
+  --color-text-secondary: #aaaaaa;
+  --font-primary: "Poppins", sans-serif; /* Sử dụng font hiện đại */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-primary);
+  background-color: var(--color-dark);
+  color: var(--color-white);
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-white);
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--color-pink);
+}
+
+.section-title {
+  font-size: 2.5em;
+  text-align: center;
+  margin-bottom: 2em;
+  letter-spacing: 2px;
+  /* Hiệu ứng gradient nhẹ cho tiêu đề */
+  background: linear-gradient(
+    90deg,
+    var(--color-light-pink),
+    var(--color-pink)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-hero-bg {
+  box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.6);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* --- 1. Navbar --- */
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 5%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.navbar-logo span {
+  font-size: 40px;
+  margin-right: 10px;
+  filter: brightness(0) invert(1) drop-shadow(0 0 5px var(--color-pink));
+}
+
+.navbar-links a {
+  margin-left: 30px;
+  font-size: 1.1em;
+}
+
+.navbar-links a.active {
+  color: var(--color-pink);
+  border-bottom: 2px solid var(--color-pink);
+  padding-bottom: 5px;
+}
+
+/* --- 2. Hero Section --- */
+.hero-section {
+  height: 80vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  /* Thêm overlay màu đen để chữ dễ đọc hơn */
+  /* box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.6); */
+}
+
+.hero-content {
+  z-index: 1;
+}
+
+.hero-content h1 {
+  font-size: 4em;
+  margin-bottom: 0.2em;
+  /* Hiệu ứng chữ màu hồng */
+  color: var(--color-light-pink);
+  text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
+}
+
+.hero-content h2 {
+  font-size: 1.5em;
+  font-weight: 300;
+  margin-top: 0;
+  color: var(--color-text-secondary);
+}
+
+.cta-button {
+  background: linear-gradient(
+    45deg,
+    var(--color-pink),
+    var(--color-light-pink)
+  );
+  color: var(--color-white);
+  border: none;
+  padding: 12px 30px;
+  font-size: 1.2em;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(255, 0, 127, 0.5);
+}
+
+/* --- 3. About Section --- */
+.about-section {
+  padding: 80px 5%;
+  background-color: #0d0d0d; /* Hơi tối hơn */
+  text-align: center;
+}
+
+.about-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.about-image-group {
+  position: relative;
+  width: 400px;
+}
+
+.founder-avatar {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 5px solid var(--color-pink);
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+  transform: rotate(-5deg);
+}
+
+.team-photo {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  position: absolute;
+  bottom: -30px;
+  right: 0;
+  border: 5px solid var(--color-white);
+  z-index: 2;
+  transform: rotate(5deg);
+}
+
+.caption {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  font-family: cursive; /* Font chữ viết tay */
+  font-size: 2em;
+  color: var(--color-light-pink);
+  transform: rotate(-10deg);
+  z-index: 3;
+  text-shadow: 2px 2px 5px #000;
+}
+
+.about-text {
+  flex: 1;
+  font-size: 1.1em;
+  line-height: 1.8;
+}
+
+.about-text p {
+  margin-bottom: 1em;
+}
+
+/* --- 4. Services Section --- */
+.services-section {
+  padding: 80px 5%;
+  text-align: center;
+}
+
+.services-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.service-item {
+  padding: 30px;
+  border-radius: 10px;
+  background-color: #1a1a1a;
+  transition: background-color 0.3s, transform 0.3s;
+  width: 180px;
+}
+
+.service-item:hover {
+  background-color: var(--color-dark);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(255, 0, 127, 0.2);
+}
+
+.service-item i {
+  font-size: 3em;
+  color: var(--color-pink);
+  margin-bottom: 15px;
+}
+
+.service-item p {
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+/* --- 5. Footer --- */
+.footer {
+  padding: 20px 5%;
+  background-color: #000000;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.9em;
+}
+
+.social-links a {
+  font-size: 1.5em;
+  margin: 0 10px;
+  color: var(--color-text-secondary);
+}
+
+.social-links a:hover {
+  color: var(--color-pink);
+}
+
+/* --- Responsive (tùy chọn) --- */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.5em;
+  }
+
+  .about-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .about-text {
+    text-align: center;
+  }
+
+  .about-image-group {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .team-photo {
+    position: static;
+    margin-left: -50px;
+    transform: none;
+  }
+
+  .caption {
+    display: none;
+  }
+
+  .services-grid {
+    flex-wrap: wrap;
+  }
+
+  .service-item {
+    width: 40%;
+    margin-bottom: 20px;
+  }
+}

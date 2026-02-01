@@ -1,0 +1,351 @@
+/* ========== RESET ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --sidebar-width: 250px;
+  --sidebar-min: 60px;
+  --background-color: #1e1e1e;
+  --color-main: #27292a;
+
+  --color-card: #27292a;
+  --card-hover: #1f242b;
+  --button: #e75e8d;
+  --color-text-select: #e75e8d;
+  --color-text-not-select: #666;
+  --color-text: white;
+}
+
+/* Ẩn thanh cuộn  */
+html {
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background: var(--background-color);
+  color: var(--color-text);
+  font-weight: 400;
+}
+
+.discovery-container {
+  /* text-align: center;
+  color: white;
+  padding: 80px 0;
+  background: #111;
+  min-height: 100vh; */
+  /* margin-top: 110px; */
+  background-color: #27292a;
+  padding: 0 60px;
+  /* border-radius: 23px; */
+}
+
+.main-banner {
+  background-image: url(/images/Members/banner-bg.jpg);
+  background-position: center center;
+  background-size: cover;
+  min-height: 380px;
+  border-radius: 23px;
+  padding: 80px 60px;
+}
+
+.main-banner h6 {
+  font-size: 20px;
+  color: #fff;
+  font-weight: 400;
+  margin-bottom: 25px;
+}
+
+.main-banner h4 {
+  font-size: 45px;
+  text-transform: uppercase;
+  margin-bottom: 25px;
+}
+
+.main-banner h4 em {
+  font-style: normal;
+  color: #ec6090;
+}
+
+.main-button a {
+  font-size: 14px;
+  color: #fff;
+  background-color: #e75e8d;
+  padding: 12px 30px;
+  display: inline-block;
+  border-radius: 25px;
+  font-weight: 400;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.main-button a:hover {
+  background-color: #fff;
+  color: #e75e8d;
+}
+
+.discovery-container img {
+  width: 100px;
+}
+
+/* .discovery-container .desc {
+  color: #bbb;
+  font-size: 18px;
+  margin-bottom: 70px;
+} */
+
+.cards-row {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 50px;
+}
+
+.card {
+  width: 180px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.card .name {
+  font-size: 17px;
+  font-weight: 500;
+  color: white;
+  margin: 10px 0 4px 0;
+}
+
+.card .role,
+.card .msv {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.img-box {
+  width: 180px;
+  height: 220px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ========== MAIN CONTENT ========== */
+.main {
+  /* position: relative; */
+  position: fixed;
+  top: 100px;
+  bottom: 100px;
+  left: 150px;
+  right: 150px;
+  padding: 20px 2vw;
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* height: calc(100vh - 170px); */
+  transition: margin-left 0.3s ease, width 0.3s ease;
+  background-color: var(--color-main);
+  border-radius: 23px;
+}
+
+.main::-webkit-scrollbar {
+  display: none;
+}
+
+.main .greeting-text {
+  font-size: 34px;
+  font-weight: bold;
+  color: var(--button);
+}
+
+/* ========== FOOTER ========== */
+/*  company info */
+.company-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 60px;
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: sans-serif;
+  color: #ccc;
+  font-weight: normal;
+}
+
+.company-logo {
+  width: 100px;
+  margin-bottom: 24px;
+}
+
+.company-info h3 {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.company-info ul {
+  font-size: 13px;
+  padding: 0;
+  margin-left: 20px;
+  margin-top: 10px;
+  color: #8f8f8f;
+}
+
+.company-info ul li {
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.company-right img:first-child {
+  display: block;
+  margin-bottom: 10px;
+  margin-top: 90px;
+  width: 105px;
+  margin-left: 16px;
+}
+
+.company-right img {
+  margin-bottom: 10px;
+  width: 125px;
+}
+
+.company-info a {
+  color: #1db954;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.company-info a:hover {
+  text-decoration: underline;
+}
+
+.company-bottom {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #aaa;
+  text-align: center;
+}
+
+.company-bottom a {
+  color: #888;
+  margin: 0 5px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.company-bottom a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.company-bottom p {
+  margin-top: 5px;
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .banner-row img {
+    height: 120px;
+  }
+
+  .category-card {
+    height: 80px;
+    padding: 10px;
+  }
+
+  .category-card img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .category-card h3 {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu {
+    width: var(--sidebar-min);
+  }
+
+  .main {
+    width: calc(100% - var(--sidebar-min));
+    margin-left: var(--sidebar-min);
+  }
+
+  /* Sidebar nhỏ lại */
+  .menu {
+    width: 70px;
+    min-width: 70px;
+  }
+
+  /* Ẩn chữ, chỉ chừa icon */
+  .menu nav a {
+    justify-content: center;
+    font-size: 0;
+  }
+
+  /* Giữ kích thước icon */
+  .menu nav a i {
+    font-size: 20px;
+  }
+
+  /* Căn logo lại cho nhỏ gọn */
+  .menu img {
+    width: 40px;
+  }
+
+  /* Header và nội dung lùi lại đúng khoảng */
+  .header {
+    left: 70px; /* bằng đúng chiều rộng sidebar khi thu nhỏ */
+    width: calc(100vw - 70px); /* chiếm phần còn lại của màn hình */
+  }
+
+  .main {
+    margin-left: 70px;
+  }
+
+  .search-box {
+    width: auto;
+  }
+
+  /* Ẩn input, chỉ hiển thị icon kính lúp */
+  .search-box input {
+    display: none;
+  }
+
+  .search-box i {
+    position: static;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+  }
+
+  /* Thu nhỏ nút back và next */
+  .chevron button {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  /* Căn chỉnh lại khối chứa */
+  .back-next-search {
+    gap: 5px;
+  }
+}

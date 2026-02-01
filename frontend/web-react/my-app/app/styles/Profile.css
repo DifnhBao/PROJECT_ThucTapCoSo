@@ -1,0 +1,171 @@
+.profile_card {
+  background-color: #212121;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  width: 500px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  transition: all 0.25s ease;
+}
+
+h1 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  letter-spacing: 0.2px;
+}
+p.lead {
+  margin: 0 0 18px 0;
+  color: #9fb7c3;
+  font-size: 13px;
+}
+
+form {
+  display: grid;
+  gap: 12px;
+}
+
+.field {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+label {
+  font-size: 13px;
+  color: #a8c0c9;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 4px rgba(252, 107, 143, 0.15);
+  border-color: var(--button);
+}
+
+.name-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.name-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.name-field.first {
+  flex: 2; /* Chiếm 2 phần */
+}
+
+.name-field.last {
+  flex: 1; /* Chiếm 1 phần */
+}
+
+.name-field input {
+  width: 100%;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+button {
+  border: 0;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: var(--button);
+  color: white;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: white;
+  border: 1px solid var(--button);
+}
+
+.note {
+  font-size: 12px;
+  color: #8fa6b1;
+  margin-top: 6px;
+}
+
+/* Responsive */
+@media (max-width: 560px) {
+  .name-row {
+    flex-direction: column;
+  }
+}
+
+/* --- Radio & Checkbox --- */
+.radio-group {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+/* Ẩn input mặc định */
+.radio-group input[type="radio"],
+.radio-group input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #6b7280;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Khi hover */
+.radio-group input[type="radio"]:hover {
+  border-color: var(--button);
+  box-shadow: 0 0 0 3px rgba(252, 107, 143, 0.15);
+}
+
+/* Khi được chọn */
+.radio-group input[type="radio"]:checked {
+  border-color: var(--button);
+  background-color: var(--button);
+}

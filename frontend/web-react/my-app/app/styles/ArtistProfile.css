@@ -1,0 +1,36 @@
+.artist-detail {
+  padding: 20px;
+  color: #fff;
+}
+
+.artist-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.artist-avatar {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.song-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.song-item {
+  background: #222;
+  border-radius: 12px;
+  padding: 10px;
+  width: 180px;
+}
+
+.song-item img {
+  width: 100%;
+  border-radius: 10px;
+}

@@ -1,0 +1,270 @@
+/* ========== HEADER ========== */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  padding: 45px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--background-headerbar);
+  z-index: 100;
+  color: var(--color-text-not-select);
+}
+
+/* Logo + Searchbar nhóm bên trái */
+/* .header .left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+} */
+
+.header .left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* .search-wrapper {
+  flex: 1;
+  min-width: 0;
+} */
+
+.left img {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  max-width: 250px;
+  height: auto;
+}
+
+/* Sidebar icon + Profile nhóm bên phải */
+.header .right {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+#upload-icon {
+  background-color: #ffffff29;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  margin-right: 16px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.auth-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.sign-in,
+.register {
+  border: none;
+  font-size: 14px;
+  height: 40px;
+  width: 100px;
+  font-weight: bold;
+  color: white;
+}
+
+.sign-in {
+  background: none;
+  color: #b3b3b3;
+}
+
+.sign-in:hover {
+  color: white;
+}
+
+.register {
+  background: var(--button);
+}
+
+.register a {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.user-area {
+  position: relative;
+  display: inline-block;
+}
+
+.user-greeting {
+  display: flex;
+  align-items: center;
+  background-color: #27292a;
+  border-radius: 23px;
+  transition: all 0.3s ease 0s;
+}
+
+.user-greeting button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.user-greeting:hover {
+  background-color: var(--color-text-select);
+  color: var(--color-text);
+}
+
+.user-area .avatar {
+  max-width: 30px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.profile-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  color: white;
+}
+
+/* Pop up */
+.user-popup {
+  position: absolute;
+  right: 30px;
+  top: 90px;
+  width: 220px;
+  background: #292929;
+  border-radius: 16px;
+  padding: 15px;
+  color: white;
+  font-size: 13px;
+  box-shadow: 0 0 20px rgba(231, 94, 141, 0.35);
+  animation: fadeIn 0.15s ease-out;
+  z-index: 1000;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ffffff14;
+}
+
+.user-info p {
+  margin-top: 5px;
+  font-size: 11px;
+  color: #8f8f8f;
+}
+
+.user-info .avatar {
+  /* width: 45px; */
+  /* height: 45px; */
+  /* border-radius: 50%; */
+  /* object-fit: cover; */
+}
+
+.user-info p {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.logout-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: left;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn i {
+  margin-right: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .search-box {
+    width: 50%;
+    max-width: 350px;
+  }
+
+  .sign-in,
+  .register {
+    width: 90px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    justify-content: flex-start;
+    padding-left: 15px;
+  }
+
+  .search-box {
+    width: 65%;
+    max-width: none;
+  }
+
+  .header-right {
+    right: 10px;
+    gap: 6px;
+  }
+
+  .sign-in,
+  .register {
+    width: 80px;
+    font-size: 12px;
+    height: 34px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-box {
+    width: 70%;
+  }
+
+  .sign-in a::after {
+    content: "🔑";
+  }
+
+  .register a::after {
+    content: "📝";
+  }
+
+  .sign-in a,
+  .register a {
+    font-size: 0;
+  }
+
+  .sign-in,
+  .register {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+  }
+}

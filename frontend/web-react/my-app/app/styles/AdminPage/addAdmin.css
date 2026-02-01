@@ -1,0 +1,106 @@
+.container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  width: 400px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  transition: all 0.25s ease;
+}
+.container h1 {
+  text-align: center;
+  color: #111827;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.container .name {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.container label {
+  color: #9ca3af;
+}
+
+/* ----- Input ----- */
+.container input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #ebf2f8;
+  color: #111827;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.container input::placeholder {
+  color: #9ca3af;
+}
+
+.container input:focus {
+  /* outline: var(--button); */
+  box-shadow: 0 0 0 3px rgba(252, 49, 104, 0.25);
+}
+
+/* ----- Button ----- */
+.container button {
+  background-color: var(--button);
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.container button:hover {
+  background-color: rgb(246, 112, 154);
+  /* color: var(--button); */
+}
+
+.container button:active {
+  transform: scale(0.98);
+}
+
+/* ----- Optional bottom text ----- */
+/* .switch-form {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-top: 1rem;
+}
+
+.switch-form .create {
+  color: #0ea5e9;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.switch-form .create:hover {
+  text-decoration: underline;
+} */
+
+/* ----- Smooth animation ----- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

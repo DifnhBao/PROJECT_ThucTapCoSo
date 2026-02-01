@@ -1,0 +1,59 @@
+/* Nền mờ phủ toàn màn hình */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+
+/* Khung modal */
+.modal-container {
+  position: relative;
+  background: transparent;
+  border-radius: 12px;
+  color: white;
+  animation: fadeIn 0.3s ease;
+  width: 100%;
+  max-width: 90vw;
+  display: flex;
+  justify-content: center;
+}
+
+/* Nút đóng */
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: black;
+}
+
+/* Nội dung bên trong modal */
+.modal-content {
+  position: relative;
+  margin-top: 1rem;
+}
+
+/* Hiệu ứng xuất hiện */
+@keyframes fadeIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
