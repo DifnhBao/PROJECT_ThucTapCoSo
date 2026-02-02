@@ -15,7 +15,7 @@ const User = sequelize.define(
       allowNull: false,
       unique: true,
     },
-    email: {  
+    email: {
       type: DataTypes.STRING(100),
       allowNull: true,
       unique: false,
@@ -56,6 +56,10 @@ const User = sequelize.define(
         is: /^[0-9+\-()\s]*$/i,
       },
     },
+    avatar_url: {
+      type: DataTypes.STRING(500),
+      allowNull: true
+    },
     address: {
       type: DataTypes.STRING(255),
       allowNull: true,
@@ -77,7 +81,8 @@ const User = sequelize.define(
   },
   {
     tableName: "users",
-    timestamps: false,
+    timestamps: true,
+    updatedAt: "updated_at",
     hooks: {
       beforeCreate: async (user) => {
         if (user.password) {
