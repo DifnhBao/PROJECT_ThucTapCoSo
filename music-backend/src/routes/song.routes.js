@@ -32,7 +32,8 @@ router.post("/:songId/view", songController.increaseView);
 // admin up nhạc
 router.post(
   "/",
-  protectAdmin,
+  protect,
+  // protectAdmin,
   upload.single("audioFile"),
   songController.createSong
 );

@@ -59,7 +59,7 @@ Rating.belongsTo(Song, { foreignKey: "song_id" });
 
 const syncDatabase = async () => {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true });
     console.log(">>> DATABASE SYNCED SUCCESSFULLY! (All tables created) <<<");
   } catch (error) {
     console.error(">>> SYNC ERROR:", error);
