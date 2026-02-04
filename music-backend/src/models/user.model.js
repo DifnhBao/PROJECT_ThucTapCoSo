@@ -56,8 +56,9 @@ const User = sequelize.define(
         is: /^[0-9+\-()\s]*$/i,
       },
     },
-    avatar_url: {
+    avatar: {
       type: DataTypes.STRING(500),
+      field: "avatar_url",
       allowNull: true
     },
     address: {
