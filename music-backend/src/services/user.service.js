@@ -47,6 +47,16 @@ const updateUserProfile = async (userId, updateData) => {
   return user;
 };
 
+const updateUserAvatar = async (userId, avatarUrl) => {
+  const user = await User.findByPk(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  user.avatar = avatarUrl;
+  return await user.save();
+};
+
 const changeUserPassword = async (userId, oldPassword, newPassword) => {
   const user = await User.findByPk(userId);
   if (!user) throw new Error("Không tìm thấy người dùng.");
@@ -305,6 +315,7 @@ const createAdminAccount = async ({ username, email, password }) => {
 module.exports = {
   getUserProfile,
   updateUserProfile,
+  updateUserAvatar,
   changeUserPassword,
   promoteUserToAdmin,
   getAllUsers,

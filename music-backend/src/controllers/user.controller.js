@@ -1,5 +1,13 @@
 const { User } = require("../models");
 const userService = require("../services/user.service");
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs-extra");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 /* --- Controller for User */
 
@@ -28,6 +36,40 @@ const updateUserProfile = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+
+const uploadAvatar = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "Vui lòng chọn ảnh!" });
+    }
+
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "avatars",
+      resource_type: "image",
+    });
+
+    if (fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+
+    const userId = req.user.user_id;
+    const avatarUrl = result.secure_url;
+
+    await userService.updateUserAvatar(userId, avatarUrl);
+
+    res.status(200).json({
+      message: "Cập nhật Avatar thành công!",
+      avatar: avatarUrl
+    });
+  } catch (error) {
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    console.error("Lỗi upload avatar:", error);
+    res.status(500).json({ message: "Lỗi Server" });
   }
 };
 
@@ -216,6 +258,7 @@ const addNewAdmin = async (req, res) => {
 module.exports = {
   getUserProfile,
   updateUserProfile,
+  uploadAvatar,
   changeUserPassword,
   promoteUser,
   getAllUsers,
