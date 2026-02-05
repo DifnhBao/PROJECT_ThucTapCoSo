@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
+const upload = require("../midlewares/upload.midleware");
 
 const {
   protect,
@@ -14,6 +15,12 @@ const {
 router.get("/me", protect, userController.getUserProfile);
 // Cập nhật thông tin user
 router.put("/me", protect, userController.updateUserProfile);
+router.post(
+  "/avatar",
+  protect,
+  upload.single("avatar"),
+  userController.uploadAvatar
+);
 
 router.post("/change-password", protect, userController.changeUserPassword);
 
