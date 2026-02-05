@@ -1,0 +1,4 @@
+# Bao giờ hoàn tất thì cài đặt .gitignore 
+# AI_Services/venv/
+# AI_Services/__pycache__/
+# AI_Services/.ipynb_checkpoints/
