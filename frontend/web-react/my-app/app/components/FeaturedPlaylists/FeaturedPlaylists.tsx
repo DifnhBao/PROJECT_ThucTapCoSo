@@ -11,6 +11,8 @@ import ArtistSection from "./ArtistSection";
 import MyPlaylistGrid from "../MusicContainer/MyPlaylistGrid";
 import { SelectedItem } from "@/app/types/music";
 
+import { RiResetRightLine } from "react-icons/ri";
+
 interface Props {
   onSelect: (item: SelectedItem) => void;
 }
@@ -20,8 +22,14 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
 
   return (
     <div className="explore-container">
-      <h2 className="title">Made For {user ? user.username : "Guest"}</h2>
+      <div className="make-for">
+        <h2 className="title">Đề xuất cho {user ? user.username : "Guest"}</h2>
+        <button id="refresh-recommendList">
+          <RiResetRightLine /> Làm mới{" "}
+        </button>
+      </div>
 
+      <h2 className="title">Mới cập nhật</h2>
       <TrackSection />
 
       <h2 className="title">Daily Mix</h2>

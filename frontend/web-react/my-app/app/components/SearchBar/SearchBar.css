@@ -3,16 +3,15 @@
   border-radius: 46px;
   height: 3rem;
   padding: 0 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
   justify-content: flex-start;
   align-items: center;
   transition: 0.15s ease-in-out;
-  background-color: #27292a;
+  background-color: var(--color-blur);
 }
 
 .input-wrapper:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 12px var(--color-text-select);
 }
 
 .input-wrapper input {

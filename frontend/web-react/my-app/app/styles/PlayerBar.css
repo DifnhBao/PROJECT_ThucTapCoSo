@@ -6,7 +6,10 @@
   bottom: 0;
   width: 100%;
   height: 100px;
-  background: #212121;
+
+  background: var(--background-footer-bar);
+  border-top: 1px solid gray;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -70,14 +73,18 @@
   height: 24px;
   color: rgb(189, 189, 189);
   margin-left: 16px;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 /* Nút trái tim (like) */
 .like-icon i {
   font-size: 22px;
   color: #bdbdbd;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .like-icon.liked i {
@@ -99,7 +106,7 @@
   bottom: 70px;
 
   width: 200px;
-  background: #292929;
+  background: var(--background-modal);
   border-radius: 12px;
   padding: 12px;
 
@@ -157,11 +164,11 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: white;
+  /* background: white; */
   border: none;
   cursor: pointer;
   font-size: 20px;
-  color: black;
+  /* color: black; */
 }
 
 /* #playBtn i {
@@ -187,7 +194,7 @@
 .control .play:hover,
 .volume:hover {
   transform: scale(1.2s);
-  color: white;
+  color: var(--button);
 }
 
 .control button:hover,

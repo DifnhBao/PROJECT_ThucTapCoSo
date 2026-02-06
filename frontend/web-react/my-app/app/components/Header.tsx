@@ -22,8 +22,9 @@ export default function Header() {
     <header className="header">
       <div className="left">
         <div className="logo">
-          <Link href="/">
-            <img src="/images/Logo/logo.png" alt="logo web page" />
+          <Link href="/explore">
+            {/* <img src="/images/Logo/logo.png" alt="logo web page" /> */}
+            <span>BTM</span>
           </Link>
         </div>
         <SearchBarComponent />
