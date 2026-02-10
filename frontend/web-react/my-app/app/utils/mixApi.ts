@@ -19,7 +19,7 @@ export async function fetchDailyMixes(): Promise<Playlist[]> {
 }
 
 export async function fetchDailyMixDetail(
-  playlistId: number
+  playlistId: number,
 ): Promise<DetailViewData> {
   const res = await fetch(`${API_URL}/playlists/daily-mix/${playlistId}`, {
     cache: "no-store",

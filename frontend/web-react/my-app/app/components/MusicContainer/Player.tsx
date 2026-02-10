@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef, Suspense } from "react";
+import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { usePlayer } from "@/app/context/PlayerContext";
 import PopUp from "../PopUp";
@@ -11,7 +12,6 @@ import {
   getLikeStatus,
   increaseSongView,
 } from "@/app/utils/songApi";
-
 
 const PlayerContent: React.FC = () => {
   const {
@@ -186,12 +186,17 @@ const PlayerContent: React.FC = () => {
   return (
     <footer className="info">
       <div className="info-player">
-        <a className="background-singer">
+        <Link
+          className="background-singer"
+          scroll={false}
+          href={`/detailSong?track=${currentSong?.trackId}`}
+        >
           <img
             src={currentSong?.imageUrl || "/images/default-song.jpg"}
             alt="Singer"
+            onClick={() => {}}
           />
-        </a>
+        </Link>
 
         <div className="info-song">
           <a href="#" className="song-tittle">

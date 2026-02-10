@@ -24,13 +24,9 @@ const DetailView: React.FC<Props> = ({ data, onBack }) => {
 
     setPlaylist(tracks, index);
   };
-  
 
   return (
-    <div
-      className="playlist-detail"
-      // style={{ backgroundImage: `url(${cover})` }}
-    >
+    <div className="playlist-detail">
       {/* BACKGROUND */}
       <div className="playlist-bg">
         <PlaylistCover images={cover ?? []} size={800} />

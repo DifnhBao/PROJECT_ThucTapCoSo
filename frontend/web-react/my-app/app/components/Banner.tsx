@@ -3,12 +3,22 @@
 import "@/app/styles/banner-category.css";
 import React from "react";
 import HorizontalScroll from "@/app/components/HorizontalScroll";
+import { useRouter } from "next/navigation";
 
 function Banner() {
+  const router = useRouter();
+  const handleClick = async () => {
+    // setLoading(true);
+    // Cho hiệu ứng có thời gian hiển thị nhẹ
+    // await new Promise((resolve) => setTimeout(resolve, 600));
+    router.push("/explore");
+  };
+
   return (
     <div className="banner-section">
       {/* Banner chính */}
-      <div className="banner-container">
+
+      {/* <div className="banner-container">
         <HorizontalScroll>
           <div className="banner-row">
             <div className="banner-item">
@@ -31,10 +41,10 @@ function Banner() {
             </div>
           </div>
         </HorizontalScroll>
-      </div>
+      </div> */}
 
       {/* Category Section */}
-        {/* <div className="category-grid">
+      {/* <div className="category-grid">
           <div className="category-card" style={{ backgroundColor: "#b87933" }}>
             <h3>Indie Việt</h3>
             <img src="/images/Banner/indieViet.png" alt="" />

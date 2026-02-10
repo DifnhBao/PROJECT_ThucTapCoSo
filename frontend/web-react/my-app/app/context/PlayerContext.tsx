@@ -61,7 +61,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       .catch(() => setIsPlaying(false));
   }, [playlist, currentIndex]);
 
-  /* PLAY / PAUSE KHÔNG ĐỘNG TỚI SRC */
   useEffect(() => {
     if (!audioRef.current) return;
 

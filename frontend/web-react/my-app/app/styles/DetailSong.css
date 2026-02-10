@@ -1,0 +1,191 @@
+:root {
+  --primary-color: #00f2ff;
+  --bg-dark: #0a0a0a;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+}
+
+.detail-container {
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  color: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  padding-bottom: 50px;
+  overflow-y: auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Hiệu ứng nền mờ ảo diệu */
+.background-blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(80px) brightness(0.3);
+  z-index: 1;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 60px;
+  max-width: 1100px;
+  width: 90%;
+  padding: 40px;
+}
+
+/* Cột trái: Hình ảnh */
+.left-section {
+  flex: 1;
+  text-align: left;
+}
+
+.image-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ai-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--primary-color);
+  color: black;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  box-shadow: 0 0 15px var(--primary-color);
+}
+
+.song-info {
+  margin: 0 0 50px 0;
+}
+
+.song-info h1 {
+  font-size: 2.5rem;
+  margin: 25px 0 5px 0;
+  letter-spacing: -1px;
+}
+
+.song-info p {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+/* Cột phải: Lời bài hát */
+.right-section {
+  flex: 1.2;
+}
+
+.lyrics-container {
+  height: 400px;
+  overflow-y: auto;
+  padding-right: 20px;
+}
+
+/* Tùy chỉnh thanh cuộn cho chuyên nghiệp */
+.lyrics-container::-webkit-scrollbar {
+  width: 4px;
+}
+.lyrics-container::-webkit-scrollbar-thumb {
+  background: var(--glass-bg);
+  border-radius: 10px;
+}
+
+.lyrics-container p {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  opacity: 0.3;
+  transition: all 0.4s ease;
+}
+
+.lyrics-container p.active {
+  opacity: 1;
+  color: white;
+  transform: scale(1.05);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* ======= COMMENT ======== */
+
+.comment-section {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 1100px;
+  margin-top: 20px;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comment-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.comment-input-wrapper {
+  display: flex;
+  gap: 10px;
+  background: var(--glass-bg);
+  padding: 5px 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comment-input-wrapper input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+}
+
+.comment-input-wrapper button {
+  background: transparent;
+  border: none;
+  color: var(--button);
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.comment-input-wrapper button:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+    padding: 20px;
+  }
+  .song-info h1 {
+    font-size: 1.8rem;
+  }
+}

@@ -13,19 +13,6 @@ const TrackSection = () => {
   const { setPlaylist } = usePlayer();
   const [hasMore, setHasMore] = useState(true);
 
-  // useEffect(() => {
-  //   const loadSongs = async () => {
-  //     try {
-  //       const songs = await fetchDailySongs(20);
-  //       setTracks(songs);
-  //     } catch (error) {
-  //       console.error("Fetch daily songs failed:", error);
-  //     }
-  //   };
-
-  //   loadSongs();
-  // }, []);
-
   const loadSongs = async () => {
     if (loading) return;
 

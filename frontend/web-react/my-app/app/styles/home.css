@@ -1,11 +1,11 @@
 /* --- Biến CSS (Tùy chọn, để dễ quản lý màu sắc) --- */
 :root {
-  --color-dark: #121212; /* Nền tối */
-  --color-pink: #ff007f; /* Màu hồng nổi bật */
-  --color-light-pink: #ff3399; /* Màu hồng nhạt */
+  --color-dark: #121212; 
+  --color-pink: #ff007f; 
+  --color-light-pink: #ff3399; 
   --color-white: #ffffff;
   --color-text-secondary: #aaaaaa;
-  --font-primary: "Poppins", sans-serif; /* Sử dụng font hiện đại */
+  --font-primary: "Poppins", sans-serif; 
 }
 
 body {
@@ -129,7 +129,9 @@ a:hover {
   border-radius: 30px;
   cursor: pointer;
   margin-top: 20px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -222,7 +224,9 @@ a:hover {
   padding: 30px;
   border-radius: 10px;
   background-color: #1a1a1a;
-  transition: background-color 0.3s, transform 0.3s;
+  transition:
+    background-color 0.3s,
+    transform 0.3s;
   width: 180px;
 }
 

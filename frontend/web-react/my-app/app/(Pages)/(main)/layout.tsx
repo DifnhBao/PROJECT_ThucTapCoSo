@@ -22,11 +22,11 @@ export default function ExploreLayout({
   return (
     <UserProvider>
       <ModalProvider>
-        <MusicDataProvider>
-          <PlayerProvider>
-            <MainLayout>{children}</MainLayout>
-          </PlayerProvider>
-        </MusicDataProvider>
+        {/* <MusicDataProvider> */}
+        <PlayerProvider>
+          <MainLayout>{children}</MainLayout>
+        </PlayerProvider>
+        {/* </MusicDataProvider> */}
       </ModalProvider>
     </UserProvider>
   );
