@@ -35,6 +35,10 @@ const Song = sequelize.define(
       allowNull: false,
       defaultValue: true,
     },
+    lyrics: {
+      type: DataTypes.TEXT('long'),
+      allowNull: true,
+    },
   },
   {
     tableName: "songs",
