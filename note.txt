@@ -3,3 +3,7 @@ docker exec -it music_web_mongo mongoexport --db=music_app --collection=useracti
 
 2. Copy file đó từ container ra thư mục project hiện tại
 docker cp music_web_mongo:/tmp/useractivities_export.json ./db/useractivities_export.json
+
+3. Thêm key của Groq vào file .env trong folder Server 
+# --- GROQ API KEY ---
+GROQ_API_KEY=
