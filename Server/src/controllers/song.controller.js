@@ -3,6 +3,11 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs-extra");
 const { Song, User } = require("../models");
 const UserActivity = require("../models/mongo/UserActivity");
+const Groq = require("groq-sdk");
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const NodeID3 = require("node-id3");
+const path = require("path");
+
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -88,6 +93,98 @@ const createSong = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }
+};
+
+/* --- HÀM MỚI: AUTO-UPLOAD BẰNG AI CÓ TRÍCH XUẤT ẢNH --- */
+const autoUploadSongs = async (req, res, next) => {
+  try {
+    const files = req.files;
+
+    if (!files || files.length === 0) {
+      return res.status(400).json({ message: "Không có file nhạc nào được chọn." });
+    }
+
+    const results = { successful: [], failed: [] };
+
+    for (const file of files) {
+      try {
+        const filename = file.originalname;
+        let finalImageUrl = null; // Mặc định là null nếu MP3 không có ảnh
+
+        // 1. TRÍCH XUẤT ẢNH TỪ MP3
+        const tags = NodeID3.read(file.path);
+        if (tags.image && tags.image.imageBuffer) {
+          // Tạo một đường dẫn file ảnh tạm thời
+          const tempImagePath = path.join(__dirname, `../uploads/temp_image_${Date.now()}.jpg`);
+
+          // Ghi buffer ảnh ra file vật lý
+          await fs.writeFile(tempImagePath, tags.image.imageBuffer);
+
+          // Upload ảnh lên Cloudinary
+          const imgUploadResult = await cloudinary.uploader.upload(tempImagePath, {
+            folder: "music/images",
+          });
+
+          finalImageUrl = imgUploadResult.secure_url;
+
+          // Xóa file ảnh tạm
+          await fs.unlink(tempImagePath);
+        }
+
+        // 2. Nhờ Groq AI phân tích tên file để lấy metadata
+        const prompt = `
+        Dựa vào tên file nhạc sau: "${fileName}".
+        Hãy phân tích và trả về đúng định dạng JSON với các key sau:
+        - "title": Tên bài hát.
+        - "artists": Tên ca sĩ (nếu nhiều ca sĩ, ngăn cách bằng dấu phẩy).
+        - "genres": Thể loại nhạc (Pop, Rap, Ballad, R&B...). LƯU Ý QUAN TRỌNG: Nếu có nhiều thể loại, BẮT BUỘC phải ngăn cách bằng dấu phẩy (,). Ví dụ ĐÚNG: "V-Pop, Ballad, Rap". Ví dụ SAI: "V-Pop Ballad". Tuyệt đối không viết liền.
+        - "duration": ${duration}
+        `;
+
+        const chatCompletion = await groq.chat.completions.create({
+          messages: [{ role: 'user', content: prompt }],
+          model: 'llama-3.3-70b-versatile',
+          temperature: 0.2,
+          response_format: { type: "json_object" }
+        });
+
+        const aiResponse = JSON.parse(chatCompletion.choices[0].message.content);
+
+        // 3. Upload file Audio lên Cloudinary
+        const audioUploadResult = await cloudinary.uploader.upload(file.path, {
+          folder: "music/audio",
+          resource_type: "video",
+        });
+
+        // 4. Xóa file audio tạm
+        await fs.unlink(file.path);
+
+        // 5. Lưu Database MySQL
+        const newSong = await songService.createSong({
+          title: aiResponse.title || "Unknown Title",
+          artist: aiResponse.artist || "Unknown Artist",
+          genre: aiResponse.genre || "Unknown",
+          duration: Math.round(audioUploadResult.duration) || 0,
+          audio_url: audioUploadResult.secure_url,
+          image_url: finalImageUrl, // Bơm link ảnh vừa trích xuất vào đây!
+        });
+
+        results.successful.push({ filename, song: newSong });
+      } catch (err) {
+        console.error(`Lỗi bài ${file.originalname}:`, err);
+        results.failed.push({ filename: file.originalname, error: err.message });
+        if (await fs.pathExists(file.path)) await fs.unlink(file.path);
+      }
+    }
+
+    res.status(200).json({
+      message: `Đã xử lý xong ${files.length} bài hát.`,
+      data: results
+    });
+
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -253,6 +350,7 @@ const searchSongs = async (req, res) => {
 
 module.exports = {
   createSong,
+  autoUploadSongs,
   getAllSongs,
   getSongById,
   updateSongById,

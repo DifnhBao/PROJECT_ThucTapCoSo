@@ -64,6 +64,15 @@ router.post(
   songController.createSong,
 );
 
+// admin AUTO up nhạc bằng AI (Nhiều bài cùng lúc)
+router.post(
+  "/auto-upload",
+  protectAdmin,
+  authorizeRoles("admin", "super_admin"),
+  upload.array("audioFiles", 20), // Cho phép tối đa 20 file mp3 một lúc
+  songController.autoUploadSongs
+);
+
 // gọi 1 lần để lấy 200 bài
 // router.post("/sync", jamendoController.fetchRandomJamendoTracks);
 
