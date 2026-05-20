@@ -9,6 +9,12 @@ module.exports = {
     port: process.env.DB_PORT, // Ví dụ: 3307
     dialect: "mysql",
     logging: false,
+    pool: {
+      max: 10,        // Tối đa 10 kết nối
+      min: 0,         // Tối thiểu 0 kết nối (để nó tự giải phóng khi không dùng)
+      acquire: 30000, // Thời gian tối đa (ms) cố gắng kết nối trước khi văng lỗi
+      idle: 10000     // Thời gian (ms) một kết nối rảnh rỗi trước khi bị đóng
+    }
   },
   test: {
     username: process.env.DB_USER,
