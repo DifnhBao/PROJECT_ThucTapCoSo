@@ -3,8 +3,8 @@ const { UserActivity } = require("../models");
 // 1. Khởi tạo RAM Buffer và các mốc giới hạn
 let activityBuffer = [];
 const BATCH_SIZE = 100;
-// const FLUSH_INTERVAL = 3 * 60 * 1000; // 3 phút
-const FLUSH_INTERVAL = 10 * 1000; // Đổi tạm thành 10 giây để test
+const FLUSH_INTERVAL = 3 * 60 * 1000; // 3 phút
+// const FLUSH_INTERVAL = 10 * 1000; // Đổi tạm thành 10 giây để test
 
 // 2. Hàm thực thi việc Bulk Insert xuống MySQL
 const flushActivities = async () => {

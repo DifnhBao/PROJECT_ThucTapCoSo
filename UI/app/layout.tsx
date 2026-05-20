@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import "./styles/globals.css";
 export const metadata: Metadata = {
-  title: "NhacCuaTui",
+  title: "Recommend Music Web",
 };
 
 export default function RootLayout({
