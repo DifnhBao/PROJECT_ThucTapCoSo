@@ -7,6 +7,7 @@ import TrackSection from "./TrackSection";
 import PlaylistSection from "./PlaylistSection";
 import ArtistSection from "../../features/artist/components/ArtistSection";
 import { SelectedItem } from "@/app/types/music";
+import RecommendationSection from "@/app/features/recommendation/components/RecommendationSection";
 
 import { RiResetRightLine } from "react-icons/ri";
 import HorizontalScroll from "../ui/HorizontalScroll";
@@ -55,71 +56,20 @@ interface Props {
 }
 
 const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
-  const { user } = useUser();
+  const { user, loading } = useUser();
   const [activeTab, setActiveTab] = useState("tracks");
-  const [recType, setRecType] = useState<"NCF" | "MF">("NCF");
-
-  // Render data theo mode
-  const dataToRender =
-    recType === "NCF" ? mockTracks : mockTracks.slice().reverse();
 
   return (
     <div className="explore-container">
       <div className="make-for">
-        <div className="make-for-header">
-          <div className="left">
-            <h2 className="title">Recommendation</h2>
-
-            {/* SWITCH */}
-            <div className="rec-switch">
-              <button
-                className={recType === "NCF" ? "active" : ""}
-                onClick={() => setRecType("NCF")}
-              >
-                NCF
-              </button>
-              <button
-                className={recType === "MF" ? "active" : ""}
-                onClick={() => setRecType("MF")}
-              >
-                MF
-              </button>
-            </div>
+        {/* ── Recommendation section (real data) ── */}
+        {!loading && (user?.userId || (user as any)?.user_id) ? (
+          <RecommendationSection userId={user?.userId || (user as any)?.user_id} limit={10} />
+        ) : (
+          <div className="make-for-header">
+            <h2 className="title">Đề xuất cho bạn</h2>
           </div>
-
-          <button id="refresh-recommendList">
-            <RiResetRightLine /> Làm mới
-          </button>
-        </div>
-
-        {/* <HorizontalScroll>
-          {dataToRender.map((track) => (
-            <div key={track.id} className="card">
-              <img src={track.cover} alt={track.title} />
-              <h3>{track.title}</h3>
-              <p>{track.artist}</p>
-            </div>
-          ))}
-        </HorizontalScroll> */}
-        <p>Tính năng sẽ sớm được cập nhật!</p>
-
-        <div className="make-for-header">
-          <h2 className="title revisit">Có thể bạn muốn nghe lại</h2>
-          <button id="refresh-recommendList">
-            <RiResetRightLine /> Làm mới
-          </button>
-        </div>
-
-        {/* <HorizontalScroll>
-          {dataToRender.map((track) => (
-            <div key={track.id} className="card">
-              <img src={track.cover} alt={track.title} />
-              <h3>{track.title}</h3>
-              <p>{track.artist}</p>
-            </div>
-          ))}
-        </HorizontalScroll> */}
-        <p>Tính năng sẽ sớm được cập nhật!</p>
+        )}
       </div>
 
       {/* TAB */}

@@ -1,0 +1,401 @@
+/* ============================================================
+   recommendation.css
+   Styles cho RecommendationSection & SimilarSongsSection
+   Dùng CSS variables đã có sẵn trong globals.css
+   ============================================================ */
+
+/* ---- Section header ---- */
+.rec-section {
+  margin-bottom: 28px;
+}
+
+.rec-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.rec-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--tt-text-primary);
+}
+
+.rec-section-icon {
+  color: var(--tt-orange);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* ---- Refresh button ---- */
+.rec-refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--button-2);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.rec-refresh-btn:hover {
+  opacity: 0.85;
+}
+
+/* ---- Grid layout (RecommendationSection) ---- */
+.rec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+/* ---- Rec card ---- */
+.rec-card {
+  background: var(--tt-surface);
+  border: 1px solid var(--tt-border);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+}
+
+.rec-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tt-shadow-md);
+  border-color: var(--tt-orange-light);
+}
+
+.rec-card--active {
+  border-color: var(--tt-orange);
+  box-shadow: 0 0 0 2px rgba(255, 126, 58, 0.25);
+}
+
+/* Image wrapper */
+.rec-card-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--tt-surface-2);
+}
+
+.rec-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.rec-card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: var(--tt-text-muted);
+}
+
+/* Play overlay */
+.rec-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: white;
+  font-size: 22px;
+}
+
+.rec-card:hover .rec-card-overlay,
+.rec-card--active .rec-card-overlay {
+  opacity: 1;
+}
+
+/* Body */
+.rec-card-body {
+  padding: 10px 12px 12px;
+}
+
+.rec-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tt-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.rec-card--active .rec-card-title {
+  color: var(--tt-orange);
+}
+
+.rec-card-artist {
+  font-size: 11px;
+  color: var(--tt-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 6px;
+}
+
+/* Score badge */
+.rec-score-badge {
+  display: inline-block;
+  background: var(--tt-orange-pale);
+  color: var(--tt-brown);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-bottom: 4px;
+}
+
+/* Skeleton */
+.rec-card--skeleton {
+  pointer-events: none;
+}
+
+.rec-card-img-skeleton {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(90deg, var(--tt-surface-2) 25%, var(--tt-border) 50%, var(--tt-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+/* ---- Reason component ---- */
+.rec-reason {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.rec-reason-text {
+  font-size: 10px;
+  color: var(--tt-text-muted);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rec-reason-scores {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rec-reason-scores span {
+  font-size: 9px;
+  background: var(--tt-surface-2);
+  color: var(--tt-text-secondary);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.rec-final-score {
+  background: var(--tt-orange-pale) !important;
+  color: var(--tt-brown) !important;
+  font-weight: 700 !important;
+}
+
+/* ---- Empty / error ---- */
+.rec-empty {
+  font-size: 13px;
+  color: var(--tt-text-muted);
+  padding: 16px 0;
+}
+
+/* ============================================================
+   SimilarSongsSection
+   ============================================================ */
+.similar-section {
+  margin-top: 24px;
+}
+
+.similar-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tt-text-primary);
+  margin-bottom: 12px;
+}
+
+/* List */
+.similar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.similar-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.similar-list::-webkit-scrollbar-thumb {
+  background: var(--tt-border);
+  border-radius: 8px;
+}
+
+/* Item */
+.similar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--tt-surface);
+  border: 1px solid var(--tt-border);
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.similar-item:hover {
+  background: var(--tt-surface-2);
+  border-color: var(--tt-orange-light);
+}
+
+.similar-item--active {
+  border-color: var(--tt-orange);
+  background: var(--tt-orange-pale);
+}
+
+/* Thumbnail */
+.similar-img-wrap {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--tt-surface-2);
+}
+
+.similar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.similar-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.similar-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.similar-item:hover .similar-play-overlay,
+.similar-item--active .similar-play-overlay {
+  opacity: 1;
+}
+
+/* Info */
+.similar-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.similar-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tt-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.similar-item--active .similar-title {
+  color: var(--tt-orange);
+}
+
+.similar-artist {
+  font-size: 11px;
+  color: var(--tt-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Score badge */
+.similar-score-badge {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tt-brown);
+  background: var(--tt-orange-pale);
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+/* Skeleton */
+.similar-item--skeleton {
+  pointer-events: none;
+}
+
+.similar-img-skeleton {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--tt-surface-2) 25%, var(--tt-border) 50%, var(--tt-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  flex-shrink: 0;
+}
+
+/* ---- Shared skeleton lines ---- */
+.skeleton-line {
+  height: 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--tt-surface-2) 25%, var(--tt-border) 50%, var(--tt-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  margin-bottom: 6px;
+}
+
+.skeleton-line--short {
+  width: 60%;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

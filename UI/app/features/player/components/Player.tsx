@@ -9,6 +9,7 @@ import { useLikeContext } from "@/app/features/like/context/LikeContext";
 import PopUp from "../../../components/ui/PopUp";
 import AddToPlaylistModal from "@/app/features/playlist/components/AddToPlaylistModal";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
+import SimilarSongsSection from "@/app/features/recommendation/components/SimilarSongsSection";
 
 const mockQueue = [
   {
@@ -287,27 +288,12 @@ const PlayerContent: React.FC = () => {
         />
       </div>
 
-      {/* ── Queue ── */}
+      {/* ── Similar Songs (replaces mock queue) ── */}
       <div className="queue">
-        <div className="queue-header">
-          <p>Next in queue</p>
-        </div>
-        <div className="queue-list">
-          {mockQueue.map((song, index) => (
-            <div
-              key={song.id}
-              className={`queue-item ${index === 0 ? "next" : ""}`}
-            >
-              <p>Update soon</p>
-              {/* <img src={song.cover} alt={song.title} />
-              <div className="queue-info">
-                <p className="queue-title">{song.title}</p>
-                <p className="queue-artist">{song.artist}</p>
-              </div>
-              {index === 0 && <span className="playing-dot" />} */}
-            </div>
-          ))}
-        </div>
+        <SimilarSongsSection
+          songId={currentTrack?.trackId ?? 0}
+          limit={8}
+        />
       </div>
     </footer>
   );

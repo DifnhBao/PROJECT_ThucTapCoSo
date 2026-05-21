@@ -1,4 +1,4 @@
-import http from "@/app/lib/axios";
+import http from "@/app/lib/http";
 
 export const getCurrentUserApi = () => http.get("/users/me");
 

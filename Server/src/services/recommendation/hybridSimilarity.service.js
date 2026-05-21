@@ -11,9 +11,6 @@ const { calculateBehavioralSimilarity } = require("./behavioralSimilarity.servic
    ========================================================= */
 
 /**
- * Tạo câu mô tả lý do gợi ý từ kết quả tính toán.
- * Mục tiêu: câu phải dễ đọc đủ để giảng viên hiểu khi demo.
- *
  * @param {Object} metaDetail  — detail từ calculateMetadataSimilarity()
  * @param {Object} behavDetail — detail từ calculateBehavioralSimilarity()
  * @returns {string}

@@ -1,4 +1,4 @@
-import http from "@/app/lib/axios";
+import http from "@/app/lib/http";
 
 export const loginApi = (username: string, password: string) =>
   http.post("/auth/login", { username, password });

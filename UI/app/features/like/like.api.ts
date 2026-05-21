@@ -1,4 +1,4 @@
-import http from "@/app/lib/axios";
+import http from "@/app/lib/http";
 
 export const toggleLikeSong = async (songId: number) => {
   const res = await http.post(`/favorites/${songId}/like`);
