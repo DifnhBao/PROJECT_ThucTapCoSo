@@ -13,6 +13,12 @@ interface RecommendationApiEnvelope {
   items?: RawRecommendationSong[];
 }
 
+interface SongPairDebugEnvelope {
+  success: boolean;
+  message?: string;
+  data: SongPairDebug;
+}
+
 function extractRecommendationItems(payload: unknown): RawRecommendationSong[] {
   if (Array.isArray(payload)) return payload as RawRecommendationSong[];
 
@@ -63,8 +69,8 @@ export async function getSongPairDebug(
   songA: number,
   songB: number,
 ): Promise<SongPairDebug> {
-  const res = await http.get<SongPairDebug>(
+  const res = await http.get<SongPairDebugEnvelope>(
     `/recommendations/debug/song-pair?songA=${songA}&songB=${songB}`,
   );
-  return res.data;
+  return res.data.data;
 }
