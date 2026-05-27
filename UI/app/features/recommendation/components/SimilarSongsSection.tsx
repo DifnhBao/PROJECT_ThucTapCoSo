@@ -29,7 +29,7 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
     try {
       const data = await getSimilarSongs(songId, limit);
       setSongs(data);
-    } catch (e: any) {
+    } catch (e: unknown) {
       setError("Không thể tải bài hát tương tự.");
       console.error("[SimilarSongsSection]", e);
     } finally {
@@ -138,9 +138,11 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
               {/* Score badge */}
               {song.finalScore !== undefined && (
                 <span className="similar-score-badge">
-                  {song.finalScore > 1
+                  {song.finalScore >= 0 && song.finalScore <= 1
+                    ? `Độ tương đồng: ${(song.finalScore * 100).toFixed(0)}%`
+                    : song.finalScore > 1
                     ? `Điểm: ${song.finalScore.toFixed(2)}`
-                    : `${(song.finalScore * 100).toFixed(0)}% tương đồng`}
+                    : `Điểm: ${song.finalScore.toFixed(2)}`}
                 </span>
               )}
             </div>

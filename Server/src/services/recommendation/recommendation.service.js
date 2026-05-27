@@ -62,16 +62,79 @@ async function getSimilarSongs(songId, limit = 10) {
     ],
   });
 
-  return rows.map((row) => ({
-    // Thông tin bài hát tương tự
-    song:             row.song2,
-    // Điểm & lý do
-    final_score:      row.final_score,
-    metadata_score:   row.metadata_score,
-    behavioral_score: row.behavioral_score,
-    reason:           row.reason,
-    detail:           row.detail,
-  }));
+  if (rows.length > 0) {
+    return rows.map((row) => ({
+      // Thông tin bài hát tương tự
+      song:             row.song2,
+      // Điểm & lý do
+      final_score:      row.final_score,
+      metadata_score:   row.metadata_score,
+      behavioral_score: row.behavioral_score,
+      reason:           row.reason,
+      detail:           row.detail,
+    }));
+  }
+
+  return getRealtimeMetadataSimilarSongs(songId, limit);
+}
+
+/**
+ * Fallback realtime khi bảng song_similarities chưa có dữ liệu cho bài hiện tại.
+ * Dùng lại metadata similarity hiện có để demo không bị trả rỗng sau khi thêm bài mới.
+ *
+ * @param {number} songId
+ * @param {number} limit
+ * @returns {Promise<Object[]>}
+ */
+async function getRealtimeMetadataSimilarSongs(songId, limit) {
+  const [currentMeta, songs] = await Promise.all([
+    getSongMetadata(songId),
+    Song.findAll({
+      where: {
+        song_id: { [Op.ne]: songId },
+        is_visible: true,
+        status: "approved",
+      },
+      attributes: [
+        "song_id", "title", "duration",
+        "audio_url", "image_url", "view_count",
+      ],
+      include: SONG_INCLUDE,
+    }),
+  ]);
+
+  const metadataList = await Promise.all(
+    songs.map((song) => getSongMetadata(song.song_id))
+  );
+  const songMap = new Map(songs.map((song) => [song.song_id, song]));
+  const fallbackReason =
+    "Gợi ý dựa trên metadata vì bài hát chưa có dữ liệu hành vi/precomputed similarity.";
+
+  return metadataList
+    .map((meta) => {
+      const { score, detail } = calculateMetadataSimilarity(currentMeta, meta);
+
+      return {
+        song: songMap.get(meta.song_id),
+        final_score: score,
+        metadata_score: score,
+        behavioral_score: 0,
+        reason: fallbackReason,
+        detail: {
+          metadata_detail: detail,
+          behavioral_detail: {
+            raw_cosine_score: 0,
+            confidence: 0,
+            adjusted_behavioral_score: 0,
+            common_user_count: 0,
+            reason_code: "metadata_realtime_fallback",
+          },
+          source: "realtime_metadata_fallback",
+        },
+      };
+    })
+    .sort((a, b) => b.final_score - a.final_score)
+    .slice(0, limit);
 }
 
 /* =========================================================
@@ -171,6 +234,7 @@ async function getRecommendationsForUser(userId, limit = 10) {
   // Tập bài user đã nghe bất kỳ lần nào → dùng để ưu tiên lọc
   const allHeardSongIds = new Set(recentActivities.map((a) => a.song_id));
   const favoriteSongIds = new Set(favoriteSeedIds);
+  const seedSongIds = new Set(seedWithWeight.keys());
 
   /* ── BƯỚC 2 & 3: Expand seed và gộp điểm ────────────── */
   const candidateMap = new Map();
@@ -187,28 +251,41 @@ async function getRecommendationsForUser(userId, limit = 10) {
     for (const sim of similars) {
       const candId = sim.song_id_2;
 
-      // Bỏ qua nếu là chính bài seed đó
-      if (candId === seedId) continue;
+      // Không gợi ý lại bất kỳ seed song nào cho chính user đó
+      if (seedSongIds.has(candId)) continue;
 
       // Bỏ qua bài đã nghe quá nhiều và đã favorite
       // (user đã biết bài này rồi, không cần gợi ý)
       if (heardTooMuch.has(candId) && favoriteSongIds.has(candId)) continue;
 
       const weightedScore = sim.final_score * weight;
+      const isDiscoveryCandidate =
+        !allHeardSongIds.has(candId) && !favoriteSongIds.has(candId);
 
       if (!candidateMap.has(candId)) {
-        candidateMap.set(candId, { accumulated_score: 0, reasons: [] });
+        candidateMap.set(candId, {
+          accumulated_score: 0,
+          reasons: [],
+          is_discovery_candidate: isDiscoveryCandidate,
+        });
       }
 
       const entry = candidateMap.get(candId);
       entry.accumulated_score += weightedScore;
+      entry.is_discovery_candidate =
+        entry.is_discovery_candidate || isDiscoveryCandidate;
       if (sim.reason) entry.reasons.push(sim.reason);
     }
   }
 
   /* ── BƯỚC 4: Sắp xếp và lấy top limit ──────────────── */
   const topCandidates = [...candidateMap.entries()]
-    .sort(([, a], [, b]) => b.accumulated_score - a.accumulated_score)
+    .sort(([, a], [, b]) => {
+      if (a.is_discovery_candidate !== b.is_discovery_candidate) {
+        return a.is_discovery_candidate ? -1 : 1;
+      }
+      return b.accumulated_score - a.accumulated_score;
+    })
     .slice(0, limit);
 
   if (topCandidates.length === 0) {
@@ -233,13 +310,14 @@ async function getRecommendationsForUser(userId, limit = 10) {
 
   return topCandidates
     .filter(([song_id]) => songMap.has(song_id)) // Bỏ bài đã bị ẩn/xóa
-    .map(([song_id, { accumulated_score, reasons }]) => ({
+    .map(([song_id, { accumulated_score, reasons, is_discovery_candidate }]) => ({
       song:              songMap.get(song_id),
       accumulated_score: Math.round(accumulated_score * 10000) / 10000,
       // Lấy lý do đầu tiên (ngắn gọn nhất) để hiển thị
       reason:            reasons[0] || "Gợi ý dựa trên sở thích của bạn.",
       // Số seed đề xuất bài này — số càng cao càng đáng tin cậy
       endorsed_by_count: reasons.length,
+      is_discovery_candidate,
     }));
 }
 

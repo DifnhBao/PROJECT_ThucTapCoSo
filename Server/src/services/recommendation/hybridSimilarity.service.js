@@ -18,26 +18,44 @@ const { calculateBehavioralSimilarity } = require("./behavioralSimilarity.servic
 function buildReason(metaDetail, behavDetail) {
   const parts = [];
 
-  if (metaDetail.common_genres.length > 0) {
-    parts.push(`Cùng thể loại ${metaDetail.common_genres.join(", ")}`);
+  const commonGenres = Array.isArray(metaDetail?.common_genres) ? metaDetail.common_genres : [];
+  const commonMoods = Array.isArray(metaDetail?.common_moods) ? metaDetail.common_moods : [];
+  const commonArtists = Array.isArray(metaDetail?.common_artists) ? metaDetail.common_artists : [];
+  const commonKeywords = Array.isArray(metaDetail?.common_keywords) ? metaDetail.common_keywords : [];
+
+  const behaviorReasonCode = behavDetail?.reason_code;
+  const commonUserCount = Number(behavDetail?.common_user_count || 0);
+  const rawCosineScore = Number(behavDetail?.raw_cosine_score || 0);
+  const adjustedBehavioralScore = Number(behavDetail?.adjusted_behavioral_score || 0);
+  const confidence = Number(behavDetail?.confidence || 0);
+
+  if (commonGenres.length > 0) {
+    parts.push(`Cùng thể loại ${commonGenres.join(", ")}`);
   }
 
-  if (metaDetail.common_moods.length > 0) {
-    parts.push(`cùng mood ${metaDetail.common_moods.join(", ")}`);
+  if (commonMoods.length > 0) {
+    parts.push(`cùng mood ${commonMoods.join(", ")}`);
   }
 
-  if (metaDetail.common_artists.length > 0) {
-    parts.push(`cùng nghệ sĩ ${metaDetail.common_artists.join(", ")}`);
+  if (commonArtists.length > 0) {
+    parts.push(`cùng nghệ sĩ ${commonArtists.join(", ")}`);
   }
 
-  if (metaDetail.common_keywords.length > 0) {
-    parts.push(`chủ đề tương tự (${metaDetail.common_keywords.slice(0, 3).join(", ")})`);
+  if (commonKeywords.length > 0) {
+    parts.push(`chủ đề tương tự (${commonKeywords.slice(0, 3).join(", ")})`);
   }
 
-  if (behavDetail.reason_code === "success" && behavDetail.common_user_count > 0) {
-    parts.push(
-      `và có ${behavDetail.common_user_count} người dùng có mẫu hành vi nghe tương tự`
-    );
+  if (
+    behaviorReasonCode === "success" &&
+    commonUserCount > 0 &&
+    rawCosineScore > 0 &&
+    adjustedBehavioralScore > 0
+  ) {
+    if (confidence >= 0.5) {
+      parts.push(`có ${commonUserCount} người dùng chung củng cố tín hiệu hành vi`);
+    } else {
+      parts.push(`tín hiệu hành vi còn hạn chế (${commonUserCount} người dùng chung)`);
+    }
   }
 
   if (parts.length === 0) return "Gợi ý dựa trên phân tích đặc trưng âm nhạc.";
@@ -110,24 +128,44 @@ function computeHybridPair(metaA, metaB, matrix) {
  * @param {{ limit?: number }} options
  * @returns {Promise<{ processed_pairs: number, song_count: number, duration_ms: number }>}
  */
-async function rebuildAllSongSimilarities({ limit = 200 } = {}) {
+async function rebuildAllSongSimilarities({ limit } = {}) {
   const startTime = Date.now();
-  console.log(`\n[HybridSimilarity] ▶ Bắt đầu rebuild. Giới hạn ${limit} bài hát...`);
+  const parsedLimit = Number.parseInt(limit, 10);
+  const hasLimit = Number.isInteger(parsedLimit) && parsedLimit > 0;
+  console.log(
+    `\n[HybridSimilarity] ▶ Bắt đầu rebuild. Limit applied: ${hasLimit ? parsedLimit : "none"}`
+  );
 
   // ── BƯỚC 1: Lấy danh sách bài hát hợp lệ ─────────────────
-  const songs = await Song.findAll({
-    where: { is_visible: true, status: "approved" },
+  const songWhere = { is_visible: true, status: "approved" };
+  const totalEligibleSongs = await Song.count({ where: songWhere });
+  const findOptions = {
+    where: songWhere,
     attributes: ["song_id"],
-    limit,
     order: [["view_count", "DESC"]], // Ưu tiên bài phổ biến trước
-  });
+  };
+
+  if (hasLimit) {
+    findOptions.limit = parsedLimit;
+  }
+
+  const songs = await Song.findAll(findOptions);
 
   const songCount = songs.length;
-  console.log(`[HybridSimilarity] ✔ Tìm thấy ${songCount} bài hát hợp lệ.`);
+  console.log(`[HybridSimilarity] ✔ Total eligible songs: ${totalEligibleSongs}`);
+  console.log(`[HybridSimilarity] ✔ Songs processed: ${songCount}`);
+  console.log(`[HybridSimilarity] ✔ Limit applied: ${hasLimit ? "yes" : "no"}`);
 
   if (songCount < 2) {
     console.log("[HybridSimilarity] ⚠ Cần ít nhất 2 bài hát để tính tương đồng. Bỏ qua.");
-    return { processed_pairs: 0, song_count: songCount, duration_ms: Date.now() - startTime };
+    return {
+      processed_pairs: 0,
+      song_count: songCount,
+      duration_ms: Date.now() - startTime,
+      total_eligible_songs: totalEligibleSongs,
+      processed_song_count: songCount,
+      limit_applied: hasLimit,
+    };
   }
 
   const songIds = songs.map((s) => s.song_id);
@@ -227,6 +265,9 @@ async function rebuildAllSongSimilarities({ limit = 200 } = {}) {
     processed_pairs: processedPairs,
     song_count:      songCount,
     duration_ms:     durationMs,
+    total_eligible_songs: totalEligibleSongs,
+    processed_song_count: songCount,
+    limit_applied: hasLimit,
   };
 }
 

@@ -6,6 +6,22 @@ import type {
 import { mapRawToRecommendationSong } from "./recommendation.mapper";
 import type { RecommendationSong } from "./recommendation.types";
 
+interface RecommendationApiEnvelope {
+  data?: RawRecommendationSong[];
+  recommendations?: RawRecommendationSong[];
+  similar?: RawRecommendationSong[];
+  items?: RawRecommendationSong[];
+}
+
+function extractRecommendationItems(payload: unknown): RawRecommendationSong[] {
+  if (Array.isArray(payload)) return payload as RawRecommendationSong[];
+
+  if (!payload || typeof payload !== "object") return [];
+
+  const body = payload as RecommendationApiEnvelope;
+  return body.data || body.recommendations || body.similar || body.items || [];
+}
+
 /**
  * GET /api/recommendations/users/:userId?limit=10
  * Trả về danh sách bài hát đề xuất cho user.
@@ -15,10 +31,9 @@ export async function getRecommendationsForUser(
   limit = 10,
 ): Promise<RecommendationSong[]> {
   const endpoint = `/recommendations/users/${userId}?limit=${limit}`;
-  const res = await http.get(endpoint);
+  const res = await http.get<unknown>(endpoint);
   
-  const resData = res.data as any;
-  const raw: RawRecommendationSong[] = resData?.data || resData?.recommendations || resData?.items || (Array.isArray(resData) ? resData : []);
+  const raw = extractRecommendationItems(res.data);
   
   return raw.map(mapRawToRecommendationSong);
 }
@@ -31,12 +46,11 @@ export async function getSimilarSongs(
   songId: number,
   limit = 10,
 ): Promise<RecommendationSong[]> {
-  const res = await http.get(
+  const res = await http.get<unknown>(
     `/recommendations/songs/${songId}/similar?limit=${limit}`,
   );
   
-  const resData = res.data as any;
-  const raw: RawRecommendationSong[] = resData?.data || resData?.similar || resData?.items || (Array.isArray(resData) ? resData : []);
+  const raw = extractRecommendationItems(res.data);
   
   return raw.map(mapRawToRecommendationSong);
 }

@@ -75,6 +75,9 @@ function calculateBehavioralSimilarity(songIdA, songIdB, matrix) {
     return {
       score: 0,
       detail: {
+        raw_cosine_score: 0,
+        confidence: 0,
+        adjusted_behavioral_score: 0,
         common_user_count: 0,
         vector_a_size: vectorASize,
         vector_b_size: vectorBSize,
@@ -83,13 +86,18 @@ function calculateBehavioralSimilarity(songIdA, songIdB, matrix) {
     };
   }
 
-  const { score, common_user_count } = cosineSimilarity(vectorA, vectorB);
+  const { score: rawCosineScore, common_user_count } = cosineSimilarity(vectorA, vectorB);
+  const confidence = common_user_count / (common_user_count + 5);
+  const behavioralScore = common_user_count === 0 ? 0 : rawCosineScore * confidence;
 
   // Nếu không có user nào nghe chung, điểm cũng bằng 0
   if (common_user_count === 0) {
     return {
       score: 0,
       detail: {
+        raw_cosine_score: Math.round(rawCosineScore * 10000) / 10000,
+        confidence: 0,
+        adjusted_behavioral_score: 0,
         common_user_count: 0,
         vector_a_size: vectorASize,
         vector_b_size: vectorBSize,
@@ -99,8 +107,11 @@ function calculateBehavioralSimilarity(songIdA, songIdB, matrix) {
   }
 
   return {
-    score: Math.round(score * 10000) / 10000,
+    score: Math.round(behavioralScore * 10000) / 10000,
     detail: {
+      raw_cosine_score: Math.round(rawCosineScore * 10000) / 10000,
+      confidence: Math.round(confidence * 10000) / 10000,
+      adjusted_behavioral_score: Math.round(behavioralScore * 10000) / 10000,
       common_user_count,
       vector_a_size: vectorASize,
       vector_b_size: vectorBSize,

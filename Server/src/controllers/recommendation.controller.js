@@ -7,10 +7,14 @@ const hybridSimilarityService = require("../services/recommendation/hybridSimila
  */
 const rebuildSimilarity = async (req, res, next) => {
   try {
-    const limit = parseInt(req.body.limit || req.query.limit) || 200;
+    const rawLimit = req.body?.limit ?? req.query.limit;
+    const parsedLimit = rawLimit !== undefined ? parseInt(rawLimit, 10) : undefined;
+    const options = Number.isInteger(parsedLimit) && parsedLimit > 0
+      ? { limit: parsedLimit }
+      : {};
     
     // Gọi service chạy nền/đồng bộ, phản hồi khi hoàn thành
-    const result = await hybridSimilarityService.rebuildAllSongSimilarities({ limit });
+    const result = await hybridSimilarityService.rebuildAllSongSimilarities(options);
     
     res.status(200).json({
       success: true,

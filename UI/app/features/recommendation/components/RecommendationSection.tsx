@@ -29,7 +29,7 @@ const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
     try {
       const data = await getRecommendationsForUser(userId, limit);
       setSongs(data);
-    } catch (e: any) {
+    } catch (e: unknown) {
       setError("Không thể tải gợi ý. Vui lòng thử lại.");
       console.error("[RecommendationSection]", e);
     } finally {
@@ -163,9 +163,7 @@ const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
                 {/* Final score badge */}
                 {song.finalScore !== undefined && (
                   <span className="rec-score-badge">
-                    {song.finalScore > 1
-                      ? `★ Điểm: ${song.finalScore.toFixed(2)}`
-                      : `★ ${(song.finalScore * 100).toFixed(0)}%`}
+                    Điểm đề xuất: {song.finalScore.toFixed(2)}
                   </span>
                 )}
 

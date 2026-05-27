@@ -1,6 +1,15 @@
 /* Nhúng Font chữ */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
+.forAdminPage {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
 /* .authContainer {
   font-family: "Inter", sans-serif;
   background-color: var(--tt-surface);
@@ -34,6 +43,15 @@
   /* Quan trọng: không để form cao hơn màn hình */
   max-height: calc(100vh - 32px);
   overflow-y: auto;
+}
+
+.registerPage {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.registerPage::-webkit-scrollbar {
+  display: none;
 }
 
 /* Header & Logo */
