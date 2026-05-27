@@ -5,7 +5,7 @@ const {
   SongArtist,
   Album,
   Favorites,
-  PlaylistSongs,
+  PlaylistSong,
   Genre,
   SongGenre,
   Rating,
@@ -268,6 +268,8 @@ const createSong = async ({
 const getAllSongs = async ({ page, limit, search }) => {
   const offset = (page - 1) * limit;
 
+  const whereCondition = {};
+
   if (search) {
     whereCondition.title = {
       [Op.like]: `%${search}%`,
@@ -275,6 +277,7 @@ const getAllSongs = async ({ page, limit, search }) => {
   }
 
   const { rows, count } = await Song.findAndCountAll({
+    where: whereCondition,
     limit,
     offset,
     order: [["song_id", "DESC"]],
@@ -544,10 +547,10 @@ const deleteSongById = async (songId) => {
     });
 
     // Nếu sau này bạn mở lại tính năng Playlist, hãy uncomment đoạn dưới
-    // await PlaylistSong.destroy({
-    //   where: { song_id: songId },
-    //   transaction: t,
-    // });
+    await PlaylistSong.destroy({
+      where: { song_id: songId },
+      transaction: t,
+    });
 
     await song.destroy({ transaction: t });
 
@@ -555,6 +558,8 @@ const deleteSongById = async (songId) => {
       message: "Xóa bài hát thành công.",
       song_id: songId,
       title: song.title,
+      audio_url: song.audio_url,
+      image_url: song.image_url,
     };
   });
 };
