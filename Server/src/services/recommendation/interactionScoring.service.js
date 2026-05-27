@@ -26,7 +26,7 @@ function calculateActivityScore(activity) {
     seek_count = 0,
   } = activity;
 
-  // ── Tỉ lệ nghe & hoàn thành, clamp về [0, 1] ──────────
+  // Tỉ lệ nghe & hoàn thành, clamp về [0, 1]
   // listen_ratio: tổng thời gian thực sự nghe / tổng thời lượng bài
   // (user có thể pause/resume nhiều lần, nên đây là implicit engagement)
   const listen_ratio =
@@ -35,31 +35,30 @@ function calculateActivityScore(activity) {
       : 0;
 
   // completion_ratio: user đã kéo/nghe đến vị trí xa nhất nào của bài
-  // (khác listen_ratio: user có thể tua nhanh đến cuối nhưng không thực sự nghe)
   const completion_ratio =
     song_duration > 0
       ? Math.min(1, Math.max(0, max_position_reached / song_duration))
       : 0;
 
-  // ── Điểm cơ sở ────────────────────────────────────────
+  // Điểm cơ sở
   // Mỗi lần phát hợp lệ (đã qua validation >20s ở view_count) = +1
   let score = 1;
 
-  // ── Bonus hoàn thành (+0 đến +4) ──────────────────────
+  // Bonus hoàn thành (+0 đến +4) 
   // User nghe hết bài → tín hiệu mạnh nhất của sự yêu thích
   score += 4 * completion_ratio;
 
-  // ── Bonus thời gian nghe thực tế (+0 đến +3) ──────────
+  // Bonus thời gian nghe thực tế (+0 đến +3)
   // Phân biệt user "để chạy nền" với user "thật sự nghe"
   score += 3 * listen_ratio;
 
-  // ── Penalty bỏ qua sớm (-4) ───────────────────────────
+  // Penalty bỏ qua sớm (-4) 
   // Nếu user chủ động skip VÀ chưa nghe đến 30% → tín hiệu không thích
   if (exit_reason === "skipped" && listen_ratio < 0.3) {
     score -= 4;
   }
 
-  // ── Penalty tua nhiều (-0.2 mỗi lần, tối đa -1) ───────
+  // Penalty tua nhiều (-0.2 mỗi lần, tối đa -1)
   // Seek nhiều có thể là do bài không hay hoặc user đang tìm đoạn cụ thể;
   // áp nhẹ để không phạt oan những bài có nhiều đoạn hay
   const seek_penalty = Math.min(1, seek_count * 0.2);
@@ -92,7 +91,7 @@ function calculateActivityScore(activity) {
  * @returns {Promise<Map<number, Map<number, number>>>}
  */
 async function buildUserSongInteractionMatrix() {
-  // ── Kết quả cuối cùng: song_id → Map(user_id → score) ─
+  // Kết quả cuối cùng: song_id → Map(user_id → score) 
   const matrix = new Map();
 
   // Hàm nội bộ: cộng điểm an toàn vào ma trận
@@ -104,7 +103,7 @@ async function buildUserSongInteractionMatrix() {
     songMap.set(userId, (songMap.get(userId) || 0) + delta);
   }
 
-  // ── NGUỒN 1: UserActivity (Implicit Feedback) ──────────
+  // NGUỒN 1: UserActivity (Implicit Feedback) 
   // Lấy toàn bộ phiên nghe, không cần join Song/User vì chỉ cần id + số liệu
   const activities = await UserActivity.findAll({
     attributes: [
@@ -123,7 +122,7 @@ async function buildUserSongInteractionMatrix() {
     addScore(activity.song_id, activity.user_id, actScore);
   }
 
-  // ── NGUỒN 2: Favorite (Explicit — Strong Positive Signal) ─
+  // NGUỒN 2: Favorite (Explicit — Strong Positive Signal) 
   // User bấm tim = tín hiệu thích mạnh hơn hành vi nghe bình thường
   // Hệ số +5 ≈ tương đương nghe gần hết bài 1 lần
   const favorites = await Favorite.findAll({
@@ -134,7 +133,7 @@ async function buildUserSongInteractionMatrix() {
     addScore(fav.song_id, fav.user_id, 5);
   }
 
-  // ── NGUỒN 3: Rating (Explicit — Scored Feedback) ───────
+  // NGUỒN 3: Rating (Explicit — Scored Feedback) 
   // User chấm sao từ 1–5, nhân 2 để đưa về thang [2, 10]
   // Giúp đồng bộ magnitude với điểm activity (thang ~8)
   const ratings = await Rating.findAll({
@@ -147,10 +146,6 @@ async function buildUserSongInteractionMatrix() {
 
   return matrix;
 }
-
-/* =========================================================
-   EXPORTS
-   ========================================================= */
 
 module.exports = {
   calculateActivityScore,

@@ -33,9 +33,8 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
 
   return (
     <div className="explore-container">
+      <SimilarSongsSection songId={currentSongId} limit={12} />
       <div className="make-for">
-        <SimilarSongsSection songId={currentSongId} limit={9} />
-
         {/* ── Recommendation section (real data) ── */}
         {!loading && userId ? (
           <RecommendationSection userId={userId} limit={10} />

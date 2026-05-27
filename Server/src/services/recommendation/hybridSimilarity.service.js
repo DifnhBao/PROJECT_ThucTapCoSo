@@ -1,13 +1,18 @@
-const { Song }                          = require("../../models");
-const { SongSimilarity }               = require("../../models");
-const { getSongMetadata,
-        calculateMetadataSimilarity }  = require("./metadataSimilarity.service");
-const { buildUserSongInteractionMatrix,
-}                                       = require("./interactionScoring.service");
-const { calculateBehavioralSimilarity } = require("./behavioralSimilarity.service");
+const { Song } = require("../../models");
+const { SongSimilarity } = require("../../models");
+const {
+  getSongMetadata,
+  calculateMetadataSimilarity,
+} = require("./metadataSimilarity.service");
+const {
+  buildUserSongInteractionMatrix,
+} = require("./interactionScoring.service");
+const {
+  calculateBehavioralSimilarity,
+} = require("./behavioralSimilarity.service");
 
 /* =========================================================
-   PHẦN 1: TẠO CÂU "REASON" DỄ HIỂU
+   PHẦN 1: TẠO CÂU REASON DỄ HIỂU
    ========================================================= */
 
 /**
@@ -18,15 +23,25 @@ const { calculateBehavioralSimilarity } = require("./behavioralSimilarity.servic
 function buildReason(metaDetail, behavDetail) {
   const parts = [];
 
-  const commonGenres = Array.isArray(metaDetail?.common_genres) ? metaDetail.common_genres : [];
-  const commonMoods = Array.isArray(metaDetail?.common_moods) ? metaDetail.common_moods : [];
-  const commonArtists = Array.isArray(metaDetail?.common_artists) ? metaDetail.common_artists : [];
-  const commonKeywords = Array.isArray(metaDetail?.common_keywords) ? metaDetail.common_keywords : [];
+  const commonGenres = Array.isArray(metaDetail?.common_genres)
+    ? metaDetail.common_genres
+    : [];
+  const commonMoods = Array.isArray(metaDetail?.common_moods)
+    ? metaDetail.common_moods
+    : [];
+  const commonArtists = Array.isArray(metaDetail?.common_artists)
+    ? metaDetail.common_artists
+    : [];
+  const commonKeywords = Array.isArray(metaDetail?.common_keywords)
+    ? metaDetail.common_keywords
+    : [];
 
   const behaviorReasonCode = behavDetail?.reason_code;
   const commonUserCount = Number(behavDetail?.common_user_count || 0);
   const rawCosineScore = Number(behavDetail?.raw_cosine_score || 0);
-  const adjustedBehavioralScore = Number(behavDetail?.adjusted_behavioral_score || 0);
+  const adjustedBehavioralScore = Number(
+    behavDetail?.adjusted_behavioral_score || 0,
+  );
   const confidence = Number(behavDetail?.confidence || 0);
 
   if (commonGenres.length > 0) {
@@ -52,9 +67,13 @@ function buildReason(metaDetail, behavDetail) {
     adjustedBehavioralScore > 0
   ) {
     if (confidence >= 0.5) {
-      parts.push(`có ${commonUserCount} người dùng chung củng cố tín hiệu hành vi`);
+      parts.push(
+        `có ${commonUserCount} người dùng chung củng cố tín hiệu hành vi`,
+      );
     } else {
-      parts.push(`tín hiệu hành vi còn hạn chế (${commonUserCount} người dùng chung)`);
+      parts.push(
+        `tín hiệu hành vi còn hạn chế (${commonUserCount} người dùng chung)`,
+      );
     }
   }
 
@@ -88,7 +107,7 @@ function computeHybridPair(metaA, metaB, matrix) {
   const { score: metadataScore, detail: metaDetail } =
     calculateMetadataSimilarity(metaA, metaB);
 
-  // Behavioral (Collaborative) score
+  // Behavioral score
   const { score: behavioralScore, detail: behavDetail } =
     calculateBehavioralSimilarity(metaA.song_id, metaB.song_id, matrix);
 
@@ -100,8 +119,8 @@ function computeHybridPair(metaA, metaB, matrix) {
     : metadataScore;
 
   return {
-    finalScore:      Math.round(finalScore      * 10000) / 10000,
-    metadataScore:   Math.round(metadataScore   * 10000) / 10000,
+    finalScore: Math.round(finalScore * 10000) / 10000,
+    metadataScore: Math.round(metadataScore * 10000) / 10000,
     behavioralScore: Math.round(behavioralScore * 10000) / 10000,
     metaDetail,
     behavDetail,
@@ -133,10 +152,10 @@ async function rebuildAllSongSimilarities({ limit } = {}) {
   const parsedLimit = Number.parseInt(limit, 10);
   const hasLimit = Number.isInteger(parsedLimit) && parsedLimit > 0;
   console.log(
-    `\n[HybridSimilarity] ▶ Bắt đầu rebuild. Limit applied: ${hasLimit ? parsedLimit : "none"}`
+    `\n[HybridSimilarity] ▶ Bắt đầu rebuild. Limit applied: ${hasLimit ? parsedLimit : "none"}`,
   );
 
-  // ── BƯỚC 1: Lấy danh sách bài hát hợp lệ ─────────────────
+  // BƯỚC 1: Lấy danh sách bài hát hợp lệ
   const songWhere = { is_visible: true, status: "approved" };
   const totalEligibleSongs = await Song.count({ where: songWhere });
   const findOptions = {
@@ -152,12 +171,16 @@ async function rebuildAllSongSimilarities({ limit } = {}) {
   const songs = await Song.findAll(findOptions);
 
   const songCount = songs.length;
-  console.log(`[HybridSimilarity] ✔ Total eligible songs: ${totalEligibleSongs}`);
+  console.log(
+    `[HybridSimilarity] ✔ Total eligible songs: ${totalEligibleSongs}`,
+  );
   console.log(`[HybridSimilarity] ✔ Songs processed: ${songCount}`);
   console.log(`[HybridSimilarity] ✔ Limit applied: ${hasLimit ? "yes" : "no"}`);
 
   if (songCount < 2) {
-    console.log("[HybridSimilarity] ⚠ Cần ít nhất 2 bài hát để tính tương đồng. Bỏ qua.");
+    console.log(
+      "[HybridSimilarity] ⚠ Cần ít nhất 2 bài hát để tính tương đồng. Bỏ qua.",
+    );
     return {
       processed_pairs: 0,
       song_count: songCount,
@@ -170,35 +193,39 @@ async function rebuildAllSongSimilarities({ limit } = {}) {
 
   const songIds = songs.map((s) => s.song_id);
 
-  // ── BƯỚC 2: Build ma trận tương tác 1 lần ────────────────
-  console.log("[HybridSimilarity] ⏳ Đang build ma trận tương tác người dùng...");
+  // BƯỚC 2: Build ma trận tương tác 1 lần
+  console.log(
+    "[HybridSimilarity] ⏳ Đang build ma trận tương tác người dùng...",
+  );
   const matrix = await buildUserSongInteractionMatrix();
-  console.log(`[HybridSimilarity] ✔ Ma trận sẵn sàng. ${matrix.size} bài hát có dữ liệu hành vi.`);
+  console.log(
+    `[HybridSimilarity] ✔ Ma trận sẵn sàng. ${matrix.size} bài hát có dữ liệu hành vi.`,
+  );
 
-  // ── BƯỚC 3: Lấy metadata từng bài song song ──────────────
+  // BƯỚC 3: Lấy metadata từng bài song song
   console.log("[HybridSimilarity] ⏳ Đang tải metadata bài hát...");
-  const metadataList = await Promise.all(songIds.map((id) => getSongMetadata(id)));
+  const metadataList = await Promise.all(
+    songIds.map((id) => getSongMetadata(id)),
+  );
 
   // Map để tra cứu nhanh theo song_id
   const metadataMap = new Map(metadataList.map((m) => [m.song_id, m]));
   console.log("[HybridSimilarity] ✔ Metadata đã sẵn sàng.");
 
-  // ── BƯỚC 4: Duyệt cặp và tính điểm ──────────────────────
+  // BƯỚC 4: Duyệt cặp và tính điểm 
   const totalPairs = (songCount * (songCount - 1)) / 2;
-  console.log(`[HybridSimilarity] ⏳ Bắt đầu tính ${totalPairs} cặp bài hát...`);
+  console.log(
+    `[HybridSimilarity] ⏳ Bắt đầu tính ${totalPairs} cặp bài hát...`,
+  );
 
   let processedPairs = 0;
   const BATCH_SIZE = 200; // Số cặp ghi vào DB mỗi lần để tránh query quá lớn
-  let upsertBuffer = [];  // [{song_id_1, song_id_2, ...}, ...]
+  let upsertBuffer = []; // [{song_id_1, song_id_2, ...}, ...]
 
   const flushBuffer = async () => {
     if (upsertBuffer.length === 0) return;
-    // upsert = INSERT ... ON DUPLICATE KEY UPDATE (hoạt động nhờ unique index uq_song_pair)
-    await Promise.all(
-      upsertBuffer.map((row) =>
-        SongSimilarity.upsert(row)
-      )
-    );
+
+    await Promise.all(upsertBuffer.map((row) => SongSimilarity.upsert(row)));
     upsertBuffer = [];
   };
 
@@ -208,34 +235,42 @@ async function rebuildAllSongSimilarities({ limit } = {}) {
     for (let j = i + 1; j < songCount; j++) {
       const metaB = metadataMap.get(songIds[j]);
 
-      const { finalScore, metadataScore, behavioralScore, metaDetail, behavDetail } =
-        computeHybridPair(metaA, metaB, matrix);
+      const {
+        finalScore,
+        metadataScore,
+        behavioralScore,
+        metaDetail,
+        behavDetail,
+      } = computeHybridPair(metaA, metaB, matrix);
 
-      const reason  = buildReason(metaDetail, behavDetail);
-      const detail  = { metadata_detail: metaDetail, behavioral_detail: behavDetail };
-      const now     = new Date();
+      const reason = buildReason(metaDetail, behavDetail);
+      const detail = {
+        metadata_detail: metaDetail,
+        behavioral_detail: behavDetail,
+      };
+      const now = new Date();
 
       // Lưu 2 chiều để query "WHERE song_id_1 = X" luôn hoạt động
       upsertBuffer.push({
-        song_id_1:        metaA.song_id,
-        song_id_2:        metaB.song_id,
-        metadata_score:   metadataScore,
+        song_id_1: metaA.song_id,
+        song_id_2: metaB.song_id,
+        metadata_score: metadataScore,
         behavioral_score: behavioralScore,
-        final_score:      finalScore,
+        final_score: finalScore,
         reason,
         detail,
-        updated_at:       now,
+        updated_at: now,
       });
 
       upsertBuffer.push({
-        song_id_1:        metaB.song_id,
-        song_id_2:        metaA.song_id,
-        metadata_score:   metadataScore,
+        song_id_1: metaB.song_id,
+        song_id_2: metaA.song_id,
+        metadata_score: metadataScore,
         behavioral_score: behavioralScore,
-        final_score:      finalScore,
+        final_score: finalScore,
         reason,
         detail,
-        updated_at:       now,
+        updated_at: now,
       });
 
       processedPairs++;
@@ -248,7 +283,9 @@ async function rebuildAllSongSimilarities({ limit } = {}) {
       // Log tiến độ mỗi 500 cặp
       if (processedPairs % 500 === 0) {
         const pct = ((processedPairs / totalPairs) * 100).toFixed(1);
-        console.log(`[HybridSimilarity]   ... ${processedPairs}/${totalPairs} cặp (${pct}%)`);
+        console.log(
+          `[HybridSimilarity]   ... ${processedPairs}/${totalPairs} cặp (${pct}%)`,
+        );
       }
     }
   }
@@ -258,25 +295,21 @@ async function rebuildAllSongSimilarities({ limit } = {}) {
 
   const durationMs = Date.now() - startTime;
   console.log(
-    `[HybridSimilarity] ✅ Hoàn thành! ${processedPairs} cặp xử lý trong ${(durationMs / 1000).toFixed(2)}s.\n`
+    `[HybridSimilarity] ✅ Hoàn thành! ${processedPairs} cặp xử lý trong ${(durationMs / 1000).toFixed(2)}s.\n`,
   );
 
   return {
     processed_pairs: processedPairs,
-    song_count:      songCount,
-    duration_ms:     durationMs,
+    song_count: songCount,
+    duration_ms: durationMs,
     total_eligible_songs: totalEligibleSongs,
     processed_song_count: songCount,
     limit_applied: hasLimit,
   };
 }
 
-/* =========================================================
-   EXPORTS
-   ========================================================= */
-
 module.exports = {
   rebuildAllSongSimilarities,
-  computeHybridPair, // Export để dễ unit test từng cặp
-  buildReason,       // Export để test câu reason riêng lẻ
+  computeHybridPair, 
+  buildReason, 
 };

@@ -1,21 +1,28 @@
-const { Op }                           = require("sequelize");
-const { SongSimilarity, Song, Artist,
-        Genre, Favorite, UserActivity,
-        Rating }                        = require("../../models");
-const { getSongMetadata,
-        calculateMetadataSimilarity }  = require("./metadataSimilarity.service");
-const { buildUserSongInteractionMatrix } = require("./interactionScoring.service");
-const { calculateBehavioralSimilarity }  = require("./behavioralSimilarity.service");
-const { buildReason }                    = require("./hybridSimilarity.service");
+const { Op } = require("sequelize");
+const {
+  SongSimilarity,
+  Song,
+  Artist,
+  Genre,
+  Favorite,
+  UserActivity,
+  Rating,
+} = require("../../models");
+const {
+  getSongMetadata,
+  calculateMetadataSimilarity,
+} = require("./metadataSimilarity.service");
+const {
+  buildUserSongInteractionMatrix,
+} = require("./interactionScoring.service");
+const {
+  calculateBehavioralSimilarity,
+} = require("./behavioralSimilarity.service");
+const { buildReason } = require("./hybridSimilarity.service");
 
 const DEBUG_RECOMMENDATION =
   process.env.DEBUG_RECOMMENDATION === "true" ||
   process.env.RECOMMENDATION_DEBUG === "true";
-
-/* =========================================================
-   HELPER: include để lấy thông tin đầy đủ của Song
-   Dùng chung ở nhiều chỗ để không lặp code.
-   ========================================================= */
 
 const SONG_INCLUDE = [
   {
@@ -69,11 +76,15 @@ async function getSimilarSongs(songId, limit = 10) {
     include: [
       {
         model: Song,
-        as: "song2",                         // Bài tương tự (phía B)
+        as: "song2", // Bài tương tự (phía B)
         where: { is_visible: true, status: "approved" },
         attributes: [
-          "song_id", "title", "duration",
-          "audio_url", "image_url", "view_count",
+          "song_id",
+          "title",
+          "duration",
+          "audio_url",
+          "image_url",
+          "view_count",
         ],
         include: SONG_INCLUDE,
       },
@@ -83,13 +94,13 @@ async function getSimilarSongs(songId, limit = 10) {
   if (rows.length > 0) {
     return rows.map((row) => ({
       // Thông tin bài hát tương tự
-      song:             row.song2,
+      song: row.song2,
       // Điểm & lý do
-      final_score:      row.final_score,
-      metadata_score:   row.metadata_score,
+      final_score: row.final_score,
+      metadata_score: row.metadata_score,
       behavioral_score: row.behavioral_score,
-      reason:           row.reason,
-      detail:           row.detail,
+      reason: row.reason,
+      detail: row.detail,
     }));
   }
 
@@ -114,15 +125,19 @@ async function getRealtimeMetadataSimilarSongs(songId, limit) {
         status: "approved",
       },
       attributes: [
-        "song_id", "title", "duration",
-        "audio_url", "image_url", "view_count",
+        "song_id",
+        "title",
+        "duration",
+        "audio_url",
+        "image_url",
+        "view_count",
       ],
       include: SONG_INCLUDE,
     }),
   ]);
 
   const metadataList = await Promise.all(
-    songs.map((song) => getSongMetadata(song.song_id))
+    songs.map((song) => getSongMetadata(song.song_id)),
   );
   const songMap = new Map(songs.map((song) => [song.song_id, song]));
   const fallbackReason =
@@ -156,6 +171,174 @@ async function getRealtimeMetadataSimilarSongs(songId, limit) {
 }
 
 /* =========================================================
+   1b. fallbackRecommendationsBySeedMetadata — fallback cá nhân hóa
+   ========================================================= */
+
+/**
+ * Fallback cá nhân hóa khi user có seed songs nhưng các seed đó chưa có
+ * dữ liệu trong bảng song_similarities.
+ *
+ * Khác với trending fallback, hàm này vẫn tận dụng sở thích user:
+ * - lấy các bài user đã nghe/yêu thích/rating cao làm seed
+ * - so sánh metadata của seed với các bài còn lại
+ * - cộng điểm theo weight của từng seed
+ *
+ * @param {Map<number, number>} seedWithWeight song_id -> seed weight
+ * @param {number} limit
+ * @returns {Promise<Object[]>}
+ */
+async function fallbackRecommendationsBySeedMetadata(
+  seedWithWeight,
+  limit = 10,
+) {
+  const seedIds = [...seedWithWeight.keys()];
+  const seedSongIds = new Set(seedIds);
+
+  if (seedIds.length === 0) {
+    return getTrendingSongs(limit);
+  }
+
+  const seedMetadataList = (
+    await Promise.all(
+      seedIds.map(async (seedId) => {
+        try {
+          const meta = await getSongMetadata(seedId);
+          return { meta, weight: seedWithWeight.get(seedId) || 1 };
+        } catch (error) {
+          console.warn(
+            `[Recommendation] Skip seed metadata fallback for song_id=${seedId}: ${error.message}`,
+          );
+          return null;
+        }
+      }),
+    )
+  ).filter(Boolean);
+
+  if (seedMetadataList.length === 0) {
+    return getTrendingSongs(limit);
+  }
+
+  const candidateSongs = await Song.findAll({
+    where: {
+      song_id: { [Op.notIn]: seedIds },
+      is_visible: true,
+      status: "approved",
+    },
+    attributes: SONG_ATTRIBUTES,
+    include: SONG_INCLUDE,
+  });
+
+  if (candidateSongs.length === 0) {
+    return getTrendingSongs(limit);
+  }
+
+  const candidateMetadataList = (
+    await Promise.all(
+      candidateSongs.map(async (song) => {
+        try {
+          const meta = await getSongMetadata(song.song_id);
+          return meta;
+        } catch (error) {
+          console.warn(
+            `[Recommendation] Skip candidate metadata fallback for song_id=${song.song_id}: ${error.message}`,
+          );
+          return null;
+        }
+      }),
+    )
+  ).filter(Boolean);
+
+  const candidateSongMap = new Map(
+    candidateSongs.map((song) => [song.song_id, song]),
+  );
+  const candidateMap = new Map();
+
+  for (const { meta: seedMeta, weight } of seedMetadataList) {
+    for (const candidateMeta of candidateMetadataList) {
+      if (seedSongIds.has(candidateMeta.song_id)) continue;
+
+      const { score, detail } = calculateMetadataSimilarity(
+        seedMeta,
+        candidateMeta,
+      );
+      if (score <= 0) continue;
+
+      if (!candidateMap.has(candidateMeta.song_id)) {
+        candidateMap.set(candidateMeta.song_id, {
+          accumulated_score: 0,
+          endorsed_by_count: 0,
+          best_detail: detail,
+          best_score: score,
+          common_reasons: [],
+        });
+      }
+
+      const entry = candidateMap.get(candidateMeta.song_id);
+      entry.accumulated_score += score * weight;
+      entry.endorsed_by_count += 1;
+
+      if (score > entry.best_score) {
+        entry.best_score = score;
+        entry.best_detail = detail;
+      }
+
+      const commonGenres = detail?.common_genres || [];
+      const commonMoods = detail?.common_moods || [];
+      const commonArtists = detail?.common_artists || [];
+
+      if (commonGenres.length > 0) {
+        entry.common_reasons.push(
+          `cùng thể loại ${commonGenres.slice(0, 2).join(", ")}`,
+        );
+      }
+      if (commonMoods.length > 0) {
+        entry.common_reasons.push(
+          `cùng mood ${commonMoods.slice(0, 2).join(", ")}`,
+        );
+      }
+      if (commonArtists.length > 0) {
+        entry.common_reasons.push(
+          `cùng nghệ sĩ ${commonArtists.slice(0, 2).join(", ")}`,
+        );
+      }
+    }
+  }
+
+  const ranked = [...candidateMap.entries()]
+    .sort(([, a], [, b]) => b.accumulated_score - a.accumulated_score)
+    .slice(0, limit);
+
+  const recommendations = ranked
+    .filter(([songId]) => candidateSongMap.has(songId))
+    .map(([songId, data]) => {
+      const uniqueReasons = [...new Set(data.common_reasons)].slice(0, 3);
+      const reason =
+        uniqueReasons.length > 0
+          ? `Gợi ý dựa trên đặc trưng giống các bài bạn đã yêu thích/đánh giá/nghe gần đây: ${uniqueReasons.join(", ")}.`
+          : "Gợi ý dựa trên đặc trưng giống các bài bạn đã yêu thích/đánh giá/nghe gần đây.";
+
+      return {
+        song: candidateSongMap.get(songId),
+        accumulated_score: Math.round(data.accumulated_score * 10000) / 10000,
+        reason,
+        endorsed_by_count: data.endorsed_by_count,
+        is_discovery_candidate: true,
+        fallback_source: "seed_metadata",
+        detail: {
+          metadata_detail: data.best_detail,
+          source: "seed_metadata_fallback",
+        },
+      };
+    });
+
+  if (recommendations.length === 0) {
+    return getTrendingSongs(limit);
+  }
+
+  return recommendations;
+}
+
+/* =========================================================
    2. getRecommendationsForUser — Gợi ý cá nhân hoá
    ========================================================= */
 
@@ -184,7 +367,7 @@ async function getRealtimeMetadataSimilarSongs(songId, limit) {
  * @returns {Promise<Object[]>}
  */
 async function getRecommendationsForUser(userId, limit = 10) {
-  /* ── BƯỚC 1: Lấy seed songs ──────────────────────────── */
+  /* BƯỚC 1: Lấy seed songs  */
 
   // Bài nghe gần đây
   const recentActivities = await UserActivity.findAll({
@@ -204,7 +387,7 @@ async function getRecommendationsForUser(userId, limit = 10) {
   const heardTooMuch = new Set(
     [...listenCountMap.entries()]
       .filter(([, count]) => count > 2)
-      .map(([song_id]) => song_id)
+      .map(([song_id]) => song_id),
   );
 
   // Seed 1: Top 10 bài nghe gần nhất (deduplicated, giữ thứ tự)
@@ -234,8 +417,8 @@ async function getRecommendationsForUser(userId, limit = 10) {
   // Favorite > Recent > Rating (favorite là tín hiệu rõ nhất)
   const seedWithWeight = [
     ...favoriteSeedIds.map((id) => ({ song_id: id, weight: 1.5 })),
-    ...recentSeedIds.map((id)   => ({ song_id: id, weight: 1.0 })),
-    ...ratingSeedIds.map((id)   => ({ song_id: id, weight: 1.2 })),
+    ...recentSeedIds.map((id) => ({ song_id: id, weight: 1.0 })),
+    ...ratingSeedIds.map((id) => ({ song_id: id, weight: 1.2 })),
   ].reduce((acc, { song_id, weight }) => {
     // Nếu 1 bài xuất hiện ở nhiều nguồn → giữ trọng số cao nhất
     if (!acc.has(song_id) || acc.get(song_id) < weight) {
@@ -266,9 +449,8 @@ async function getRecommendationsForUser(userId, limit = 10) {
   const favoriteSongIds = new Set(favoriteSeedIds);
   const seedSongIds = new Set(seedWithWeight.keys());
 
-  /* ── BƯỚC 2 & 3: Expand seed và gộp điểm ────────────── */
+  /* BƯỚC 2 & 3: Expand seed và gộp điểm */
   const candidateMap = new Map();
-  // candidateMap: song_id → { accumulated_score, reasons[] }
 
   for (const [seedId, weight] of seedWithWeight.entries()) {
     const similars = await SongSimilarity.findAll({
@@ -321,10 +503,10 @@ async function getRecommendationsForUser(userId, limit = 10) {
       "songs.length": 0,
       "recommendations.length": 0,
     });
-    return getTrendingSongs(limit);
+    return fallbackRecommendationsBySeedMetadata(seedWithWeight, limit);
   }
 
-  /* ── BƯỚC 4: Sắp xếp và lấy top limit ──────────────── */
+  /* BƯỚC 4: Sắp xếp và lấy top limit */
   const topCandidates = [...candidateMap.entries()]
     .sort(([, a], [, b]) => {
       if (a.is_discovery_candidate !== b.is_discovery_candidate) {
@@ -347,10 +529,10 @@ async function getRecommendationsForUser(userId, limit = 10) {
       "songs.length": 0,
       "recommendations.length": 0,
     });
-    return getTrendingSongs(limit);
+    return fallbackRecommendationsBySeedMetadata(seedWithWeight, limit);
   }
 
-  /* ── BƯỚC 5: Lấy đầy đủ thông tin bài hát ──────────── */
+  /* BƯỚC 5: Lấy đầy đủ thông tin bài hát */
   const candidateSongIds = topCandidates.map(([song_id]) => song_id);
 
   const songs = await Song.findAll({
@@ -394,7 +576,7 @@ async function getRecommendationsForUser(userId, limit = 10) {
   });
 
   if (recommendations.length === 0) {
-    return getTrendingSongs(limit);
+    return fallbackRecommendationsBySeedMetadata(seedWithWeight, limit);
   }
 
   return recommendations;
@@ -485,15 +667,15 @@ async function getSongPairDebug(songIdA, songIdB) {
   // Nếu đã có trong DB → trả luôn, kèm thông tin bài hát
   if (existing) {
     return {
-      source:           "cache",     // Đọc từ DB pre-computed
-      song_a:           songA,
-      song_b:           songB,
-      final_score:      existing.final_score,
-      metadata_score:   existing.metadata_score,
+      source: "cache", // Đọc từ DB pre-computed
+      song_a: songA,
+      song_b: songB,
+      final_score: existing.final_score,
+      metadata_score: existing.metadata_score,
       behavioral_score: existing.behavioral_score,
-      reason:           existing.reason,
-      detail:           existing.detail,
-      updated_at:       existing.updated_at,
+      reason: existing.reason,
+      detail: existing.detail,
+      updated_at: existing.updated_at,
     };
   }
 
@@ -518,28 +700,25 @@ async function getSongPairDebug(songIdA, songIdB) {
   const reason = buildReason(metaDetail, behavDetail);
 
   return {
-    source:           "realtime",   // Tính trực tiếp, chưa cache
-    song_a:           songA,
-    song_b:           songB,
-    final_score:      Math.round(finalScore      * 10000) / 10000,
-    metadata_score:   Math.round(metadataScore   * 10000) / 10000,
+    source: "realtime", // Tính trực tiếp, chưa cache
+    song_a: songA,
+    song_b: songB,
+    final_score: Math.round(finalScore * 10000) / 10000,
+    metadata_score: Math.round(metadataScore * 10000) / 10000,
     behavioral_score: Math.round(behavioralScore * 10000) / 10000,
     reason,
     detail: {
-      metadata_detail:   metaDetail,
+      metadata_detail: metaDetail,
       behavioral_detail: behavDetail,
     },
     updated_at: null,
   };
 }
 
-/* =========================================================
-   EXPORTS
-   ========================================================= */
-
 module.exports = {
   getSimilarSongs,
   getRecommendationsForUser,
   getSongPairDebug,
   getTrendingSongs,
+  fallbackRecommendationsBySeedMetadata,
 };

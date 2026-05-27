@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { FaPlay, FaPause } from "react-icons/fa";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { FaPlay, FaPause, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { RiResetRightLine } from "react-icons/ri";
 import { PiSparkle } from "react-icons/pi";
 
@@ -20,6 +20,7 @@ const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
   const [songs, setSongs] = useState<RecommendationSong[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   const { setPlaylist, currentTrack, isPlaying, togglePlay } = usePlayer();
 
@@ -51,6 +52,16 @@ const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
       // Truyền source "recommendation" để activity logger ghi đúng
       setPlaylist(songs, index, "recommendation");
     }
+  };
+
+  const scrollList = (direction: "left" | "right") => {
+    const list = listRef.current;
+    if (!list) return;
+
+    list.scrollBy({
+      left: direction === "left" ? -list.clientWidth * 0.85 : list.clientWidth * 0.85,
+      behavior: "smooth",
+    });
   };
 
   /* ---------- Skeleton ---------- */
@@ -118,18 +129,38 @@ const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
           <PiSparkle className="rec-section-icon" />
           Đề xuất cho bạn
         </h2>
-        <button
-          id="refresh-rec-for-you"
-          className="rec-refresh-btn"
-          onClick={fetchData}
-          title="Làm mới"
-        >
-          <RiResetRightLine />
-          Làm mới
-        </button>
+        <div className="rec-header-actions">
+          <div className="rec-scroll-controls" aria-label="Cuộn đề xuất">
+            <button
+              className="rec-scroll-btn"
+              type="button"
+              onClick={() => scrollList("left")}
+              title="Cuộn sang trái"
+            >
+              <FaChevronLeft />
+            </button>
+            <button
+              className="rec-scroll-btn"
+              type="button"
+              onClick={() => scrollList("right")}
+              title="Cuộn sang phải"
+            >
+              <FaChevronRight />
+            </button>
+          </div>
+          <button
+            id="refresh-rec-for-you"
+            className="rec-refresh-btn"
+            onClick={fetchData}
+            title="Làm mới"
+          >
+            <RiResetRightLine />
+            Làm mới
+          </button>
+        </div>
       </div>
 
-      <div className="rec-grid">
+      <div className="rec-grid" ref={listRef}>
         {songs.map((song, index) => {
           const isActive = currentTrack?.trackId === song.trackId;
           return (

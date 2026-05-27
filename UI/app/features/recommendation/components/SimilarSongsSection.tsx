@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { FaPlay, FaPause } from "react-icons/fa";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { FaPlay, FaPause, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { PiMusicNoteSimpleBold } from "react-icons/pi";
 
 import { getSimilarSongs } from "../recommendation.api";
 import type { RecommendationSong } from "../recommendation.types";
 import { usePlayer } from "@/app/features/player/context/PlayerContext";
-import RecommendationReason from "./RecommendationReason";
 import "@/app/features/recommendation/recommendation.css";
 
 interface Props {
@@ -19,6 +18,7 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
   const [songs, setSongs] = useState<RecommendationSong[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   const { setPlaylist, currentTrack, isPlaying, togglePlay } = usePlayer();
 
@@ -59,6 +59,26 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
     }
   };
 
+  const getSimilarityLabel = (score?: number) => {
+    if (score === undefined) return null;
+    const percent =
+      score >= 0 && score <= 1 ? score * 100 : Math.min(score, 100);
+    return `Độ tương đồng: ${percent.toFixed(0)}%`;
+  };
+
+  const scrollList = (direction: "left" | "right") => {
+    const list = listRef.current;
+    if (!list) return;
+
+    list.scrollBy({
+      left:
+        direction === "left"
+          ? -list.clientWidth * 0.85
+          : list.clientWidth * 0.85,
+      behavior: "smooth",
+    });
+  };
+
   /* ---------- Không có songId ---------- */
   if (!songId) {
     return (
@@ -68,7 +88,11 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
             <PiMusicNoteSimpleBold className="rec-section-icon" />
             Bài hát tương tự
           </h3>
-          <p className="similar-section-subtitle">Dựa trên bài đang phát</p>
+          <p className="similar-section-subtitle">
+            {currentTrack?.title
+              ? `Dựa trên bài đang phát: ${currentTrack.title}`
+              : "Dựa trên bài đang phát"}
+          </p>
         </div>
         <p className="rec-empty">Chọn một bài hát để xem các bài tương tự.</p>
       </div>
@@ -80,11 +104,15 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
     return (
       <div className="similar-section">
         <div className="similar-section-header">
-          <h3 className="similar-section-title">
+          <h2 className="similar-section-title">
             <PiMusicNoteSimpleBold className="rec-section-icon" />
             Bài hát tương tự
-          </h3>
-          <p className="similar-section-subtitle">Dựa trên bài đang phát</p>
+          </h2>
+          <p className="similar-section-subtitle">
+            {currentTrack?.title
+              ? `Dựa trên bài đang phát: ${currentTrack.title}`
+              : "Dựa trên bài đang phát"}
+          </p>
         </div>
         <div className="similar-list">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -110,7 +138,11 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
             <PiMusicNoteSimpleBold className="rec-section-icon" />
             Bài hát tương tự
           </h3>
-          <p className="similar-section-subtitle">Dựa trên bài đang phát</p>
+          <p className="similar-section-subtitle">
+            {currentTrack?.title
+              ? `Dựa trên bài đang phát: ${currentTrack.title}`
+              : "Dựa trên bài đang phát"}
+          </p>
         </div>
         <p className="rec-empty">{error}</p>
       </div>
@@ -124,16 +156,41 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
   return (
     <div className="similar-section">
       <div className="similar-section-header">
-        <h3 className="similar-section-title">
-          <PiMusicNoteSimpleBold className="rec-section-icon" />
-          Bài hát tương tự
-        </h3>
-        <p className="similar-section-subtitle">Dựa trên bài đang phát</p>
+        <div>
+          <h3 className="similar-section-title">
+            <PiMusicNoteSimpleBold className="rec-section-icon" />
+            Bài hát tương tự
+          </h3>
+          <p className="similar-section-subtitle">
+            {currentTrack?.title
+              ? `Dựa trên bài đang phát: ${currentTrack.title}`
+              : "Dựa trên bài đang phát"}
+          </p>
+        </div>
+        <div className="rec-scroll-controls" aria-label="Cuộn bài hát tương tự">
+          <button
+            className="rec-scroll-btn"
+            type="button"
+            onClick={() => scrollList("left")}
+            title="Cuộn sang trái"
+          >
+            <FaChevronLeft />
+          </button>
+          <button
+            className="rec-scroll-btn"
+            type="button"
+            onClick={() => scrollList("right")}
+            title="Cuộn sang phải"
+          >
+            <FaChevronRight />
+          </button>
+        </div>
       </div>
 
-      <div className="similar-list">
+      <div className="similar-list" ref={listRef}>
         {songs.map((song, index) => {
           const isActive = currentTrack?.trackId === song.trackId;
+          const similarityLabel = getSimilarityLabel(song.finalScore);
           return (
             <div
               key={song.trackId}
@@ -161,19 +218,27 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
               <div className="similar-info">
                 <span className="similar-title">{song.title}</span>
                 <span className="similar-artist">{song.artistName}</span>
-                <RecommendationReason song={song} />
+                {song.reason && (
+                  <span className="similar-reason">{song.reason}</span>
+                )}
+                {similarityLabel && (
+                  <span className="similar-score-badge">
+                    {similarityLabel}
+                  </span>
+                )}
               </div>
 
-              {/* Score badge */}
-              {song.finalScore !== undefined && (
-                <span className="similar-score-badge">
-                  {song.finalScore >= 0 && song.finalScore <= 1
-                    ? `Độ tương đồng: ${(song.finalScore * 100).toFixed(0)}%`
-                    : song.finalScore > 1
-                    ? `Điểm: ${song.finalScore.toFixed(2)}`
-                    : `Điểm: ${song.finalScore.toFixed(2)}`}
-                </span>
-              )}
+              {/* <button
+                className="similar-play-button"
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handlePlay(index);
+                }}
+                title={isActive && isPlaying ? "Tạm dừng" : "Phát"}
+              >
+                {isActive && isPlaying ? <FaPause /> : <FaPlay />}
+              </button> */}
             </div>
           );
         })}

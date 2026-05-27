@@ -70,7 +70,6 @@ function calculateBehavioralSimilarity(songIdA, songIdB, matrix) {
   const vectorBSize = vectorB ? vectorB.size : 0;
 
   // Xử lý Cold Start: Thiếu dữ liệu tương tác để kết luận có ý nghĩa
-  // (ví dụ bài hát quá mới, hoặc chưa có ai nghe chung)
   if (!vectorA || !vectorB || vectorASize === 0 || vectorBSize === 0) {
     return {
       score: 0,
@@ -119,10 +118,6 @@ function calculateBehavioralSimilarity(songIdA, songIdB, matrix) {
     }
   };
 }
-
-/* =========================================================
-   EXPORTS
-   ========================================================= */
 
 module.exports = {
   cosineSimilarity,
