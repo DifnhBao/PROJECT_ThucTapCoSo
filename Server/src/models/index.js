@@ -13,6 +13,7 @@ const SongGenre = require("./song_genres.model");
 const Playlist = require("./playlist.model");
 const PlaylistSong = require("./playlist_song.model");
 const UserActivity = require("./user_activity.model")(sequelize, DataTypes);
+const SongSimilarity = require("./song_similarity.model");
 
 // 1. User - RefreshToken (Quan hệ 1-N)
 // Một User có nhiều Token
@@ -124,6 +125,32 @@ Playlist.belongsTo(User, {
 // Truyền object chứa các models mà UserActivity cần liên kết (User, Song)
 UserActivity.associate({ User, Song });
 
+// SongSimilarity -> Song (2 chiều: song_id_1 và song_id_2)
+// constraints: false để tránh ràng buộc FK cứng, giúp bulk-upsert nhanh hơn khi engine chạy
+SongSimilarity.belongsTo(Song, {
+  foreignKey: "song_id_1",
+  as: "song1",
+  constraints: false,
+});
+
+SongSimilarity.belongsTo(Song, {
+  foreignKey: "song_id_2",
+  as: "song2",
+  constraints: false,
+});
+
+Song.hasMany(SongSimilarity, {
+  foreignKey: "song_id_1",
+  as: "similaritiesAsSong1",
+  constraints: false,
+});
+
+Song.hasMany(SongSimilarity, {
+  foreignKey: "song_id_2",
+  as: "similaritiesAsSong2",
+  constraints: false,
+});
+
 /* =========================================
    HÀM ĐỒNG BỘ
 ========================================= */
@@ -151,4 +178,5 @@ module.exports = {
   Playlist,
   PlaylistSong,
   UserActivity,
+  SongSimilarity,
 };

@@ -5,7 +5,6 @@ import "@/app/components/layout/Header/AdminPage/Header.css";
 import { useAdminUser } from "@/app/features/admin/context/AdminUserContext";
 // import { logoutAdmin } from "@/app/utils/authApi";
 import { logoutAdminService } from "@/app/features/admin/service";
-import Sidebar from "@/app/components/layout/Sidebar/AdminPage/Sidebar";
 
 export default function Header() {
   const { admin, setAdmin, loading } = useAdminUser();
@@ -37,7 +36,7 @@ export default function Header() {
       </div>
 
       <div className="header-center">
-        <Sidebar />
+        {/* Sidebar moved to layout */}
       </div>
 
       <div className="header-right">

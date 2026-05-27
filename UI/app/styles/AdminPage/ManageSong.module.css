@@ -1,6 +1,6 @@
 /* ==== CONTAINER ==== */
 .container {
-  padding: 120px 200px;
+  padding: 120px 40px;
   background: #f5f6fa;
   min-height: 100vh;
   font-family: "Inter", sans-serif;
@@ -11,6 +11,29 @@
   font-weight: 700;
   color: #333;
   margin-bottom: 20px;
+}
+
+/* ==== TOP BAR ==== */
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.searchInput {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  width: 300px;
+  transition: border-color 0.2s ease;
+  color: #333;
+}
+
+.searchInput:focus {
+  border-color: rgb(88, 196, 220);
 }
 
 /* ==== ADD BUTTON ==== */
@@ -24,7 +47,6 @@
   font-size: 15px;
   font-weight: 600;
   transition: 0.2s ease;
-  margin-bottom: 20px;
 }
 
 .addButton:hover {

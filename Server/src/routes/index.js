@@ -10,6 +10,7 @@ const playlistRoutes = require("./playlist.routes");
 const ratingRoutes = require("./rating.routes");
 const favoriteRoutes = require("./favorite.route");
 const userActivityRoutes = require("./userActivity.routes");
+const recommendationRoutes = require("./recommendation.routes");
 
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
@@ -21,5 +22,6 @@ router.use("/playlists", playlistRoutes);
 router.use("/ratings", ratingRoutes);
 router.use("/favorites", favoriteRoutes);
 router.use("/activity", userActivityRoutes);
+router.use("/recommendations", recommendationRoutes);
 
 module.exports = router;

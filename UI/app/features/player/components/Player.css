@@ -4,7 +4,7 @@
   right: 20px;
   bottom: 20px;
   width: 300px;
-  height: 650px;
+  height: 680px;
   overflow: hidden;
   background: var(--tt-surface);
   border-radius: 20px;
@@ -267,11 +267,14 @@
   gap: 40px;
 }
 
-/* Hàng đợi queue */
+/* Hàng đợi queue / Similar Songs panel */
 .queue {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 .queue-header p {
   font-size: 13px;

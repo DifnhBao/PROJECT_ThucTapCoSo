@@ -1,7 +1,27 @@
 "use client";
 
 import Header from "@/app/components/layout/Header/AdminPage/Header";
-import { AdminUserProvider } from "@/app/features/admin/context/AdminUserContext";
+import Sidebar from "@/app/components/layout/Sidebar/AdminPage/Sidebar";
+import { AdminUserProvider, useAdminUser } from "@/app/features/admin/context/AdminUserContext";
+import { usePathname } from "next/navigation";
+
+function AdminLayoutContent({ children }: { children: React.ReactNode }) {
+  const { admin } = useAdminUser();
+  const pathname = usePathname();
+  const isLoginPage = pathname === "/administrator/login";
+
+  if (isLoginPage) {
+    return <div className="login-content">{children}</div>;
+  }
+
+  return (
+    <>
+      <Header />
+      <Sidebar />
+      <div className="main_content">{children}</div>
+    </>
+  );
+}
 
 export default function AdminLayout({
   children,
@@ -10,8 +30,7 @@ export default function AdminLayout({
 }) {
   return (
     <AdminUserProvider>
-      <Header />
-      <div className="main_content">{children}</div>
+      <AdminLayoutContent>{children}</AdminLayoutContent>
     </AdminUserProvider>
   );
 }

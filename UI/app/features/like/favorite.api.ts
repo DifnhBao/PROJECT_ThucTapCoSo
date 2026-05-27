@@ -1,4 +1,4 @@
-import http from "@/app/lib/axios";
+import http from "@/app/lib/http";
 
 export const getMyFavoriteSongs = async (page = 1, limit = 10) => {
   const res = await http.get(`/favorites/me`, {

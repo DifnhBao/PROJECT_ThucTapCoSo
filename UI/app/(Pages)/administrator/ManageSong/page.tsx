@@ -21,6 +21,15 @@ function SongManagement() {
   const [songs, setSongs] = useState<any[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +39,7 @@ function SongManagement() {
         const res = await fetchSongsForManage({
           page: currentPage,
           limit: 20,
-          search: "",
+          search: debouncedSearch,
         });
 
         setSongs(res.data);
@@ -43,7 +52,7 @@ function SongManagement() {
     };
 
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, debouncedSearch]);
 
   const openAddModal = () => {
     openModal("song-form", {
@@ -117,9 +126,18 @@ function SongManagement() {
     <div className={styles.container}>
       <h2 className={styles.header}>Song Management</h2>
 
-      <button className={styles.addButton} onClick={openAddModal}>
-        + Add New Song
-      </button>
+      <div className={styles.topBar}>
+        <button className={styles.addButton} onClick={openAddModal}>
+          + Add New Song
+        </button>
+        <input
+          type="text"
+          className={styles.searchInput}
+          placeholder="Search songs by title..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
 
       <table className={styles.songTable}>
         <colgroup>

@@ -1,4 +1,4 @@
-import http from "@/app/lib/axios";
+import http from "@/app/lib/http";
 
 export const rateSong = async (songId: number, score: number) => {
   const res = await http.post("/ratings/rate", {
