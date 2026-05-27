@@ -1,7 +1,7 @@
 /* Nhúng Font chữ */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
-.authContainer {
+/* .authContainer {
   font-family: "Inter", sans-serif;
   background-color: var(--tt-surface);
   width: 100%;
@@ -11,12 +11,35 @@
   box-shadow: var(--tt-shadow-md);
   border: 1px solid var(--tt-border);
   transition: all 0.3s ease;
+} */
+
+.authContainer {
+  font-family: "Inter", sans-serif;
+  background-color: var(--tt-surface);
+
+  width: 100%;
+  max-width: 480px;
+
+  /* Quan trọng: tránh tràn ngang do padding */
+  box-sizing: border-box;
+
+  /* Padding co giãn theo màn hình */
+  padding: clamp(24px, 5vw, 48px);
+
+  border-radius: 24px;
+  box-shadow: var(--tt-shadow-md);
+  border: 1px solid var(--tt-border);
+  transition: all 0.3s ease;
+
+  /* Quan trọng: không để form cao hơn màn hình */
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
 }
 
 /* Header & Logo */
 .header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: clamp(24px, 4vh, 40px);
 }
 
 .logo a {
@@ -31,7 +54,7 @@
 /* Typography */
 .title {
   color: var(--tt-text-primary);
-  font-size: 32px;
+  font-size: clamp(24px, 5vw, 32px);
   font-weight: 700;
   letter-spacing: -1px;
   margin-bottom: 12px;
@@ -42,14 +65,14 @@
   color: var(--tt-text-secondary);
   font-size: 16px;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: clamp(24px, 4vh, 40px);
 }
 
 /* Form Styles */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: clamp(16px, 3vh, 24px);
 }
 
 .formField {
@@ -162,7 +185,7 @@
 
 /* Switch Form Footer */
 .switchFormFooter {
-  margin-top: 40px;
+  margin-top: clamp(24px, 4vh, 40px);
   text-align: center;
   padding-top: 24px;
   border-top: 1px solid var(--tt-border);
@@ -186,17 +209,56 @@
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .authContainer {
-    padding: 32px 24px;
+    max-width: 100%;
+    padding: 28px 20px;
     border-radius: 16px;
+
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
   }
 
   .title {
-    font-size: 28px;
+    font-size: 26px;
+  }
+
+  .logoImg {
+    height: 40px;
+  }
+
+  .formInput {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+
+  .submitButton {
+    padding: 14px;
   }
 }
 
-.errorText {
-  color: #ff4d4f;
-  font-size: 13px;
-  margin-top: 4px;
+@media (max-height: 700px) {
+  .authContainer {
+    padding: 24px;
+    max-height: calc(100vh - 16px);
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .subtitle {
+    margin-bottom: 24px;
+  }
+
+  .form {
+    gap: 16px;
+  }
+
+  .switchFormFooter {
+    margin-top: 24px;
+    padding-top: 16px;
+  }
+
+  .logoImg {
+    height: 40px;
+  }
 }

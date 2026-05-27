@@ -279,6 +279,34 @@ const deleteSongById = async (req, res, next) => {
     // 3. Gọi service
     const result = await songService.deleteSongById(songId);
 
+    // 4. Xóa file trên Cloudinary
+    const extractPublicId = (url) => {
+      if (!url) return null;
+      const uploadIndex = url.indexOf('/upload/');
+      if (uploadIndex === -1) return null;
+      let path = url.substring(uploadIndex + 8);
+      const versionRegex = /^v\d+\//;
+      path = path.replace(versionRegex, '');
+      const lastDotIndex = path.lastIndexOf('.');
+      return lastDotIndex !== -1 ? path.substring(0, lastDotIndex) : path;
+    };
+
+    if (result.audio_url) {
+      const audioId = extractPublicId(result.audio_url);
+      if (audioId) {
+        await cloudinary.uploader.destroy(audioId, { resource_type: "video" })
+          .catch(err => console.error("Lỗi xóa audio trên Cloudinary:", err));
+      }
+    }
+
+    if (result.image_url) {
+      const imageId = extractPublicId(result.image_url);
+      if (imageId) {
+        await cloudinary.uploader.destroy(imageId)
+          .catch(err => console.error("Lỗi xóa image trên Cloudinary:", err));
+      }
+    }
+
     res.status(200).json(result);
   } catch (error) {
     if (error.status === 404) {
