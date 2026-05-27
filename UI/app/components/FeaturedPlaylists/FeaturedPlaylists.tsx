@@ -4,52 +4,11 @@ import { useState } from "react";
 import "@/app/styles/feature-playlists.css";
 import { useUser } from "@/app/features/user/context/UserContext";
 import TrackSection from "./TrackSection";
-import PlaylistSection from "./PlaylistSection";
 import ArtistSection from "../../features/artist/components/ArtistSection";
 import { SelectedItem } from "@/app/types/music";
 import RecommendationSection from "@/app/features/recommendation/components/RecommendationSection";
-
-import { RiResetRightLine } from "react-icons/ri";
-import HorizontalScroll from "../ui/HorizontalScroll";
-
-const mockTracks = [
-  {
-    id: 1,
-    title: "Anh Đã Ổn Hơn",
-    artist: "RPT MCK",
-    cover: "https://picsum.photos/300?random=1",
-  },
-  {
-    id: 2,
-    title: "Waiting For You",
-    artist: "MONO",
-    cover: "https://picsum.photos/300?random=2",
-  },
-  {
-    id: 3,
-    title: "Em Là",
-    artist: "Orange",
-    cover: "https://picsum.photos/300?random=3",
-  },
-  {
-    id: 4,
-    title: "Lạc Trôi",
-    artist: "Sơn Tùng",
-    cover: "https://picsum.photos/300?random=4",
-  },
-  {
-    id: 5,
-    title: "Nàng Thơ",
-    artist: "Hoàng Dũng",
-    cover: "https://picsum.photos/300?random=5",
-  },
-  {
-    id: 6,
-    title: "Chạy Ngay Đi",
-    artist: "Sơn Tùng",
-    cover: "https://picsum.photos/300?random=6",
-  },
-];
+import SimilarSongsSection from "@/app/features/recommendation/components/SimilarSongsSection";
+import { usePlayer } from "@/app/features/player/context/PlayerContext";
 
 interface Props {
   onSelect: (item: SelectedItem) => void;
@@ -57,14 +16,29 @@ interface Props {
 
 const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
   const { user, loading } = useUser();
+  const { currentTrack } = usePlayer();
   const [activeTab, setActiveTab] = useState("tracks");
+  const currentTrackIds = currentTrack as unknown as {
+    song_id?: number;
+    id?: number;
+  } | null;
+  const currentSongId =
+    Number(
+      currentTrackIds?.song_id ?? currentTrackIds?.id ?? currentTrack?.trackId,
+    ) || 0;
+  const userId =
+    Number(
+      user?.userId ?? (user as unknown as { user_id?: number } | null)?.user_id,
+    ) || 0;
 
   return (
     <div className="explore-container">
       <div className="make-for">
+        <SimilarSongsSection songId={currentSongId} limit={9} />
+
         {/* ── Recommendation section (real data) ── */}
-        {!loading && (user?.userId || (user as any)?.user_id) ? (
-          <RecommendationSection userId={user?.userId || (user as any)?.user_id} limit={10} />
+        {!loading && userId ? (
+          <RecommendationSection userId={userId} limit={10} />
         ) : (
           <div className="make-for-header">
             <h2 className="title">Đề xuất cho bạn</h2>

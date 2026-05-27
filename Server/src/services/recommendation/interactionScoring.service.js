@@ -89,10 +89,6 @@ function calculateActivityScore(activity) {
  *     ...
  *   }
  *
- * Lý do dùng Map lồng Map thay vì plain object:
- *   - Key là số nguyên (user_id, song_id) → Map an toàn hơn object
- *   - Dễ iterate khi tính Cosine Similarity giữa 2 bài hát
- *
  * @returns {Promise<Map<number, Map<number, number>>>}
  */
 async function buildUserSongInteractionMatrix() {

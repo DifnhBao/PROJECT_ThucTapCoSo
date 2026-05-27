@@ -13,7 +13,8 @@ const app = express();
 
 // --- CORS: Hỗ trợ cả local dev lẫn Docker ---
 const allowedOrigins = [
-  "http://localhost:3000", // Local dev
+  "http://localhost:3000",
+  "http://127.0.0.1:3000", // Local dev
   "http://ui:3000", // Docker internal
   "https://project-web-gamma-neon.vercel.app",
   "https://project-thuc-tap-co-so.vercel.app",

@@ -8,6 +8,10 @@ const { buildUserSongInteractionMatrix } = require("./interactionScoring.service
 const { calculateBehavioralSimilarity }  = require("./behavioralSimilarity.service");
 const { buildReason }                    = require("./hybridSimilarity.service");
 
+const DEBUG_RECOMMENDATION =
+  process.env.DEBUG_RECOMMENDATION === "true" ||
+  process.env.RECOMMENDATION_DEBUG === "true";
+
 /* =========================================================
    HELPER: include để lấy thông tin đầy đủ của Song
    Dùng chung ở nhiều chỗ để không lặp code.
@@ -27,6 +31,20 @@ const SONG_INCLUDE = [
     through: { attributes: [] },
   },
 ];
+
+const SONG_ATTRIBUTES = [
+  "song_id",
+  "title",
+  "duration",
+  "audio_url",
+  "image_url",
+  "view_count",
+];
+
+function logRecommendationDebug(stage, payload) {
+  if (!DEBUG_RECOMMENDATION) return;
+  console.log(`[Recommendation][getRecommendationsForUser][${stage}]`, payload);
+}
 
 /* =========================================================
    1. getSimilarSongs — Bài hát tương tự
@@ -227,6 +245,18 @@ async function getRecommendationsForUser(userId, limit = 10) {
   }, new Map());
 
   if (seedWithWeight.size === 0) {
+    logRecommendationDebug("fallback:no-seeds", {
+      userId,
+      "recentActivities.length": recentActivities.length,
+      favoriteSeedIds,
+      ratingSeedIds,
+      "seedWithWeight.size": seedWithWeight.size,
+      "candidateMap.size": 0,
+      "topCandidates.length": 0,
+      candidateSongIds: [],
+      "songs.length": 0,
+      "recommendations.length": 0,
+    });
     // Cold start: user chưa có lịch sử → trả về top trending
     return getTrendingSongs(limit);
   }
@@ -278,6 +308,22 @@ async function getRecommendationsForUser(userId, limit = 10) {
     }
   }
 
+  if (candidateMap.size === 0) {
+    logRecommendationDebug("fallback:no-candidates", {
+      userId,
+      "recentActivities.length": recentActivities.length,
+      favoriteSeedIds,
+      ratingSeedIds,
+      "seedWithWeight.size": seedWithWeight.size,
+      "candidateMap.size": candidateMap.size,
+      "topCandidates.length": 0,
+      candidateSongIds: [],
+      "songs.length": 0,
+      "recommendations.length": 0,
+    });
+    return getTrendingSongs(limit);
+  }
+
   /* ── BƯỚC 4: Sắp xếp và lấy top limit ──────────────── */
   const topCandidates = [...candidateMap.entries()]
     .sort(([, a], [, b]) => {
@@ -289,6 +335,18 @@ async function getRecommendationsForUser(userId, limit = 10) {
     .slice(0, limit);
 
   if (topCandidates.length === 0) {
+    logRecommendationDebug("fallback:no-top-candidates", {
+      userId,
+      "recentActivities.length": recentActivities.length,
+      favoriteSeedIds,
+      ratingSeedIds,
+      "seedWithWeight.size": seedWithWeight.size,
+      "candidateMap.size": candidateMap.size,
+      "topCandidates.length": topCandidates.length,
+      candidateSongIds: [],
+      "songs.length": 0,
+      "recommendations.length": 0,
+    });
     return getTrendingSongs(limit);
   }
 
@@ -301,24 +359,45 @@ async function getRecommendationsForUser(userId, limit = 10) {
       is_visible: true,
       status: "approved",
     },
-    attributes: ["song_id", "title", "duration", "audio_url", "image_url", "view_count"],
+    attributes: SONG_ATTRIBUTES,
     include: SONG_INCLUDE,
   });
 
   // Map song_id → song để ghép kết quả theo đúng thứ tự điểm
   const songMap = new Map(songs.map((s) => [s.song_id, s]));
 
-  return topCandidates
+  const recommendations = topCandidates
     .filter(([song_id]) => songMap.has(song_id)) // Bỏ bài đã bị ẩn/xóa
-    .map(([song_id, { accumulated_score, reasons, is_discovery_candidate }]) => ({
-      song:              songMap.get(song_id),
-      accumulated_score: Math.round(accumulated_score * 10000) / 10000,
-      // Lấy lý do đầu tiên (ngắn gọn nhất) để hiển thị
-      reason:            reasons[0] || "Gợi ý dựa trên sở thích của bạn.",
-      // Số seed đề xuất bài này — số càng cao càng đáng tin cậy
-      endorsed_by_count: reasons.length,
-      is_discovery_candidate,
-    }));
+    .map(
+      ([song_id, { accumulated_score, reasons, is_discovery_candidate }]) => ({
+        song: songMap.get(song_id),
+        accumulated_score: Math.round(accumulated_score * 10000) / 10000,
+        // Lấy lý do đầu tiên (ngắn gọn nhất) để hiển thị
+        reason: reasons[0] || "Gợi ý dựa trên sở thích của bạn.",
+        // Số seed đề xuất bài này — số càng cao càng đáng tin cậy
+        endorsed_by_count: reasons.length,
+        is_discovery_candidate,
+      }),
+    );
+
+  logRecommendationDebug("result", {
+    userId,
+    "recentActivities.length": recentActivities.length,
+    favoriteSeedIds,
+    ratingSeedIds,
+    "seedWithWeight.size": seedWithWeight.size,
+    "candidateMap.size": candidateMap.size,
+    "topCandidates.length": topCandidates.length,
+    candidateSongIds,
+    "songs.length": songs.length,
+    "recommendations.length": recommendations.length,
+  });
+
+  if (recommendations.length === 0) {
+    return getTrendingSongs(limit);
+  }
+
+  return recommendations;
 }
 
 /* =========================================================
@@ -333,19 +412,30 @@ async function getRecommendationsForUser(userId, limit = 10) {
  * @returns {Promise<Object[]>}
  */
 async function getTrendingSongs(limit = 10) {
-  const songs = await Song.findAll({
-    where: { is_visible: true, status: "approved" },
-    order: [["view_count", "DESC"]],
-    limit,
-    attributes: ["song_id", "title", "duration", "audio_url", "image_url", "view_count"],
-    include: SONG_INCLUDE,
+  const findTrendingSongs = (where) =>
+    Song.findAll({
+      where,
+      order: [["view_count", "DESC"]],
+      limit,
+      attributes: SONG_ATTRIBUTES,
+      include: SONG_INCLUDE,
+    });
+
+  let songs = await findTrendingSongs({
+    is_visible: true,
+    status: "approved",
   });
+
+  if (songs.length === 0) {
+    songs = await findTrendingSongs({ is_visible: true });
+  }
 
   return songs.map((song) => ({
     song,
     accumulated_score: null,
-    reason:            "Bài hát đang thịnh hành.",
+    reason: "Bài hát đang thịnh hành.",
     endorsed_by_count: 0,
+    is_discovery_candidate: true,
   }));
 }
 

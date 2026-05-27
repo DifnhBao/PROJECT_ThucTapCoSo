@@ -225,7 +225,11 @@
    SimilarSongsSection
    ============================================================ */
 .similar-section {
-  margin-top: 24px;
+  margin-bottom: 28px;
+}
+
+.similar-section-header {
+  margin-bottom: 14px;
 }
 
 .similar-section-title {
@@ -235,26 +239,19 @@
   font-size: 16px;
   font-weight: 700;
   color: var(--tt-text-primary);
-  margin-bottom: 12px;
+  margin-bottom: 3px;
+}
+
+.similar-section-subtitle {
+  color: var(--tt-text-secondary);
+  font-size: 12px;
 }
 
 /* List */
 .similar-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 420px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.similar-list::-webkit-scrollbar {
-  width: 4px;
-}
-
-.similar-list::-webkit-scrollbar-thumb {
-  background: var(--tt-border);
-  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
 }
 
 /* Item */
@@ -364,6 +361,20 @@
   background: var(--tt-orange-pale);
   padding: 3px 8px;
   border-radius: 10px;
+}
+
+@media (max-width: 640px) {
+  .similar-list {
+    grid-template-columns: 1fr;
+  }
+
+  .similar-item {
+    align-items: flex-start;
+  }
+
+  .similar-score-badge {
+    display: none;
+  }
 }
 
 /* Skeleton */

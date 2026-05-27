@@ -1,18 +1,6 @@
 /* Nhúng Font chữ */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
-/* .authContainer {
-  font-family: "Inter", sans-serif;
-  background-color: var(--tt-surface);
-  width: 100%;
-  max-width: 480px;
-  padding: 48px;
-  border-radius: 24px;
-  box-shadow: var(--tt-shadow-md);
-  border: 1px solid var(--tt-border);
-  transition: all 0.3s ease;
-} */
-
 .authContainer {
   font-family: "Inter", sans-serif;
   background-color: var(--tt-surface);
@@ -36,6 +24,15 @@
   overflow-y: auto;
 }
 
+.forAdminPage {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
 /* Header & Logo */
 .header {
   text-align: center;
@@ -46,8 +43,17 @@
   display: inline-block;
 }
 
+.registerPage {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.registerPage::-webkit-scrollbar {
+  display: none;
+}
+
 .logoImg {
-  height: 48px; 
+  height: 48px;
   width: auto;
 }
 

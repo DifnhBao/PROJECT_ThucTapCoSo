@@ -39,8 +39,15 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
 
   // Refetch mỗi khi bài hát hiện tại đổi
   useEffect(() => {
+    if (!songId) {
+      setSongs([]);
+      setError(null);
+      setLoading(false);
+      return;
+    }
+
     fetchData();
-  }, [fetchData]);
+  }, [songId, fetchData]);
 
   const handlePlay = (index: number) => {
     const song = songs[index];
@@ -53,16 +60,32 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
   };
 
   /* ---------- Không có songId ---------- */
-  if (!songId) return null;
+  if (!songId) {
+    return (
+      <div className="similar-section">
+        <div className="similar-section-header">
+          <h3 className="similar-section-title">
+            <PiMusicNoteSimpleBold className="rec-section-icon" />
+            Bài hát tương tự
+          </h3>
+          <p className="similar-section-subtitle">Dựa trên bài đang phát</p>
+        </div>
+        <p className="rec-empty">Chọn một bài hát để xem các bài tương tự.</p>
+      </div>
+    );
+  }
 
   /* ---------- Skeleton ---------- */
   if (loading) {
     return (
       <div className="similar-section">
-        <h3 className="similar-section-title">
-          <PiMusicNoteSimpleBold className="rec-section-icon" />
-          Bài hát tương tự
-        </h3>
+        <div className="similar-section-header">
+          <h3 className="similar-section-title">
+            <PiMusicNoteSimpleBold className="rec-section-icon" />
+            Bài hát tương tự
+          </h3>
+          <p className="similar-section-subtitle">Dựa trên bài đang phát</p>
+        </div>
         <div className="similar-list">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="similar-item similar-item--skeleton">
@@ -82,10 +105,13 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
   if (error) {
     return (
       <div className="similar-section">
-        <h3 className="similar-section-title">
-          <PiMusicNoteSimpleBold className="rec-section-icon" />
-          Bài hát tương tự
-        </h3>
+        <div className="similar-section-header">
+          <h3 className="similar-section-title">
+            <PiMusicNoteSimpleBold className="rec-section-icon" />
+            Bài hát tương tự
+          </h3>
+          <p className="similar-section-subtitle">Dựa trên bài đang phát</p>
+        </div>
         <p className="rec-empty">{error}</p>
       </div>
     );
@@ -97,10 +123,13 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
   /* ---------- Main ---------- */
   return (
     <div className="similar-section">
-      <h3 className="similar-section-title">
-        <PiMusicNoteSimpleBold className="rec-section-icon" />
-        Bài hát tương tự
-      </h3>
+      <div className="similar-section-header">
+        <h3 className="similar-section-title">
+          <PiMusicNoteSimpleBold className="rec-section-icon" />
+          Bài hát tương tự
+        </h3>
+        <p className="similar-section-subtitle">Dựa trên bài đang phát</p>
+      </div>
 
       <div className="similar-list">
         {songs.map((song, index) => {

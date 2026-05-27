@@ -9,28 +9,6 @@ import { useLikeContext } from "@/app/features/like/context/LikeContext";
 import PopUp from "../../../components/ui/PopUp";
 import AddToPlaylistModal from "@/app/features/playlist/components/AddToPlaylistModal";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
-import SimilarSongsSection from "@/app/features/recommendation/components/SimilarSongsSection";
-
-const mockQueue = [
-  {
-    id: 1,
-    title: "Nếu Biết Đó Là Lần Cuối",
-    artist: "Đức Trường",
-    cover: "https://i.scdn.co/image/ab67616d00001e02b667917dd1a458f91d15b146",
-  },
-  {
-    id: 2,
-    title: "Waiting For You",
-    artist: "MONO",
-    cover: "https://picsum.photos/100?random=2",
-  },
-  {
-    id: 3,
-    title: "Lạc Trôi",
-    artist: "Sơn Tùng",
-    cover: "https://picsum.photos/100?random=3",
-  },
-];
 
 const PlayerContent: React.FC = () => {
   const {
@@ -285,14 +263,6 @@ const PlayerContent: React.FC = () => {
           min={0}
           max={100}
           onChange={handleVolumeChange}
-        />
-      </div>
-
-      {/* ── Similar Songs (replaces mock queue) ── */}
-      <div className="queue">
-        <SimilarSongsSection
-          songId={currentTrack?.trackId ?? 0}
-          limit={8}
         />
       </div>
     </footer>
