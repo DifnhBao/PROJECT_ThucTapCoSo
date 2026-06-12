@@ -10,6 +10,7 @@ const {
 const {
   calculateBehavioralSimilarity,
 } = require("./behavioralSimilarity.service");
+const { buildLyricsTfIdfVectorMap } = require("./lyricsSimilarity.service");
 
 /* =========================================================
    PHẦN 1: TẠO CÂU REASON DỄ HIỂU
@@ -35,6 +36,20 @@ function buildReason(metaDetail, behavDetail) {
   const commonKeywords = Array.isArray(metaDetail?.common_keywords)
     ? metaDetail.common_keywords
     : [];
+
+  const commonLyricsTerms = Array.isArray(metaDetail?.common_lyrics_terms)
+    ? metaDetail.common_lyrics_terms
+    : [];
+
+  const lyricsSimilarity = Number(metaDetail?.lyrics_similarity || 0);
+
+  if (lyricsSimilarity >= 0.15 && commonLyricsTerms.length > 0) {
+    parts.push(
+      `lời bài hát có chủ đề tương đồng (${commonLyricsTerms
+        .slice(0, 4)
+        .join(", ")})`,
+    );
+  }
 
   const behaviorReasonCode = behavDetail?.reason_code;
   const commonUserCount = Number(behavDetail?.common_user_count || 0);
@@ -208,11 +223,17 @@ async function rebuildAllSongSimilarities({ limit } = {}) {
     songIds.map((id) => getSongMetadata(id)),
   );
 
+  const lyricsVectorMap = buildLyricsTfIdfVectorMap(metadataList);
+
+  for (const meta of metadataList) {
+    meta.lyricsVector = lyricsVectorMap.get(meta.song_id) || new Map();
+  }
+
   // Map để tra cứu nhanh theo song_id
   const metadataMap = new Map(metadataList.map((m) => [m.song_id, m]));
   console.log("[HybridSimilarity] ✔ Metadata đã sẵn sàng.");
 
-  // BƯỚC 4: Duyệt cặp và tính điểm 
+  // BƯỚC 4: Duyệt cặp và tính điểm
   const totalPairs = (songCount * (songCount - 1)) / 2;
   console.log(
     `[HybridSimilarity] ⏳ Bắt đầu tính ${totalPairs} cặp bài hát...`,
@@ -310,6 +331,6 @@ async function rebuildAllSongSimilarities({ limit } = {}) {
 
 module.exports = {
   rebuildAllSongSimilarities,
-  computeHybridPair, 
-  buildReason, 
+  computeHybridPair,
+  buildReason,
 };

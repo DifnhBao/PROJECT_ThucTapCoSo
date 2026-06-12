@@ -1,4 +1,5 @@
 const { Song, Genre, Artist } = require("../../models");
+const { calculateLyricsSimilarity } = require("./lyricsSimilarity.service");
 
 /* =========================================================
    PHẦN 1: HÀM TIỆN ÍCH (Utility Functions)
@@ -130,19 +131,19 @@ function durationSimilarity(durationA, durationB) {
  */
 async function getSongMetadata(songId) {
   const song = await Song.findByPk(songId, {
-    attributes: ["song_id", "title", "duration", "mood", "keywords"],
+    attributes: ["song_id", "title", "duration", "mood", "keywords", "lyrics"],
     include: [
       {
         model: Genre,
         as: "genres",
         attributes: ["genre_id", "name"],
-        through: { attributes: [] }, // Bỏ qua dữ liệu bảng trung gian SongGenre
+        through: { attributes: [] },
       },
       {
         model: Artist,
         as: "artists",
         attributes: ["artist_id", "name"],
-        through: { attributes: [] }, // Bỏ qua dữ liệu bảng trung gian SongArtist
+        through: { attributes: [] },
       },
     ],
   });
@@ -160,6 +161,7 @@ async function getSongMetadata(songId) {
     artists: uniqueNonEmpty((song.artists || []).map((a) => a.name)),
     moods: normalizeMood(song.mood),
     keywords: normalizeJsonArrayLike(song.keywords),
+    lyrics: song.lyrics || "",
   };
 }
 
@@ -183,22 +185,25 @@ async function getSongMetadata(songId) {
  * @returns {{ score: number, detail: Object }}
  */
 function calculateMetadataSimilarity(songA, songB) {
-  // Tính điểm từng thành phần 
+  // Tính điểm từng thành phần
   const genre_similarity = jaccardSimilarity(songA.genres, songB.genres);
   const mood_similarity = jaccardSimilarity(songA.moods, songB.moods);
   const artist_similarity = jaccardSimilarity(songA.artists, songB.artists);
   const keyword_similarity = jaccardSimilarity(songA.keywords, songB.keywords);
   const dur_similarity = durationSimilarity(songA.duration, songB.duration);
+  const { score: lyrics_similarity, detail: lyricsDetail } =
+    calculateLyricsSimilarity(songA.lyricsVector, songB.lyricsVector);
 
-  // Điểm tổng hợp theo trọng số 
+  // Điểm tổng hợp theo trọng số
   const score =
-    0.35 * genre_similarity +
-    0.25 * mood_similarity +
-    0.2 * artist_similarity +
-    0.15 * keyword_similarity +
+    0.25 * genre_similarity +
+    0.2 * mood_similarity +
+    0.15 * artist_similarity +
+    0.1 * keyword_similarity +
+    0.25 * lyrics_similarity +
     0.05 * dur_similarity;
 
-  // Tập giao (để lưu vào cột `reason` / `detail`) 
+  // Tập giao (để lưu vào cột `reason` / `detail`)
   const common_genres = songA.genres.filter((g) => songB.genres.includes(g));
   const common_artists = songA.artists.filter((a) => songB.artists.includes(a));
   const common_moods = songA.moods.filter((m) => songB.moods.includes(m));
@@ -213,11 +218,13 @@ function calculateMetadataSimilarity(songA, songB) {
       mood_similarity: Math.round(mood_similarity * 10000) / 10000,
       artist_similarity: Math.round(artist_similarity * 10000) / 10000,
       keyword_similarity: Math.round(keyword_similarity * 10000) / 10000,
+      lyrics_similarity: Math.round(lyrics_similarity * 10000) / 10000,
       duration_similarity: Math.round(dur_similarity * 10000) / 10000,
       common_genres,
       common_artists,
       common_moods,
       common_keywords,
+      common_lyrics_terms: lyricsDetail.common_lyrics_terms,
     },
   };
 }
