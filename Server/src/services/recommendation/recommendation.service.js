@@ -231,6 +231,13 @@ async function getRealtimeMetadataSimilarSongs(songId, limit) {
   const metadataList = await Promise.all(
     songs.map((song) => getSongMetadata(song.song_id)),
   );
+
+  const allMeta = [currentMeta, ...metadataList];
+  const vectorMap = buildLyricsTfIdfVectorMap(allMeta);
+
+  for (const meta of allMeta) {
+    meta.lyricsVector = vectorMap.get(meta.song_id) || new Map();
+  }
   const songMap = new Map(songs.map((song) => [song.song_id, song]));
   const fallbackReason =
     "Gợi ý dựa trên metadata vì bài hát chưa có dữ liệu hành vi/precomputed similarity.";
@@ -339,6 +346,17 @@ async function fallbackRecommendationsBySeedMetadata(
       }),
     )
   ).filter(Boolean);
+
+  const allMeta = [
+    ...seedMetadataList.map((item) => item.meta),
+    ...candidateMetadataList,
+  ];
+
+  const vectorMap = buildLyricsTfIdfVectorMap(allMeta);
+
+  for (const meta of allMeta) {
+    meta.lyricsVector = vectorMap.get(meta.song_id) || new Map();
+  }
 
   const candidateSongMap = new Map(
     candidateSongs.map((song) => [song.song_id, song]),
@@ -590,15 +608,28 @@ async function getRecommendationsForUser(userId, limit = 10) {
         candidateMap.set(candId, {
           accumulated_score: 0,
           reasons: [],
+          best_reason: null,
+          best_weighted_score: -Infinity,
           is_discovery_candidate: isDiscoveryCandidate,
         });
       }
 
       const entry = candidateMap.get(candId);
+
       entry.accumulated_score += weightedScore;
       entry.is_discovery_candidate =
         entry.is_discovery_candidate || isDiscoveryCandidate;
-      if (sim.reason) entry.reasons.push(sim.reason);
+
+      if (sim.reason) {
+        entry.reasons.push(sim.reason);
+
+        // Chọn reason đến từ seed đóng góp điểm mạnh nhất cho candidate này.
+        // weightedScore đã bao gồm cả final_score của cặp bài hát và weight của seed.
+        if (weightedScore > entry.best_weighted_score) {
+          entry.best_weighted_score = weightedScore;
+          entry.best_reason = sim.reason;
+        }
+      }
     }
   }
 
@@ -621,13 +652,13 @@ async function getRecommendationsForUser(userId, limit = 10) {
   }
 
   /* BƯỚC 4: Sắp xếp và lấy top limit */
+  function rankingScore(entry) {
+    const discoveryBonus = entry.is_discovery_candidate ? 0.05 : 0;
+    return entry.accumulated_score + discoveryBonus;
+  }
+
   const topCandidates = [...candidateMap.entries()]
-    .sort(([, a], [, b]) => {
-      if (a.is_discovery_candidate !== b.is_discovery_candidate) {
-        return a.is_discovery_candidate ? -1 : 1;
-      }
-      return b.accumulated_score - a.accumulated_score;
-    })
+    .sort(([, a], [, b]) => rankingScore(b) - rankingScore(a))
     .slice(0, limit);
 
   if (topCandidates.length === 0) {
@@ -665,15 +696,22 @@ async function getRecommendationsForUser(userId, limit = 10) {
   const songMap = new Map(songs.map((s) => [s.song_id, s]));
 
   const recommendations = topCandidates
-    .filter(([song_id]) => songMap.has(song_id)) // Bỏ bài đã bị ẩn/xóa
+    .filter(([song_id]) => songMap.has(song_id))
     .map(
-      ([song_id, { accumulated_score, reasons, is_discovery_candidate }]) => ({
+      ([
+        song_id,
+        { accumulated_score, reasons, best_reason, is_discovery_candidate },
+      ]) => ({
         song: songMap.get(song_id),
         accumulated_score: Math.round(accumulated_score * 10000) / 10000,
-        // Lấy lý do đầu tiên (ngắn gọn nhất) để hiển thị
-        reason: reasons[0] || "Gợi ý dựa trên sở thích của bạn.",
+
+        // Ưu tiên lý do đến từ seed đóng góp điểm mạnh nhất
+        // Nếu vì lý do nào đó không có best_reason, fallback về reason đầu tiên
+        reason: best_reason || reasons[0] || "Gợi ý dựa trên sở thích của bạn.",
+
         // Số seed đề xuất bài này — số càng cao càng đáng tin cậy
         endorsed_by_count: reasons.length,
+
         is_discovery_candidate,
       }),
     );
@@ -815,8 +853,10 @@ async function getSongPairDebug(songIdA, songIdB) {
   const { score: behavioralScore, detail: behavDetail } =
     calculateBehavioralSimilarity(songIdA, songIdB, matrix);
 
-  const hasBehavior = behavDetail.reason_code === "success";
-  const finalScore = hasBehavior
+  const hasPositiveBehavior =
+    behavDetail.reason_code === "success" && behavioralScore > 0;
+
+  const finalScore = hasPositiveBehavior
     ? 0.6 * metadataScore + 0.4 * behavioralScore
     : metadataScore;
 

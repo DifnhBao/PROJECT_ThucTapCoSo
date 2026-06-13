@@ -43,14 +43,6 @@ function buildReason(metaDetail, behavDetail) {
 
   const lyricsSimilarity = Number(metaDetail?.lyrics_similarity || 0);
 
-  if (lyricsSimilarity >= 0.15 && commonLyricsTerms.length > 0) {
-    parts.push(
-      `lời bài hát có chủ đề tương đồng (${commonLyricsTerms
-        .slice(0, 4)
-        .join(", ")})`,
-    );
-  }
-
   const behaviorReasonCode = behavDetail?.reason_code;
   const commonUserCount = Number(behavDetail?.common_user_count || 0);
   const rawCosineScore = Number(behavDetail?.raw_cosine_score || 0);
@@ -59,12 +51,24 @@ function buildReason(metaDetail, behavDetail) {
   );
   const confidence = Number(behavDetail?.confidence || 0);
 
+  const GENERIC_MOOD_TERMS = new Set([
+    "low",
+    "medium",
+    "high",
+    "positive",
+    "neutral",
+    "negative",
+  ]);
+  const displayMoods = commonMoods.filter(
+    (mood) => !GENERIC_MOOD_TERMS.has(mood),
+  );
+
   if (commonGenres.length > 0) {
     parts.push(`Cùng thể loại ${commonGenres.join(", ")}`);
   }
 
-  if (commonMoods.length > 0) {
-    parts.push(`cùng mood ${commonMoods.join(", ")}`);
+  if (displayMoods.length > 0) {
+    parts.push(`cùng mood ${displayMoods.join(", ")}`);
   }
 
   if (commonArtists.length > 0) {
@@ -73,6 +77,14 @@ function buildReason(metaDetail, behavDetail) {
 
   if (commonKeywords.length > 0) {
     parts.push(`chủ đề tương tự (${commonKeywords.slice(0, 3).join(", ")})`);
+  }
+
+  if (lyricsSimilarity >= 0.03 && commonLyricsTerms.length >= 2) {
+    parts.push(
+      `lời bài hát có chủ đề tương đồng (${commonLyricsTerms
+        .slice(0, 4)
+        .join(", ")})`,
+    );
   }
 
   if (
@@ -127,9 +139,10 @@ function computeHybridPair(metaA, metaB, matrix) {
     calculateBehavioralSimilarity(metaA.song_id, metaB.song_id, matrix);
 
   // Nếu không có dữ liệu hành vi → fallback 100% vào metadata
-  const hasBehavior = behavDetail.reason_code === "success";
+  const hasPositiveBehavior =
+    behavDetail.reason_code === "success" && behavioralScore > 0;
 
-  const finalScore = hasBehavior
+  const finalScore = hasPositiveBehavior
     ? 0.6 * metadataScore + 0.4 * behavioralScore
     : metadataScore;
 

@@ -44,7 +44,7 @@ function cosineSimilarity(vectorA, vectorB) {
   const score = dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
   
   return {
-    score: Math.min(1, Math.max(0, score)), // Clamp [0, 1] để an toàn
+    score: Math.min(1, Math.max(-1, score)), // Clamp [-1, 1] để an toàn
     common_user_count: commonUserCount
   };
 }
@@ -87,7 +87,10 @@ function calculateBehavioralSimilarity(songIdA, songIdB, matrix) {
 
   const { score: rawCosineScore, common_user_count } = cosineSimilarity(vectorA, vectorB);
   const confidence = common_user_count / (common_user_count + 5);
-  const behavioralScore = common_user_count === 0 ? 0 : rawCosineScore * confidence;
+  // const behavioralScore = common_user_count === 0 ? 0 : rawCosineScore * confidence;
+  
+  const positiveCosineScore = Math.max(0, rawCosineScore);
+  const behavioralScore = common_user_count === 0 ? 0 : positiveCosineScore * confidence;
 
   // Nếu không có user nào nghe chung, điểm cũng bằng 0
   if (common_user_count === 0) {

@@ -63,6 +63,28 @@ const VIETNAMESE_STOPWORDS = new Set([
   "yeah",
   "baby",
   "alo",
+
+  "dù",
+  "nhau",
+  "nhiều",
+  "chưa",
+  "tại",
+  "vậy",
+  "but",
+  "just",
+  "yeah",
+  "oh",
+  "ooh",
+  "baby",
+  "ok",
+  "thế",
+  "nên",
+  "còn",
+  "lại",
+  "nơi",
+  "đâu",
+  "bao",
+  "giờ",
 ]);
 
 function normalizeLyrics(text) {
