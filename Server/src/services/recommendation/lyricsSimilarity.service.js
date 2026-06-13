@@ -1,28 +1,68 @@
 const VIETNAMESE_STOPWORDS = new Set([
+  // Đại từ rất phổ biến trong lyrics
   "anh",
   "em",
   "ta",
   "tôi",
   "mình",
   "người",
+  "ai",
+
+  // Từ nối / quan hệ
   "là",
   "và",
   "của",
   "cho",
   "với",
   "trong",
+  "ngoài",
+  "về",
+  "đến",
+  "từ",
+  "ở",
+  "nơi",
+
+  // Từ chức năng / ngữ pháp
   "không",
   "có",
   "đã",
   "sẽ",
+  "đang",
+  "vẫn",
+  "còn",
+  "lại",
+  "chỉ",
+  "rồi",
+  "thôi",
+  "nữa",
+  "cũng",
+  "rằng",
+  "như",
+  "khi",
+  "nếu",
+  "vì",
+  "nên",
+  "để",
+
+  // Từ chỉ định / lượng từ
   "một",
   "những",
+  "các",
   "này",
   "kia",
   "đó",
+  "ấy",
+  "đây",
+
+  // Từ đệm thường gặp
   "thì",
   "mà",
   "ơi",
+  "oh",
+  "ooh",
+  "yeah",
+  "baby",
+  "alo",
 ]);
 
 function normalizeLyrics(text) {
@@ -35,16 +75,29 @@ function normalizeLyrics(text) {
 }
 
 function tokenizeLyrics(text) {
-  const words = normalizeLyrics(text)
+  const rawWords = normalizeLyrics(text)
     .split(" ")
-    .filter((w) => w.length >= 2 && !VIETNAMESE_STOPWORDS.has(w));
+    .filter((w) => w.length >= 2);
 
+  // Unigram: bỏ stopword
+  const unigrams = rawWords.filter((w) => !VIETNAMESE_STOPWORDS.has(w));
+
+  // Bigram: tạo từ chuỗi gốc để không làm mất cụm như "nhớ em", "yêu em"
   const bigrams = [];
-  for (let i = 0; i < words.length - 1; i++) {
-    bigrams.push(`${words[i]} ${words[i + 1]}`);
+
+  for (let i = 0; i < rawWords.length - 1; i++) {
+    const w1 = rawWords[i];
+    const w2 = rawWords[i + 1];
+
+    const bothAreStopwords =
+      VIETNAMESE_STOPWORDS.has(w1) && VIETNAMESE_STOPWORDS.has(w2);
+
+    if (!bothAreStopwords) {
+      bigrams.push(`${w1} ${w2}`);
+    }
   }
 
-  return [...words, ...bigrams];
+  return [...unigrams, ...bigrams];
 }
 
 function buildLyricsTfIdfVectorMap(metadataList) {

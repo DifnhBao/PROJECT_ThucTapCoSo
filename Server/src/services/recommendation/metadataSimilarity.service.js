@@ -173,12 +173,13 @@ async function getSongMetadata(songId) {
  * Tính điểm tương đồng Content-Based giữa 2 bài hát dựa trên metadata.
  *
  * Công thức Hybrid weighted sum:
- *   metadata_score =
- *     0.35 * genre_similarity      (thể loại – quan trọng nhất)
- *   + 0.25 * mood_similarity       (tâm trạng)
- *   + 0.20 * artist_similarity     (nghệ sĩ)
- *   + 0.15 * keyword_similarity    (từ khóa / chủ đề)
- *   + 0.05 * duration_similarity   (thời lượng – yếu tố phụ)
+ * metadata_score =
+ *   0.25 * genre_similarity
+ * + 0.20 * mood_similarity
+ * + 0.15 * artist_similarity
+ * + 0.10 * keyword_similarity
+ * + 0.25 * lyrics_similarity
+ * + 0.05 * duration_similarity
  *
  * @param {Object} songA  — kết quả từ getSongMetadata()
  * @param {Object} songB  — kết quả từ getSongMetadata()

@@ -19,6 +19,7 @@ const {
   calculateBehavioralSimilarity,
 } = require("./behavioralSimilarity.service");
 const { buildReason } = require("./hybridSimilarity.service");
+const { buildLyricsTfIdfVectorMap } = require("./lyricsSimilarity.service");
 
 const DEBUG_RECOMMENDATION =
   process.env.DEBUG_RECOMMENDATION === "true" ||
@@ -51,6 +52,97 @@ const SONG_ATTRIBUTES = [
 function logRecommendationDebug(stage, payload) {
   if (!DEBUG_RECOMMENDATION) return;
   console.log(`[Recommendation][getRecommendationsForUser][${stage}]`, payload);
+}
+
+/*
+normalized_score > 0:
+user đánh giá bài này cao hơn mức trung bình của chính họ.
+
+weight:
+normalized càng cao thì rating seed càng mạnh.
+
+fallback:
+nếu user chỉ có 1 rating hoặc toàn rating cao bằng nhau, vẫn giữ rating >= 4 để không làm mất tín hiệu rõ ràng.
+*/
+
+function clampNumber(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function buildNormalizedRatingSeedItems(userRatings, limit = 5) {
+  const validRatings = userRatings
+    .map((rating) => ({
+      song_id: rating.song_id,
+      score: Number(rating.score),
+    }))
+    .filter(
+      (rating) =>
+        Number.isInteger(Number(rating.song_id)) &&
+        Number.isFinite(rating.score),
+    );
+
+  if (validRatings.length === 0) {
+    return {
+      avgRating: null,
+      ratingSeedItems: [],
+    };
+  }
+
+  const avgRating =
+    validRatings.reduce((sum, rating) => sum + rating.score, 0) /
+    validRatings.length;
+
+  let candidates = validRatings
+    .map((rating) => ({
+      ...rating,
+      normalized_score: rating.score - avgRating,
+      seed_reason: "normalized_rating_positive",
+    }))
+    .filter((rating) => rating.normalized_score > 0);
+
+  /*
+    Trường hợp fallback:
+    - User chỉ có 1 rating thì normalized_score = 0, không đủ để so bias.
+    - User rating toàn 5 sao thì tất cả normalized_score = 0.
+    Khi đó vẫn giữ lại rating >= 4 như explicit positive feedback.
+  */
+  if (candidates.length === 0) {
+    candidates = validRatings
+      .filter((rating) => rating.score >= 4)
+      .map((rating) => ({
+        ...rating,
+        normalized_score: 0,
+        seed_reason: "fallback_explicit_high_rating",
+      }));
+  }
+
+  const ratingSeedItems = candidates
+    .sort((a, b) => {
+      if (b.normalized_score !== a.normalized_score) {
+        return b.normalized_score - a.normalized_score;
+      }
+      return b.score - a.score;
+    })
+    .slice(0, limit)
+    .map((rating) => ({
+      song_id: rating.song_id,
+      score: rating.score,
+      avg_rating: Math.round(avgRating * 10000) / 10000,
+      normalized_score: Math.round(rating.normalized_score * 10000) / 10000,
+      weight:
+        rating.seed_reason === "fallback_explicit_high_rating"
+          ? 1.2
+          : Math.round(
+              clampNumber(1.2 + rating.normalized_score * 0.2, 1.1, 1.6) *
+                10000,
+            ) / 10000,
+      seed_reason: rating.seed_reason,
+    }));
+
+  return {
+    avgRating: Math.round(avgRating * 10000) / 10000,
+    ratingSeedItems,
+  };
 }
 
 /* =========================================================
@@ -348,7 +440,8 @@ async function fallbackRecommendationsBySeedMetadata(
  *   Bước 1 — Tìm "seed songs" (bài gốc của user):
  *     - Top 10 bài nghe gần đây (UserActivity)
  *     - Top 5 bài yêu thích (Favorite)
- *     - Top 5 bài đánh giá cao nhất (Rating score >= 4)
+ *     - Top 5 bài có normalized rating dương
+ *       normalized_rating = rating_score - avg_rating_of_user
  *
  *   Bước 2 — Expand từ seed:
  *     Với mỗi seed, lấy top 20 bài tương tự từ SongSimilarity.
@@ -404,23 +497,40 @@ async function getRecommendationsForUser(userId, limit = 10) {
   });
   const favoriteSeedIds = favorites.map((f) => f.song_id);
 
-  // Seed 3: Bài được đánh giá cao (4–5 sao)
-  const highRatings = await Rating.findAll({
-    where: { user_id: userId, score: { [Op.gte]: 4 } },
+  // Seed 3: Bài được user đánh giá cao hơn mức trung bình của chính user đó
+  const userRatings = await Rating.findAll({
+    where: { user_id: userId },
     attributes: ["song_id", "score"],
-    order: [["score", "DESC"]],
-    limit: 5,
   });
-  const ratingSeedIds = highRatings.map((r) => r.song_id);
+
+  const { avgRating, ratingSeedItems } = buildNormalizedRatingSeedItems(
+    userRatings,
+    5,
+  );
+
+  const ratingSeedIds = ratingSeedItems.map((item) => item.song_id);
 
   // Gộp seed, tránh trùng lặp; gán trọng số theo nguồn
   // Favorite > Recent > Rating (favorite là tín hiệu rõ nhất)
   const seedWithWeight = [
-    ...favoriteSeedIds.map((id) => ({ song_id: id, weight: 1.5 })),
-    ...recentSeedIds.map((id) => ({ song_id: id, weight: 1.0 })),
-    ...ratingSeedIds.map((id) => ({ song_id: id, weight: 1.2 })),
+    ...favoriteSeedIds.map((id) => ({
+      song_id: id,
+      weight: 1.5,
+      source: "favorite",
+    })),
+    ...recentSeedIds.map((id) => ({
+      song_id: id,
+      weight: 1.0,
+      source: "recent_activity",
+    })),
+    ...ratingSeedItems.map((item) => ({
+      song_id: item.song_id,
+      weight: item.weight,
+      source: "normalized_rating",
+      normalized_score: item.normalized_score,
+      avg_rating: item.avg_rating,
+    })),
   ].reduce((acc, { song_id, weight }) => {
-    // Nếu 1 bài xuất hiện ở nhiều nguồn → giữ trọng số cao nhất
     if (!acc.has(song_id) || acc.get(song_id) < weight) {
       acc.set(song_id, weight);
     }
@@ -433,6 +543,8 @@ async function getRecommendationsForUser(userId, limit = 10) {
       "recentActivities.length": recentActivities.length,
       favoriteSeedIds,
       ratingSeedIds,
+      avgRating,
+      ratingSeedItems,
       "seedWithWeight.size": seedWithWeight.size,
       "candidateMap.size": 0,
       "topCandidates.length": 0,
@@ -496,6 +608,8 @@ async function getRecommendationsForUser(userId, limit = 10) {
       "recentActivities.length": recentActivities.length,
       favoriteSeedIds,
       ratingSeedIds,
+      avgRating,
+      ratingSeedItems,
       "seedWithWeight.size": seedWithWeight.size,
       "candidateMap.size": candidateMap.size,
       "topCandidates.length": 0,
@@ -522,6 +636,8 @@ async function getRecommendationsForUser(userId, limit = 10) {
       "recentActivities.length": recentActivities.length,
       favoriteSeedIds,
       ratingSeedIds,
+      avgRating,
+      ratingSeedItems,
       "seedWithWeight.size": seedWithWeight.size,
       "candidateMap.size": candidateMap.size,
       "topCandidates.length": topCandidates.length,
@@ -567,6 +683,8 @@ async function getRecommendationsForUser(userId, limit = 10) {
     "recentActivities.length": recentActivities.length,
     favoriteSeedIds,
     ratingSeedIds,
+    avgRating,
+    ratingSeedItems,
     "seedWithWeight.size": seedWithWeight.size,
     "candidateMap.size": candidateMap.size,
     "topCandidates.length": topCandidates.length,
@@ -684,6 +802,11 @@ async function getSongPairDebug(songIdA, songIdB) {
     getSongMetadata(songIdA),
     getSongMetadata(songIdB),
   ]);
+
+  const vectorMap = buildLyricsTfIdfVectorMap([metaA, metaB]);
+
+  metaA.lyricsVector = vectorMap.get(metaA.song_id) || new Map();
+  metaB.lyricsVector = vectorMap.get(metaB.song_id) || new Map();
 
   const { score: metadataScore, detail: metaDetail } =
     calculateMetadataSimilarity(metaA, metaB);

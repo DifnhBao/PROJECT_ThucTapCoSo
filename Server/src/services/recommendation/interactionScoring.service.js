@@ -44,7 +44,7 @@ function calculateActivityScore(activity) {
   // Mỗi lần phát hợp lệ (đã qua validation >20s ở view_count) = +1
   let score = 1;
 
-  // Bonus hoàn thành (+0 đến +4) 
+  // Bonus hoàn thành (+0 đến +4)
   // User nghe hết bài → tín hiệu mạnh nhất của sự yêu thích
   score += 4 * completion_ratio;
 
@@ -52,7 +52,7 @@ function calculateActivityScore(activity) {
   // Phân biệt user "để chạy nền" với user "thật sự nghe"
   score += 3 * listen_ratio;
 
-  // Penalty bỏ qua sớm (-4) 
+  // Penalty bỏ qua sớm (-4)
   // Nếu user chủ động skip VÀ chưa nghe đến 30% → tín hiệu không thích
   if (exit_reason === "skipped" && listen_ratio < 0.3) {
     score -= 4;
@@ -65,6 +65,68 @@ function calculateActivityScore(activity) {
   score -= seek_penalty;
 
   return score;
+}
+
+function clampNumber(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function buildUserRatingStats(ratings) {
+  const stats = new Map();
+
+  for (const rating of ratings) {
+    const userId = rating.user_id;
+    const score = Number(rating.score);
+
+    if (!Number.isFinite(score)) continue;
+
+    if (!stats.has(userId)) {
+      stats.set(userId, {
+        sum: 0,
+        count: 0,
+      });
+    }
+
+    const userStats = stats.get(userId);
+    userStats.sum += score;
+    userStats.count += 1;
+  }
+
+  const avgMap = new Map();
+
+  for (const [userId, userStats] of stats.entries()) {
+    avgMap.set(userId, {
+      avg: userStats.sum / userStats.count,
+      count: userStats.count,
+    });
+  }
+
+  return avgMap;
+}
+
+function calculateNormalizedRatingContribution(
+  ratingScore,
+  userAvgRating,
+  userRatingCount,
+) {
+  const normalized = ratingScore - userAvgRating;
+
+  /*
+    Nếu user chỉ có 1 rating, normalized = 0 nên không thể biết user
+    dễ tính hay khó tính. Nếu rating đó >= 4, giữ lại một tín hiệu dương nhẹ.
+  */
+  if (Math.abs(normalized) < 1e-9) {
+    if (userRatingCount < 2 && ratingScore >= 4) {
+      return 1.2;
+    }
+    return 0;
+  }
+
+  /*
+    Nhân 2 để cùng thang với activity score.
+    Clamp để rating không áp đảo hoàn toàn favorite/activity.
+  */
+  return clampNumber(normalized * 2, -4, 4);
 }
 
 /* =========================================================
@@ -91,7 +153,7 @@ function calculateActivityScore(activity) {
  * @returns {Promise<Map<number, Map<number, number>>>}
  */
 async function buildUserSongInteractionMatrix() {
-  // Kết quả cuối cùng: song_id → Map(user_id → score) 
+  // Kết quả cuối cùng: song_id → Map(user_id → score)
   const matrix = new Map();
 
   // Hàm nội bộ: cộng điểm an toàn vào ma trận
@@ -103,7 +165,7 @@ async function buildUserSongInteractionMatrix() {
     songMap.set(userId, (songMap.get(userId) || 0) + delta);
   }
 
-  // NGUỒN 1: UserActivity (Implicit Feedback) 
+  // NGUỒN 1: UserActivity (Implicit Feedback)
   // Lấy toàn bộ phiên nghe, không cần join Song/User vì chỉ cần id + số liệu
   const activities = await UserActivity.findAll({
     attributes: [
@@ -122,7 +184,7 @@ async function buildUserSongInteractionMatrix() {
     addScore(activity.song_id, activity.user_id, actScore);
   }
 
-  // NGUỒN 2: Favorite (Explicit — Strong Positive Signal) 
+  // NGUỒN 2: Favorite (Explicit — Strong Positive Signal)
   // User bấm tim = tín hiệu thích mạnh hơn hành vi nghe bình thường
   // Hệ số +5 ≈ tương đương nghe gần hết bài 1 lần
   const favorites = await Favorite.findAll({
@@ -133,15 +195,34 @@ async function buildUserSongInteractionMatrix() {
     addScore(fav.song_id, fav.user_id, 5);
   }
 
-  // NGUỒN 3: Rating (Explicit — Scored Feedback) 
-  // User chấm sao từ 1–5, nhân 2 để đưa về thang [2, 10]
-  // Giúp đồng bộ magnitude với điểm activity (thang ~8)
+  // NGUỒN 3: Rating (Explicit — Normalized Scored Feedback)
+  // Không dùng rating thô trực tiếp vì mỗi user có thói quen chấm điểm khác nhau.
+  // normalized_rating = rating_score - avg_rating_of_user
+  //
+  // normalized_rating > 0  → user thích bài này hơn mức bình thường của họ
+  // normalized_rating = 0  → trung lập
+  // normalized_rating < 0  → user thích bài này kém hơn mức bình thường của họ
   const ratings = await Rating.findAll({
     attributes: ["user_id", "song_id", "score"],
   });
 
+  const userRatingStats = buildUserRatingStats(ratings);
+
   for (const rating of ratings) {
-    addScore(rating.song_id, rating.user_id, rating.score * 2);
+    const ratingScore = Number(rating.score);
+    const stats = userRatingStats.get(rating.user_id);
+
+    if (!stats || !Number.isFinite(ratingScore)) continue;
+
+    const contribution = calculateNormalizedRatingContribution(
+      ratingScore,
+      stats.avg,
+      stats.count,
+    );
+
+    if (contribution !== 0) {
+      addScore(rating.song_id, rating.user_id, contribution);
+    }
   }
 
   return matrix;
@@ -150,4 +231,6 @@ async function buildUserSongInteractionMatrix() {
 module.exports = {
   calculateActivityScore,
   buildUserSongInteractionMatrix,
+  buildUserRatingStats,
+  calculateNormalizedRatingContribution,
 };
