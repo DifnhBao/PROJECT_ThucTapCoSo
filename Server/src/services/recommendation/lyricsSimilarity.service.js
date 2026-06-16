@@ -1,97 +1,32 @@
 const VIETNAMESE_STOPWORDS = new Set([
-  // Đại từ rất phổ biến trong lyrics
-  "anh",
-  "em",
-  "ta",
-  "tôi",
-  "mình",
-  "người",
-  "ai",
-
-  // Từ nối / quan hệ
-  "là",
-  "và",
-  "của",
-  "cho",
-  "với",
-  "trong",
-  "ngoài",
-  "về",
-  "đến",
-  "từ",
-  "ở",
-  "nơi",
-
-  // Từ chức năng / ngữ pháp
-  "không",
-  "có",
-  "đã",
-  "sẽ",
-  "đang",
-  "vẫn",
-  "còn",
-  "lại",
-  "chỉ",
-  "rồi",
-  "thôi",
-  "nữa",
-  "cũng",
-  "rằng",
-  "như",
-  "khi",
-  "nếu",
-  "vì",
-  "nên",
-  "để",
-
-  // Từ chỉ định / lượng từ
-  "một",
-  "những",
-  "các",
-  "này",
-  "kia",
-  "đó",
-  "ấy",
-  "đây",
-
-  // Từ đệm thường gặp
-  "thì",
-  "mà",
-  "ơi",
-  "oh",
-  "ooh",
-  "yeah",
-  "baby",
-  "alo",
-
-  "dù",
-  "nhau",
-  "nhiều",
-  "chưa",
-  "tại",
-  "vậy",
-  "but",
-  "just",
-  "yeah",
-  "oh",
-  "ooh",
-  "baby",
-  "ok",
-  "thế",
-  "nên",
-  "còn",
-  "lại",
-  "nơi",
-  "đâu",
-  "bao",
-  "giờ",
+  // Đại từ nhân xưng đại trà
+  "anh", "em", "ta", "tôi", "mình", "người", "ai", "hắn", "y", "chúng", "bọn", "nó",
+  
+  // Từ nối, quan hệ từ, giới từ
+  "là", "và", "của", "cho", "với", "trong", "ngoài", "về", "đến", "từ", "ở", "nơi",
+  "mà", "như", "thì", "nếu", "vì", "nên", "để", "bởi", "tại", "nhưng", "tuy", "dù",
+  "hay", "hoặc", "cùng", "qua", "lại", "lên", "xuống", "ra", "vào", "sang",
+  
+  // Từ chức năng, trạng từ chỉ thời gian/mức độ
+  "không", "có", "đã", "sẽ", "đang", "vẫn", "còn", "cũng", "chỉ", "mới", "cứ",
+  "rất", "quá", "lắm", "hơi", "hẳn", "đều", "từng", "từng", "khi", "lúc", "nào",
+  "nay", "mai", "qua", "rồi", "thôi", "nữa", "nhau", "nhiều", "chưa", "bao", "giờ",
+  
+  // Lượng từ, từ chỉ định
+  "một", "những", "các", "mọi", "mỗi", "từng", "này", "kia", "đó", "ấy", "đây", "đấy",
+  
+  // Thán từ, từ đệm thường gặp trong nhạc (Rác dữ liệu)
+  "ơi", "à", "ừ", "nhé", "nha", "đâu", "sao", "vậy", "thế", "cơ", "hả",
+  "oh", "ooh", "yeah", "baby", "alo", "ah", "la", "ok", "hey", "ha", "uh"
 ]);
 
 function normalizeLyrics(text) {
   return String(text || "")
     .toLowerCase()
     .normalize("NFC")
+    // Giữ lại chữ cái và số, xóa các ký tự đặc biệt, dấu câu
     .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    // Xóa khoảng trắng thừa
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -99,22 +34,23 @@ function normalizeLyrics(text) {
 function tokenizeLyrics(text) {
   const rawWords = normalizeLyrics(text)
     .split(" ")
-    .filter((w) => w.length >= 2);
+    .filter((w) => w.length > 0);
 
-  // Unigram: bỏ stopword
+  // 1. Unigram: Lọc bỏ stopword để lấy các từ đơn mang ý nghĩa
   const unigrams = rawWords.filter((w) => !VIETNAMESE_STOPWORDS.has(w));
 
-  // Bigram: tạo từ chuỗi gốc để không làm mất cụm như "nhớ em", "yêu em"
+  // 2. Bigram: Ghép từ để bắt các cụm từ (như "tình yêu", "cô đơn")
   const bigrams = [];
 
   for (let i = 0; i < rawWords.length - 1; i++) {
     const w1 = rawWords[i];
     const w2 = rawWords[i + 1];
 
-    const bothAreStopwords =
-      VIETNAMESE_STOPWORDS.has(w1) && VIETNAMESE_STOPWORDS.has(w2);
+    // Chỉ ghép Bigram khi CẢ HAI từ đều mang ý nghĩa (Không nằm trong Stopwords)
+    const isW1Meaningful = !VIETNAMESE_STOPWORDS.has(w1);
+    const isW2Meaningful = !VIETNAMESE_STOPWORDS.has(w2);
 
-    if (!bothAreStopwords) {
+    if (isW1Meaningful && isW2Meaningful) {
       bigrams.push(`${w1} ${w2}`);
     }
   }
@@ -177,6 +113,7 @@ function cosineSimilaritySparse(vectorA, vectorB) {
   let normA = 0;
   let normB = 0;
 
+  // Tính Tích vô hướng (Dot Product) và Độ dài vector A (Norm A)
   for (const [token, valueA] of vectorA.entries()) {
     normA += valueA * valueA;
     if (vectorB.has(token)) {
@@ -184,13 +121,18 @@ function cosineSimilaritySparse(vectorA, vectorB) {
     }
   }
 
+  // Tính Độ dài vector B (Norm B)
   for (const valueB of vectorB.values()) {
     normB += valueB * valueB;
   }
 
+  // Tránh lỗi chia cho 0
   if (normA === 0 || normB === 0) return 0;
 
-  return dot / (Math.sqrt(normA) * Math.sqrt(normB));
+  const score = dot / (Math.sqrt(normA) * Math.sqrt(normB));
+  
+  // Kỹ thuật Clamp an toàn: Ép kiểu kết quả vào đúng giới hạn [0, 1]
+  return Math.min(1, Math.max(0, score));
 }
 
 function getCommonTopLyricsTerms(vectorA, vectorB, limit = 5) {
