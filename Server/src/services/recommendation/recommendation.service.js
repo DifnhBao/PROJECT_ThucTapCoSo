@@ -379,7 +379,7 @@ async function fallbackRecommendationsBySeedMetadata(
           endorsed_by_count: 0,
           best_detail: detail,
           best_score: score,
-          common_reasons: [],
+          best_seed_title: seedMeta.title,
         });
       }
 
@@ -390,27 +390,28 @@ async function fallbackRecommendationsBySeedMetadata(
       if (score > entry.best_score) {
         entry.best_score = score;
         entry.best_detail = detail;
+        entry.best_seed_title = seedMeta.title;
       }
 
-      const commonGenres = detail?.common_genres || [];
-      const commonMoods = detail?.common_moods || [];
-      const commonArtists = detail?.common_artists || [];
+      // const commonGenres = detail?.common_genres || [];
+      // const commonMoods = detail?.common_moods || [];
+      // const commonArtists = detail?.common_artists || [];
 
-      if (commonGenres.length > 0) {
-        entry.common_reasons.push(
-          `cùng thể loại ${commonGenres.slice(0, 2).join(", ")}`,
-        );
-      }
-      if (commonMoods.length > 0) {
-        entry.common_reasons.push(
-          `cùng mood ${commonMoods.slice(0, 2).join(", ")}`,
-        );
-      }
-      if (commonArtists.length > 0) {
-        entry.common_reasons.push(
-          `cùng nghệ sĩ ${commonArtists.slice(0, 2).join(", ")}`,
-        );
-      }
+      // if (commonGenres.length > 0) {
+      //   entry.common_reasons.push(
+      //     `cùng thể loại ${commonGenres.slice(0, 2).join(", ")}`,
+      //   );
+      // }
+      // if (commonMoods.length > 0) {
+      //   entry.common_reasons.push(
+      //     `cùng mood ${commonMoods.slice(0, 2).join(", ")}`,
+      //   );
+      // }
+      // if (commonArtists.length > 0) {
+      //   entry.common_reasons.push(
+      //     `cùng nghệ sĩ ${commonArtists.slice(0, 2).join(", ")}`,
+      //   );
+      // }
     }
   }
 
@@ -421,16 +422,17 @@ async function fallbackRecommendationsBySeedMetadata(
   const recommendations = ranked
     .filter(([songId]) => candidateSongMap.has(songId))
     .map(([songId, data]) => {
-      const uniqueReasons = [...new Set(data.common_reasons)].slice(0, 3);
-      const reason =
-        uniqueReasons.length > 0
-          ? `Gợi ý dựa trên đặc trưng giống các bài bạn đã yêu thích/đánh giá/nghe gần đây: ${uniqueReasons.join(", ")}.`
-          : "Gợi ý dựa trên đặc trưng giống các bài bạn đã yêu thích/đánh giá/nghe gần đây.";
-
       return {
         song: candidateSongMap.get(songId),
         accumulated_score: Math.round(data.accumulated_score * 10000) / 10000,
-        reason,
+
+        // Gọi hàm dịch thuật dùng chung cho toàn hệ thống
+        reason: buildUserCentricReason(
+          data.best_seed_title || "những ca khúc yêu thích",
+          "recent_activity", // Fallback mặc định là recent_activity
+          { metadata_detail: data.best_detail }, // Đóng gói lại thành cấu trúc detail
+        ),
+
         endorsed_by_count: data.endorsed_by_count,
         is_discovery_candidate: true,
         fallback_source: "seed_metadata",
@@ -582,13 +584,22 @@ async function getRecommendationsForUser(userId, limit = 10) {
   /* BƯỚC 2 & 3: Expand seed và gộp điểm */
   const candidateMap = new Map();
 
+  const seedSongsInfo = await Song.findAll({
+    where: { song_id: { [Op.in]: Array.from(seedSongIds) } },
+    attributes: ["song_id", "title"],
+  });
+  const seedTitleMap = new Map(seedSongsInfo.map((s) => [s.song_id, s.title]));
+
   for (const [seedId, weight] of seedWithWeight.entries()) {
     const similars = await SongSimilarity.findAll({
       where: { song_id_1: seedId },
       order: [["final_score", "DESC"]],
       limit: 20, // Top 20 gợi ý mỗi seed
-      attributes: ["song_id_2", "final_score", "reason"],
+      attributes: ["song_id_2", "final_score", "detail"],
     });
+
+    // Tìm nguồn của seed này từ map ban đầu để biết user đã thích/nghe/hay rating
+    const seedTitle = seedTitleMap.get(seedId) || "ca khúc bạn từng nghe";
 
     for (const sim of similars) {
       const candId = sim.song_id_2;
@@ -607,10 +618,17 @@ async function getRecommendationsForUser(userId, limit = 10) {
       if (!candidateMap.has(candId)) {
         candidateMap.set(candId, {
           accumulated_score: 0,
-          reasons: [],
-          best_reason: null,
-          best_weighted_score: -Infinity,
+          // reasons: [],
+          // best_reason: null,
+          // best_weighted_score: -Infinity,
           is_discovery_candidate: isDiscoveryCandidate,
+          // Lưu lại thông tin của seed mạnh nhất sinh ra bài này
+          best_seed_id: seedId,
+          best_seed_title: seedTitle,
+          best_score: sim.final_score,
+          // Giữ lại meta detail để tạo câu reason cá nhân hóa real-time
+          best_detail: sim.detail,
+          endorsed_by_count: 0,
         });
       }
 
@@ -620,16 +638,26 @@ async function getRecommendationsForUser(userId, limit = 10) {
       entry.is_discovery_candidate =
         entry.is_discovery_candidate || isDiscoveryCandidate;
 
-      if (sim.reason) {
-        entry.reasons.push(sim.reason);
+      // Mỗi lần một seed gợi ý bài này, tăng biến đếm lên 1
+      entry.endorsed_by_count += 1;
 
-        // Chọn reason đến từ seed đóng góp điểm mạnh nhất cho candidate này.
-        // weightedScore đã bao gồm cả final_score của cặp bài hát và weight của seed.
-        if (weightedScore > entry.best_weighted_score) {
-          entry.best_weighted_score = weightedScore;
-          entry.best_reason = sim.reason;
-        }
+      // Cập nhật nếu tìm thấy seed có sức ảnh hưởng mạnh hơn (Đóng góp nhiều điểm hơn)
+      if (weightedScore > entry.accumulated_score - weightedScore) {
+        entry.best_seed_id = seedId;
+        entry.best_seed_title = seedTitle;
+        entry.best_detail = sim.detail; // Cập nhật lại detail của seed mạnh nhất
       }
+
+      // if (sim.reason) {
+      //   entry.reasons.push(sim.reason);
+
+      //   // Chọn reason đến từ seed đóng góp điểm mạnh nhất cho candidate này.
+      //   // weightedScore đã bao gồm cả final_score của cặp bài hát và weight của seed.
+      //   if (weightedScore > entry.best_weighted_score) {
+      //     entry.best_weighted_score = weightedScore;
+      //     entry.best_reason = sim.reason;
+      //   }
+      // }
     }
   }
 
@@ -697,24 +725,37 @@ async function getRecommendationsForUser(userId, limit = 10) {
 
   const recommendations = topCandidates
     .filter(([song_id]) => songMap.has(song_id))
-    .map(
-      ([
-        song_id,
-        { accumulated_score, reasons, best_reason, is_discovery_candidate },
-      ]) => ({
+    .map(([song_id, entry]) => {
+      // Tìm lại data detail tương đồng giữa cặp bài hát (đọc từ bảng song_similarities hoặc memory)
+      const seedId = entry.best_seed_id;
+
+      // Giả định bạn xác định được nguồn hành vi của seedId (v dụ lấy từ list favorite/recent)
+      let source = "recent_activity";
+      if (favoriteSeedIds.includes(seedId)) source = "favorite";
+      if (ratingSeedIds.includes(seedId)) source = "normalized_rating";
+
+      // Lấy mảng mood chung từ kết quả đối sánh metadata của cặp bài
+      // (Ở đây mình lấy ví dụ mảng mood tĩnh, bạn có thể truyền entry.common_moods vào)
+      const commonMoods =
+        entry.best_detail?.metadata_detail?.common_moods || [];
+      const commonGenres =
+        entry.best_detail?.metadata_detail?.common_genres || [];
+
+      return {
         song: songMap.get(song_id),
-        accumulated_score: Math.round(accumulated_score * 10000) / 10000,
+        accumulated_score: Math.round(entry.accumulated_score * 10000) / 10000,
 
-        // Ưu tiên lý do đến từ seed đóng góp điểm mạnh nhất
-        // Nếu vì lý do nào đó không có best_reason, fallback về reason đầu tiên
-        reason: best_reason || reasons[0] || "Gợi ý dựa trên sở thích của bạn.",
+        // Ghi đè câu lý do kỹ thuật thành câu lý do trải nghiệm
+        reason: buildUserCentricReason(
+          entry.best_seed_title,
+          source,
+          entry.best_detail,
+        ),
 
-        // Số seed đề xuất bài này — số càng cao càng đáng tin cậy
-        endorsed_by_count: reasons.length,
-
-        is_discovery_candidate,
-      }),
-    );
+        endorsed_by_count: entry.endorsed_by_count,
+        is_discovery_candidate: entry.is_discovery_candidate,
+      };
+    });
 
   logRecommendationDebug("result", {
     userId,
@@ -876,6 +917,140 @@ async function getSongPairDebug(songIdA, songIdB) {
     },
     updated_at: null,
   };
+}
+
+/**
+ * Hàm tạo câu lý do cá nhân hóa dựa trên Dictionary Mapping
+ */
+// TỪ ĐIỂN DỊCH MOOD SANG NGÔN NGỮ TỰ NHIÊN
+const MOOD_DICTIONARY = {
+  // Nhóm Vui vẻ / Năng động
+  energetic: "tràn đầy năng lượng",
+  party: "sôi động, bùng nổ",
+  banger: "cực cháy và bùng nổ",
+  upbeat: "nhịp độ tươi vui",
+  playful: "tươi vui, nhí nhảnh",
+  cute: "dễ thương, kẹo ngọt",
+  festive: "rộn ràng, mang không khí lễ hội",
+  bright: "tươi sáng",
+  cheerful: "tích cực, yêu đời",
+
+  // Nhóm Lãng mạn / Thư giãn
+  romantic: "lãng mạn, ngọt ngào",
+  sweet: "ngọt ngào",
+  chill: "nhẹ nhàng, thư giãn",
+  relaxed: "thoải mái, êm dịu",
+  peaceful: "bình yên",
+  healing: "mang tính chữa lành",
+  dreamy: "mộng mơ, bay bổng",
+  warm: "ấm áp",
+
+  // Nhóm Buồn / Suy tư
+  sad: "buồn bã",
+  melancholy: "u buồn, suy tư",
+  heartbreak: "tan vỡ, da diết",
+  lonely: "cô đơn, tĩnh lặng",
+  regret: "đầy nuối tiếc",
+  reflective: "đầy tự sự, suy ngẫm",
+  nostalgic: "mang nhiều hoài niệm",
+  passionate: "mãnh liệt, trào dâng",
+
+  // Nhóm Chất / Cá tính
+  groovy: "bắt tai, lôi cuốn",
+  catchy: "giai điệu cực cuốn",
+  retro: "âm hưởng hoài cổ",
+  swag: "cực chất và cá tính",
+  confident: "phong cách tự tin",
+  inspirational: "đầy cảm hứng",
+  folk: "âm hưởng dân gian đương đại",
+};
+
+// TỪ ĐIỂN DỊCH THỂ LOẠI (Dùng làm Fallback nếu không có Mood)
+const GENRE_DICTIONARY = {
+  "V-Pop": "âm nhạc V-Pop quen thuộc",
+  "Rap Việt": "nhịp beat Rap/Hip-hop",
+  "Dance Pop": "chất Pop Dance nhún nhảy",
+  EDM: "chất điện tử EDM",
+  Ballad: "giai điệu Ballad sâu lắng",
+  Acoustic: "âm sắc mộc mạc (Acoustic)",
+  Indie: "phong cách Indie tự do",
+  "R&B": "giai điệu R&B cuốn hút",
+  "Lo-fi": "không gian Lo-fi",
+  Chill: "chất nhạc Chill thư giãn",
+};
+
+/**
+ * Hàm tạo câu lý do cá nhân hóa toàn diện (Bao gồm Nội dung + Hành vi)
+ */
+function buildUserCentricReason(seedTitle, userActionSource, detail) {
+  // Bóc tách dữ liệu an toàn
+  const metaDetail = detail?.metadata_detail || {};
+  const behavDetail = detail?.behavioral_detail || {};
+
+  // 1. Dịch nguồn hành động của user
+  let actionText = "bạn nghe gần đây";
+  if (userActionSource === "favorite") actionText = "bạn đã thả tim";
+  if (userActionSource === "normalized_rating") actionText = "bạn đánh giá cao";
+
+  // 2. Thu thập các bằng chứng Nội dung (Content-Based)
+  const contentReasons = [];
+
+  // Mức độ ưu tiên 1: Cùng Nghệ sĩ (Tín hiệu rất mạnh với người dùng)
+  if (metaDetail.common_artists?.length > 0) {
+    contentReasons.push(
+      `cùng do ${metaDetail.common_artists.join(", ")} thể hiện`,
+    );
+  }
+
+  // Mức độ ưu tiên 2: Cùng Cảm xúc (Mood)
+  if (metaDetail.common_moods?.length > 0) {
+    const mappedVibes = metaDetail.common_moods
+      .map((m) => MOOD_DICTIONARY[m])
+      .filter(Boolean)
+      .slice(0, 2); // Tránh câu quá dài
+    if (mappedVibes.length > 0) {
+      contentReasons.push(`mang âm hưởng ${mappedVibes.join(" và ")}`);
+    }
+  }
+
+  // Mức độ ưu tiên 3: Cùng Chủ đề (Keywords) hoặc Lời bài hát (Lyrics)
+  if (metaDetail.common_keywords?.length > 0) {
+    contentReasons.push(`xoay quanh chủ đề ${metaDetail.common_keywords[0]}`);
+  } else if (metaDetail.common_lyrics_terms?.length >= 2) {
+    // Nếu thuật toán TF-IDF bắt được từ khóa đặc trưng
+    const terms = metaDetail.common_lyrics_terms.slice(0, 2).join(", ");
+    contentReasons.push(`mang những ca từ đồng điệu (${terms})`);
+  }
+
+  // Mức độ ưu tiên 4: Cùng Thể loại (Genre - Dùng làm Fallback)
+  if (contentReasons.length === 0 && metaDetail.common_genres?.length > 0) {
+    const mappedGenres = metaDetail.common_genres
+      .map((g) => GENRE_DICTIONARY[g])
+      .filter(Boolean);
+    if (mappedGenres.length > 0) {
+      contentReasons.push(`mang ${mappedGenres[0]}`);
+    }
+  }
+
+  // Chọn tối đa 2 lý do nội dung để ghép câu cho tự nhiên
+  const selectedContentReasons = contentReasons.slice(0, 2).join(", ");
+  const vibeText = selectedContentReasons
+    ? `, ${selectedContentReasons}`
+    : ", mang sự đồng điệu về phong cách âm nhạc";
+
+  // 3. Thu thập bằng chứng Hành vi (Collaborative Filtering)
+  let communityText = "";
+  // Nếu có từ 2 user trở lên cùng tương tác mạnh với cả 2 bài hát này
+  if (
+    behavDetail.common_user_count >= 2 &&
+    behavDetail.adjusted_behavioral_score > 0
+  ) {
+    communityText =
+      " và đang được nhiều người có cùng gu âm nhạc với bạn yêu thích";
+  }
+
+  // 4. Kết hợp thành câu hoàn chỉnh
+  return `Được gợi ý từ ca khúc "${seedTitle}" mà ${actionText}${vibeText}${communityText}.`;
 }
 
 module.exports = {

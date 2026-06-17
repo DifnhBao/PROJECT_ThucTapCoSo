@@ -29,16 +29,10 @@ function calculateActivityScore(activity) {
   // Tỉ lệ nghe & hoàn thành, clamp về [0, 1]
   // listen_ratio: tổng thời gian thực sự nghe / tổng thời lượng bài
   // (user có thể pause/resume nhiều lần, nên đây là implicit engagement)
-  const listen_ratio =
-    song_duration > 0
-      ? Math.min(1, Math.max(0, total_listened_time / song_duration))
-      : 0;
+  const listen_ratio = song_duration > 0 ? Math.min(1, Math.max(0, total_listened_time / song_duration)) : 0;
 
   // completion_ratio: user đã kéo/nghe đến vị trí xa nhất nào của bài
-  const completion_ratio =
-    song_duration > 0
-      ? Math.min(1, Math.max(0, max_position_reached / song_duration))
-      : 0;
+  const completion_ratio = song_duration > 0 ? Math.min(1, Math.max(0, max_position_reached / song_duration)) : 0;
 
   // Điểm cơ sở
   // Mỗi lần phát hợp lệ (đã qua validation >20s ở view_count) = +1

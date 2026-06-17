@@ -170,7 +170,6 @@ function computeHybridPair(metaA, metaB, matrix) {
  *   5. Upsert 2 chiều (A→B và B→A) vào bảng song_similarities
  *      → Query "WHERE song_id_1 = X" sẽ nhanh, không cần OR
  *
- * Dataset 100 bài → 4950 cặp → 9900 upsert rows — hoàn toàn ổn cho demo.
  *
  * @param {{ limit?: number }} options
  * @returns {Promise<{ processed_pairs: number, song_count: number, duration_ms: number }>}
