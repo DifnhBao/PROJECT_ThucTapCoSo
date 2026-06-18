@@ -203,7 +203,7 @@ const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
             isActive={currentTrack?.trackId === song.trackId}
             isPlaying={isPlaying}
             isDevMode={isDevMode}
-            variant="grid" // <--- SỬA 2: Đổi thành thẻ vuông (grid)
+            variant="grid" 
             onClick={() => handlePlay(index)}
           />
         ))}

@@ -106,11 +106,11 @@
 
 /* ---- Rec card ---- */
 .rec-card {
-  flex: 0 0 170px;
+  flex: 0 0 210px;
   background: var(--tt-surface);
   border: 1px solid var(--tt-border);
   border-radius: 14px;
-  /* overflow: hidden; */
+  overflow: hidden;
   cursor: pointer;
   scroll-snap-align: start;
   transition:
@@ -282,6 +282,7 @@
    SimilarSongsSection
    ============================================================ */
 .similar-section {
+  margin-top: 30px;
   margin-bottom: 28px;
   background: var(--tt-surface);
   padding: 18px;
@@ -834,10 +835,10 @@
   font-size: 10px;
   color: rgba(255,255,255,0.6);
   line-height: 1.5;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-  overflow: hidden;
+  /* display: -webkit-box; */
+  /* -webkit-box-orient: vertical; */
+  /* -webkit-line-clamp: 4; */
+  /* overflow: hidden; */
 }
 
 /* ============================================================

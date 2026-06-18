@@ -103,15 +103,16 @@ body {
 /* ========== MAIN CONTENT ========== */
 .main {
   position: relative;
+  /* width: 100vw; */
 
   margin-left: var(--sidebar-width);
   margin-top: 90px;
 
-  padding: 24px 32px;
+  padding: 24px 40px;
   min-height: 100vh;
   background: var(--background-color);
 
-  padding-right: 350px;
+  padding-right: 300px;
   transition: all 0.3s ease;
 }
 
@@ -123,6 +124,10 @@ body {
   font-size: 34px;
   font-weight: bold;
   color: var(--color-text);
+}
+
+#content{
+  width: 128%;
 }
 
 /* ========== EXPLORE PAGE ========== */

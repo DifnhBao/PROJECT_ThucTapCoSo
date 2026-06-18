@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { usePlaylists } from "../hooks/usePlaylists";
 import { addSongToPlaylistService } from "../service";
 import { createPlaylistService } from "../service";
@@ -28,6 +29,11 @@ export default function AddToPlaylistModal({
   const [adding, setAdding] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleAddSong = async (playlistId: number) => {
     try {
@@ -62,7 +68,8 @@ export default function AddToPlaylistModal({
     setMessage("✓ Playlist mới đã được tạo!");
   };
 
-  return (
+  // Toàn bộ nội dung UI của Modal
+  const modalContent = (
     <div className="add-to-playlist-modal-overlay" onClick={onClose}>
       <div
         className="add-to-playlist-modal-content"
@@ -70,15 +77,14 @@ export default function AddToPlaylistModal({
       >
         <div className="modal-header">
           <h2>Thêm vào Playlist</h2>
-          <button className="close-btn" onClick={onClose}>
-            ✕
-          </button>
+          <button className="close-btn" onClick={onClose}>✕</button>
         </div>
 
         {message && <div className="success-message">{message}</div>}
         {error && <div className="error-message">{error}</div>}
 
         <div className="modal-body">
+          {/* ... (Nội dung hiển thị danh sách playlist giữ nguyên) ... */}
           {loading ? (
             <div className="loading">Đang tải playlists...</div>
           ) : playlists.length > 0 ? (
@@ -131,4 +137,79 @@ export default function AddToPlaylistModal({
       </div>
     </div>
   );
+
+  // 3. Sử dụng createPortal để render thẳng vào body
+  if (!mounted) return null;
+  return createPortal(modalContent, document.body);
+
+
+  // return (
+  //   <div className="add-to-playlist-modal-overlay" onClick={onClose}>
+  //     <div
+  //       className="add-to-playlist-modal-content"
+  //       onClick={(e) => e.stopPropagation()}
+  //     >
+  //       <div className="modal-header">
+  //         <h2>Thêm vào Playlist</h2>
+  //         <button className="close-btn" onClick={onClose}>
+  //           ✕
+  //         </button>
+  //       </div>
+
+  //       {message && <div className="success-message">{message}</div>}
+  //       {error && <div className="error-message">{error}</div>}
+
+  //       <div className="modal-body">
+  //         {loading ? (
+  //           <div className="loading">Đang tải playlists...</div>
+  //         ) : playlists.length > 0 ? (
+  //           <div className="playlist-list">
+  //             {playlists.map((playlist: any) => (
+  //               <div key={playlist.playlistId} className="playlist-item">
+  //                 <div className="playlist-info">
+  //                    <p className="playlist-name">{playlist.name}</p>
+  //                   {playlist.description && (
+  //                     <p className="playlist-description">
+  //                       {playlist.description}
+  //                     </p>
+  //                   )}
+  //                 </div>
+  //                 <button
+  //                   className="add-btn"
+  //                   onClick={() => handleAddSong(playlist.playlistId)}
+  //                   disabled={adding}
+  //                 >
+  //                   {adding && selectedPlaylistId === playlist.playlistId
+  //                     ? "Đang thêm..."
+  //                     : "Thêm"}
+  //                 </button>
+  //               </div>
+  //             ))}
+  //           </div>
+  //         ) : (
+  //           <div className="empty-state">
+  //             <p>Bạn chưa có playlist nào</p>
+  //           </div>
+  //         )}
+  //       </div>
+
+  //       <div className="modal-footer">
+  //         <button
+  //           className="create-new-btn"
+  //           onClick={() => setShowCreateModal(true)}
+  //         >
+  //           + Tạo Playlist Mới
+  //         </button>
+  //       </div>
+
+  //       {showCreateModal && (
+  //         <CreatePlaylistModal
+  //           isNested={true}
+  //           onClose={() => setShowCreateModal(false)}
+  //           onCreated={handlePlaylistCreated}
+  //         />
+  //       )}
+  //     </div>
+  //   </div>
+  // );
 }
