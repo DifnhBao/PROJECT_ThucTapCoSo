@@ -1,0 +1,60 @@
+Cụm 1: Nhạc Trẻ Đại Chúng (V-Pop / R&B / Indie Pop)
+song_id	Bài hát thật			Nghệ sĩ 	Genre			
+1	Thích Em Hơi Nhiều		Wren Evans	V-Pop, R&B, Chill
+2	Yêu Thì Yêu Không Yêu Thì Yêu	AMEE		V-Pop, Dance Pop
+3	Nàng Thơ			Hoàng Dũng	V-Pop, Ballad
+4	Mascara				Chillies	V-Pop, Indie
+5	Đã Lỡ Yêu Em Nhiều		JustaTee	V-Pop, R&B
+6	Ước Gì				Mỹ Tâm		V-Pop, Ballad
+
+Cụm này dùng để test user thích nhạc tình yêu, V-Pop, romantic.
+
+Cụm 2: Nhạc Chữa Lành & Tự Sự (Acoustic / Soul / Ballad Buồn)
+song_id	Bài hát thật		Nghệ sĩ			Genre
+7	Hẹn Ước Từ Hư Vô	Mỹ Tâm			Ballad, Acoustic
+8	Nửa Thập Kỷ		Hoàng Dũng		Ballad, R&B
+9	Vùng Ký Ức		Chillies		V-Pop, Indie
+10	Khi Em Lớn		Orange, Hoàng Dũng	V-Pop, Acoustic, Chill
+11	Crying Over You		JustaTee, Binz		Rap Việt, R&B
+12	Chuyện Như Chưa Bắt Đầu	Mỹ Tâm			V-Pop, Ballad
+
+Cụm này dùng để test các bài buồn, chia tay, hồi ức, acoustic/ballad.
+
+Cụm 3: Dòng Chảy Hip-Hop & Urban (Rap Việt / Melodic Rap)
+song_id	Bài hát thật		Nghệ sĩ			Genre
+13	Chìm Sâu		RPT MCK, Trung Trần	Rap, R&B, Chill
+14	Tại Vì Sao		RPT MCK			Rap, R&B
+15	Lối Nhỏ			Đen, Phương Anh Đào	Rap, Acoustic, Chill
+16	Bài Này Chill Phết	Đen, Min		V-Pop, Rap, Chill
+17	Bigcityboi		Binz			Rap, EDM
+18	Mang Tiền Về Cho Mẹ	Đen, Nguyên Thảo	V-Pop, Rap
+
+Cụm này dùng để test user thích rap/hip-hop/urban.
+
+Cụm 4: Năng Lượng Tích Cực & Sôi Động (Dance Pop / Disco / Vinahouse)
+song_id	Bài hát thật		Nghệ sĩ				Genre
+19	Ngày Mai		Tóc Tiên			EDM, Dance Pop
+20	Hai Phút Hơn		Pháo				Rap, EDM, Dance Pop
+21	The Playah		SOOBIN				V-Pop, R&B, Dance Pop
+22	See Tình		Hoàng Thùy Linh			V-Pop, Dance Pop
+23	Gieo Quẻ		Hoàng Thùy Linh, Đen		V-Pop, Rap, Dance Pop
+24	Bật Tình Yêu Lên	Tăng Duy Tân, Hòa Minzy		V-Pop, Dance Pop
+
+Cụm này dùng để test EDM/Dance Pop/party/high energy.
+
+Cụm 5: Không Gian Thư Giãn (Lo-fi / Acoustic Chill)
+song_id	Bài hát thật	Nghệ sĩ					Genre
+25	3107		W/N, Nâu, Duongg			Rap, Lo-fi, Chill
+26	Cứ Chill Thôi	Chillies, Suni Hạ Linh, Rhymastic	V-Pop, Rap, Chill
+
+
+
+
+| ID | Username         | Gu Âm Nhạc Chính (Cụm mồi)   | Thể loại Đặc trưng (Genres) | Cảm xúc & Chủ đề (Mood/Keywords)                                   |
+| -- | ---------------- | ---------------------------- | --------------------------- | ------------------------------------------------------------------ |
+| 1  | demo_pop_user    | Cụm 1: Nhạc Trẻ Đại Chúng    | V-Pop, Dance Pop, R&B       | Groovy, cute, romantic (Tình yêu, thả thính, tươi vui)             |
+| 2  | demo_rap_user    | Cụm 3: Hip-Hop & Urban       | Rap Việt, R&B               | Melancholy, chill, reflective (Suy, thất tình, tự sự, melodic rap) |
+| 3  | demo_ballad_user | Cụm 2: Chữa Lành & Tự Sự     | Ballad, Acoustic, Indie     | Peaceful, sad, nostalgic (Chữa lành, hoài niệm, chia tay)          |
+| 4  | demo_edm_user    | Cụm 4: Năng Lượng & Sôi Động | EDM, Dance Pop              | Energetic, party, confident (Bùng nổ, club, quẩy)                  |
+| 5  | demo_new_user    | Chưa xác định (Cold-start)   | N/A                         | N/A                                                                |
+| 6  | demo_mixed_user  | Giao thoa đa Cụm (1, 3, 4)   | V-Pop, Rap Việt, EDM        | Đa dạng (Vừa thích thả thính, vừa thích Rap)                       |
