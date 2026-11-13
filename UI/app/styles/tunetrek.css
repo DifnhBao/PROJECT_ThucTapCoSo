@@ -6,7 +6,7 @@
    ===================================================== */
 
 :root {
-  --tt-orange: #ff7e3a;
+  --tt-orange: #b34700;
   --tt-orange-light: #ffd7c2;
   --tt-orange-pale: #fff0e8;
   --tt-brown: #73391a;
@@ -17,7 +17,7 @@
   --tt-border: #eaeaee;
   --tt-text-primary: #1c0e06;
   --tt-text-secondary: #5c5c68;
-  --tt-text-muted: #9898a6;
+  --tt-text-muted: #666674;
   --tt-sidebar-width: 260px;
   --tt-header-height: 64px;
   --tt-player-height: 80px;

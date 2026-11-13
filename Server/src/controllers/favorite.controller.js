@@ -2,47 +2,33 @@ const favoriteService = require("../services/favorite.service");
 
 exports.toggleLikeSong = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.auth.userId;
     const songId = Number(req.params.id);
 
     const result = await favoriteService.toggleLikeSong(userId, songId);
 
     res.status(200).json(result);
   } catch (error) {
-    console.error("toggleLikeSong error:", error);
-
-    if (error.message === "SONG_NOT_FOUND") {
-      return res.status(404).json({
-        message: "Bài hát không tồn tại",
-      });
-    }
-
-    res.status(500).json({
-      message: "Lỗi hệ thống",
-    });
+    next(error);
   }
 };
 
-exports.getLikeStatus = async (req, res) => {
+exports.getLikeStatus = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.auth.userId;
     const songId = Number(req.params.id);
 
     const result = await favoriteService.getLikeStatus(userId, songId);
 
     res.status(200).json(result);
   } catch (error) {
-    console.error("getLikeStatus error:", error);
-
-    res.status(500).json({
-      message: "Lỗi hệ thống",
-    });
+    next(error);
   }
 };
 
-exports.getMyFavoriteSongs = async (req, res) => {
+exports.getMyFavoriteSongs = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.auth.userId;
 
     // query params
     const page = Number(req.query.page) || 1;
@@ -56,10 +42,8 @@ exports.getMyFavoriteSongs = async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    console.error("getMyFavoriteSongs error:", error);
-
-    res.status(500).json({
-      message: "Lỗi hệ thống",
-    });
+    next(error);
   }
 };
+
+module.exports = require('../validation/validate-controller').withContracts(module.exports, require('../validation/contracts').contracts.favorites);

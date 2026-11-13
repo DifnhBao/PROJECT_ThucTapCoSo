@@ -1,7 +1,6 @@
 "use client";
-
-import React, { useState } from "react";
-import { FaPlay, FaPause } from "react-icons/fa";
+import React,{ useState } from "react";
+import { FaPause,FaPlay } from "react-icons/fa";
 import type { RecommendationSong } from "../recommendation.types";
 
 /* ------------------------------------------------------------------ */
@@ -9,16 +8,6 @@ import type { RecommendationSong } from "../recommendation.types";
 /* ------------------------------------------------------------------ */
 type TagDef = { emoji: string; label: string; keywords: string[] };
 
-// const TAG_DEFINITIONS: TagDef[] = [
-//   { emoji: "🎤", label: "Cùng ca sĩ",  keywords: ["cùng nghệ sĩ", "cùng ca sĩ", "same artist", "cùng tác giả"] },
-//   { emoji: "🔥", label: "Sôi động",    keywords: ["sôi động", "năng lượng", "energetic", "upbeat", "dance"] },
-//   { emoji: "🥰", label: "Thư giãn",    keywords: ["thư giãn", "nhẹ nhàng", "chill", "relax", "acoustic"] },
-//   { emoji: "🎸", label: "Cùng thể loại", keywords: ["cùng thể loại", "thể loại", "genre", "same genre"] },
-//   { emoji: "💫", label: "Phổ biến",    keywords: ["phổ biến", "trending", "nổi tiếng", "popular"] },
-//   { emoji: "🎵", label: "Âm điệu tương tự", keywords: ["âm điệu", "melody", "tương tự âm", "similar sound"] },
-//   { emoji: "❤️", label: "Bạn yêu thích", keywords: ["yêu thích", "favorite", "liked", "đã thích"] },
-//   { emoji: "🌙", label: "Tâm trạng",   keywords: ["tâm trạng", "mood", "buồn", "sad", "ballad"] },
-// ];
 
 const TAG_DEFINITIONS: TagDef[] = [
   { emoji: "🎤", label: "Cùng nghệ sĩ", keywords: ["cùng do", "thể hiện", "nghệ sĩ"] },
@@ -61,7 +50,7 @@ function extractScoreBars(song: RecommendationSong): ScoreBar[] {
 
   // Bóc detail nếu có
   if (song.detail && typeof song.detail === "object") {
-    const detail = song.detail as Record<string, unknown>;
+    const detail = song.detail;
     const extraKeys = ["content_score", "collab_score", "hybrid_score", "interaction_score"];
     const labelMap: Record<string, string> = {
       content_score: "Content",
@@ -73,7 +62,7 @@ function extractScoreBars(song: RecommendationSong): ScoreBar[] {
     let ci = 0;
     for (const key of extraKeys) {
       if (typeof detail[key] === "number" && !bars.find((b) => b.label === labelMap[key])) {
-        bars.push({ label: labelMap[key], value: Math.min(detail[key] as number, 1), color: colors[ci % colors.length] });
+        bars.push({ label: labelMap[key], value: Math.min(detail[key], 1), color: colors[ci % colors.length] });
         ci++;
       }
     }
@@ -122,7 +111,7 @@ const RecommendSongCard: React.FC<CardProps> = ({
         {/* Thumbnail */}
         <div className="similar-img-wrap">
           {song.imageUrl ? (
-            <img src={song.imageUrl} alt={song.title} className="similar-img" />
+            <img loading="lazy" decoding="async" width={180} height={180} src={song.imageUrl} alt={song.title} className="similar-img" />
           ) : (
             <div className="similar-img-placeholder">🎵</div>
           )}
@@ -185,7 +174,7 @@ const RecommendSongCard: React.FC<CardProps> = ({
       {/* Cover art */}
       <div className="rec-card-img-wrap">
         {song.imageUrl ? (
-          <img src={song.imageUrl} alt={song.title} className="rec-card-img" />
+          <img loading="lazy" decoding="async" width={180} height={180} src={song.imageUrl} alt={song.title} className="rec-card-img" />
         ) : (
           <div className="rec-card-img-placeholder">🎵</div>
         )}
@@ -245,7 +234,7 @@ interface PopoverProps {
 
 const AiPopover: React.FC<PopoverProps> = ({ song, scoreBars }) => {
   // Bao quát cả 2 API (Similar dùng finalScore, User Rec dùng accumulatedScore)
-  const mainScore = song.finalScore ?? (song as any).accumulatedScore ?? (song as any).accumulated_score;
+  const mainScore = song.finalScore;
 
   return (
     // Xóa onClick={(e) => e.stopPropagation()} để khi click vào Popover vẫn phát nhạc được

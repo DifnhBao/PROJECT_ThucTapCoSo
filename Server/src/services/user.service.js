@@ -1,6 +1,10 @@
+const sessions = require('./session.service');
+const { AppError } = require("../utils/app-error");
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const { validatePassword } = require("../utils/passwordValidator");
+const { AuthorizationError, requireId, requirePermission } = require("../utils/authorization");
+const { isAdmin, canManageAdmins, canResetPassword, canDeleteUser, canUpdateUserProfile } = require("../policies/user.policy");
 
 /* --- CHỨC NĂNG DÀNH CHO USER --- */
 const getUserProfile = async (userId) => {
@@ -9,7 +13,7 @@ const getUserProfile = async (userId) => {
   });
 
   if (!user) {
-    throw new Error("Không tìm thấy người dùng.");
+    throw new AppError("Không tìm thấy người dùng.", 404, "USER_NOT_FOUND");
   }
 
   return user;
@@ -21,7 +25,7 @@ const updateUserProfile = async (userId, updateData) => {
 
   const user = await User.findByPk(userId);
   if (!user) {
-    throw new Error("Không tìm thấy người dùng.");
+    throw new AppError("Không tìm thấy người dùng.", 404, "USER_NOT_FOUND");
   }
 
   const emptyToNull = (v) => (v === "" ? null : v);
@@ -51,7 +55,7 @@ const updateUserProfile = async (userId, updateData) => {
 const updateUserAvatar = async (userId, avatarUrl) => {
   const user = await User.findByPk(userId);
   if (!user) {
-    throw new Error("User not found");
+    throw new AppError("User not found", 404, "USER_NOT_FOUND");
   }
 
   user.avatar = avatarUrl;
@@ -59,28 +63,31 @@ const updateUserAvatar = async (userId, avatarUrl) => {
 };
 
 const changeUserPassword = async (userId, oldPassword, newPassword) => {
+  if (typeof oldPassword !== "string" || typeof newPassword !== "string" || !oldPassword || !newPassword) {
+    throw new AuthorizationError("Vui lòng cung cấp mật khẩu cũ và mật khẩu mới.", 400, "PASSWORD_REQUIRED");
+  }
   const user = await User.findByPk(userId);
-  if (!user) throw new Error("Không tìm thấy người dùng.");
+  if (!user) throw new AppError("Không tìm thấy người dùng.", 404, "USER_NOT_FOUND");
 
   const isMatch = await bcrypt.compare(oldPassword, user.password);
   if (!isMatch) {
-    throw new Error("Mật khẩu cũ không chính xác.");
+    throw new AuthorizationError("Mật khẩu cũ không chính xác.");
   }
 
   if (oldPassword === newPassword) {
-    throw new Error("Mật khẩu mới không được trùng với mật khẩu cũ.");
+    throw new AppError("Mật khẩu mới không được trùng với mật khẩu cũ.", 422, "PASSWORD_REUSED");
   }
 
   // Validate new password
   const passwordError = validatePassword(newPassword);
   if (passwordError) {
-    throw new Error(passwordError);
+    throw new AppError(passwordError, 422, "INVALID_PASSWORD");
   }
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(newPassword, salt);
 
-  await user.save();
+  await sessions.saveSecurityChange(user);
 
   return {
     message: "Đổi mật khẩu thành công",
@@ -95,48 +102,40 @@ const getCurrentAdmin = async (adminId) => {
   });
 
   if (!admin) {
-    throw new Error("Không tìm thấy quản trị viên.");
+    throw new AppError("Không tìm thấy quản trị viên.", 404, "USER_NOT_FOUND");
   }
 
   return admin;
 };
 
-const promoteUserToAdmin = async (userIdToPromote, requesterId) => {
-  if (requesterId !== 2) {
-    throw new Error("Bạn không có quyền của Super Admin để promote.");
-  }
+const promoteUserToAdmin = async (userIdToPromote, requester) => {
+  userIdToPromote = requireId(userIdToPromote);
+  requirePermission(canManageAdmins(requester));
 
   const user = await User.findByPk(userIdToPromote);
-  if (!user) throw new Error("Không tìm thấy ID này!!!");
-  if (user.role === "admin") throw new Error("ID đã có quyền admin!!!");
+  if (!user) throw new AppError("Không tìm thấy ID này!!!", 404, "USER_NOT_FOUND");
+  requirePermission(user.role === "user" && user.user_id !== requester.userId);
 
   user.role = "admin";
-  await user.save();
+  await sessions.saveSecurityChange(user);
 
   user.password = undefined;
   return user;
 };
 
-const demoteAdminToUser = async (userIdToDemote, requesterId) => {
-  if (userIdToDemote === requesterId) {
-    throw new Error("Bạn không thể hạ quyền của chính mình!");
-  }
-
-  if (requesterId !== 2) {
-    throw new Error("Bạn không có quyền Super Admin để demote.");
-  }
+const demoteAdminToUser = async (userIdToDemote, requester) => {
+  userIdToDemote = requireId(userIdToDemote);
+  requirePermission(canManageAdmins(requester) && userIdToDemote !== requester.userId);
 
   const user = await User.findByPk(userIdToDemote);
   if (!user) {
-    throw new Error("Không tìm thấy user này.");
+    throw new AppError("Không tìm thấy user này.", 404, "USER_NOT_FOUND");
   }
 
-  if (user.role === "user") {
-    throw new Error("Nguời dùng này đã là user thường rồi.");
-  }
+  requirePermission(user.role === "admin");
 
   user.role = "user";
-  await user.save();
+  await sessions.saveSecurityChange(user);
 
   return user;
 };
@@ -171,36 +170,35 @@ const getAdminsAndSuperAdmins = async () => {
 };
 
 // Lấy thông tin user theo ID
-const adminGetUserById = async (userId) => {
+const adminGetUserById = async (userId, requester) => {
+  requirePermission(isAdmin(requester));
+  userId = requireId(userId);
   const user = await User.findByPk(userId, {
     attributes: { exclude: ["password"] },
   });
 
   if (!user) {
-    throw new Error("Không tìm thấy người dùng");
+    throw new AppError("Không tìm thấy người dùng", 404, "USER_NOT_FOUND");
   }
 
   return user;
 };
 
 // Cập nhật thông tin user theo ID
-const updateUserById = async (userId, updateData) => {
+const updateUserById = async (userId, updateData, requester) => {
+  requirePermission(isAdmin(requester));
+  userId = requireId(userId);
   const { firstName, lastName, gender, dateOfBirth, address, phone } =
     updateData;
 
   const user = await User.findByPk(userId);
-  if (!user) throw new Error("Không tìm thấy người dùng.");
+  if (!user) throw new AppError("Không tìm thấy người dùng.", 404, "USER_NOT_FOUND");
 
-  if (user.role !== "user") {
-    throw new Error("Chỉ được phép chỉnh sửa thông tin người dùng.");
+  requirePermission(canUpdateUserProfile(requester, user));
+
+  for (const [field, value] of Object.entries({ first_name: firstName, last_name: lastName, gender, birthday: dateOfBirth, address, phone_number: phone })) {
+    if (value !== undefined) user[field] = value === '' ? null : value;
   }
-
-  user.first_name = firstName ?? user.first_name;
-  user.last_name = lastName ?? user.last_name;
-  user.gender = gender ?? user.gender;
-  user.birthday = dateOfBirth ?? user.birthday;
-  user.address = address ?? user.address;
-  user.phone_number = phone ?? user.phone_number;
 
   await user.save();
 
@@ -209,36 +207,21 @@ const updateUserById = async (userId, updateData) => {
 };
 
 const deleteUserById = async (userIdToDelete, requester) => {
-  const { user_id: requesterId, role: requesterRole } = requester;
+  userIdToDelete = requireId(userIdToDelete);
+  requirePermission(isAdmin(requester));
 
   // 1. Không được xóa chính mình
-  if (userIdToDelete === requesterId) {
-    throw new Error("Bạn không thể tự xóa tài khoản của chính mình.");
+  if (userIdToDelete === requester.userId) {
+    throw new AuthorizationError("Bạn không thể tự xóa tài khoản của chính mình.");
   }
 
   // 2. Kiểm tra user cần xóa
   const user = await User.findByPk(userIdToDelete);
   if (!user) {
-    throw new Error("Người dùng không tồn tại.");
+    throw new AppError("Người dùng không tồn tại.", 404, "USER_NOT_FOUND");
   }
 
-  const targetRole = user.role;
-
-  // 3. Phân quyền
-  if (requesterRole === "admin") {
-    if (targetRole !== "user") {
-      throw new Error("Admin chỉ được phép xóa người dùng thường.");
-    }
-  }
-
-  if (requesterRole === "super_admin") {
-    if (targetRole === "super_admin") {
-      throw new Error(
-        "Super Admin không thể xóa chính mình hoặc Super Admin khác."
-      );
-    }
-    // xóa admin & user OK
-  }
+  requirePermission(canDeleteUser(requester, user));
 
   // 4. Thực hiện xóa
   await user.destroy();
@@ -249,51 +232,28 @@ const deleteUserById = async (userIdToDelete, requester) => {
 };
 
 const resetUserPassword = async (userId, newPassword, requester) => {
+  userId = requireId(userId);
+  requirePermission(isAdmin(requester));
   const targetUser = await User.findByPk(userId);
   if (!targetUser) {
-    throw new Error("Không tìm thấy user này.");
+    throw new AppError("Không tìm thấy user này.", 404, "USER_NOT_FOUND");
   }
 
-  const isSelf = targetUser.id === requester.user_id;
-  const requesterRole = requester.role;
-  const targetRole = targetUser.role;
-
-  // ===== SUPER ADMIN =====
-  if (requesterRole === "super_admin") {
-    if (!isSelf && targetRole === "super_admin") {
-      throw new Error("Không thể đặt lại mật khẩu cho Super Admin khác.");
-    }
-  }
-
-  // ===== ADMIN =====
-  else if (requesterRole === "admin") {
-    // admin đổi mật khẩu chính mình
-    if (isSelf) {
-      // OK
-    }
-    // admin đổi mật khẩu user thường
-    else if (targetRole === "user") {
-      // OK
-    } else {
-      throw new Error("Admin không có quyền đặt lại mật khẩu cho role này.");
-    }
-  }
-
-  // ===== ROLE KHÁC =====
-  else {
-    throw new Error("Bạn không có quyền đặt lại mật khẩu.");
+  requirePermission(canResetPassword(requester, targetUser));
+  if (typeof newPassword !== "string") {
+    throw new AuthorizationError("Mật khẩu mới không hợp lệ.", 400, "INVALID_PASSWORD");
   }
 
   // Validate new password
   const passwordError = validatePassword(newPassword);
   if (passwordError) {
-    throw new Error(passwordError);
+    throw new AppError(passwordError, 422, "INVALID_PASSWORD");
   }
 
   // ===== UPDATE PASSWORD =====
   const salt = await bcrypt.genSalt(10);
   targetUser.password = await bcrypt.hash(newPassword, salt);
-  await targetUser.save();
+  await sessions.saveSecurityChange(targetUser);
 
   return {
     message: `Đã đặt lại mật khẩu cho user ${targetUser.username} thành công.`,
@@ -301,20 +261,21 @@ const resetUserPassword = async (userId, newPassword, requester) => {
 };
 
 // Thêm mới tài khoản admin
-const createAdminAccount = async ({ username, email, password }) => {
+const createAdminAccount = async ({ username, email, password }, requester) => {
+  requirePermission(canManageAdmins(requester));
   // 1. Check trùng username
   const existedUser = await User.findOne({
     where: { username },
   });
 
   if (existedUser) {
-    throw new Error("Username đã tồn tại");
+    throw new AppError("Username đã tồn tại", 409, "USERNAME_EXISTS");
   }
 
   // Validate password
   const passwordError = validatePassword(password);
   if (passwordError) {
-    throw new Error(passwordError);
+    throw new AppError(passwordError, 422, "INVALID_PASSWORD");
   }
 
   // 2. Tạo admin

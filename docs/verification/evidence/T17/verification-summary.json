@@ -1,0 +1,34 @@
+{
+  "task": "T17",
+  "status": "complete",
+  "completedOn": "2026-11-04",
+  "branch": "feat/t17-responsive-accessibility",
+  "typecheck": "pass",
+  "uiTests": 56,
+  "lint": {
+    "errors": 0,
+    "warnings": 24,
+    "trackedBy": "T18"
+  },
+  "productionBuild": "pass",
+  "responsiveKeyboardBrowser": "pass",
+  "playerBrowserRegression": "pass",
+  "accountBrowserRegression": "pass",
+  "widths": [
+    375,
+    768,
+    1440
+  ],
+  "zoom": "200% reflow emulation: CSS viewport 720x450, DPR2; native GUI zoom not exercised",
+  "shortViewport": [
+    375,
+    450
+  ],
+  "currentTreeSecretFindings": 0,
+  "commit": false,
+  "push": false,
+  "deploy": false,
+  "newDependencies": false,
+  "localServerStopped": true,
+  "limitations": "Fixture API/media; sampled palette contrast and observed demo path, not whole-site WCAG/screen-reader certification."
+}

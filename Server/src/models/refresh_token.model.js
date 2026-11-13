@@ -12,11 +12,16 @@ const RefreshToken = sequelize.define(
     },
 
     token: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(64),
       allowNull: false,
       comment: "Hashed refresh token (SHA-256)",
     },
 
+    family_id: { type: DataTypes.STRING(36), allowNull: false },
+    scope: { type: DataTypes.STRING(5), allowNull: false, validate: { isIn: [['user', 'admin']] } },
+    consumed_at: { type: DataTypes.DATE(3), allowNull: true },
+    revoked_at: { type: DataTypes.DATE(3), allowNull: true },
+    replacement_digest: { type: DataTypes.STRING(64), allowNull: true },
     expires_at: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -40,6 +45,7 @@ const RefreshToken = sequelize.define(
     indexes: [
       { unique: true, fields: ["token"] },
       { fields: ["user_id"] },
+      { name: "refresh_family_scope", fields: ["family_id", "scope"] },
       { fields: ["expires_at"] },
     ],
   },

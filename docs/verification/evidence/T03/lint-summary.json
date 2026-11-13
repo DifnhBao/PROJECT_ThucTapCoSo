@@ -1,0 +1,15 @@
+{
+  "before": {
+    "files": 120,
+    "errors": 71,
+    "warnings": 76
+  },
+  "after": {
+    "files": 122,
+    "errors": 84,
+    "warnings": 76
+  },
+  "newRules": {
+    "react-hooks/set-state-in-effect": 13
+  }
+}

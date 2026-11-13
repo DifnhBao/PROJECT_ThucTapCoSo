@@ -1,16 +1,14 @@
 "use client";
-
-import React, { useEffect, useRef } from "react";
-import type { DetailViewData } from "@/app/types/music";
-import { usePlayer } from "@/app/features/player/context/PlayerContext";
+import Link from "next/link";
 import PlaylistCover from "@/app/components/FeaturedPlaylists/PlaylistCover";
+import { usePlayerControls } from "@/app/features/player/context/PlayerContext";
+import type { DetailViewData } from "@/app/types/music";
 import { formatDuration } from "@/app/utils/dateHelper";
-import styles from "./DetailView.module.css";
+import React,{ useEffect,useRef } from "react";
+import { FaPause,FaPlay } from "react-icons/fa";
+import { IoTrashOutline } from "react-icons/io5";
 import { MdArrowBackIosNew } from "react-icons/md";
-import { IoShareOutline, IoTrashOutline } from "react-icons/io5";
-import { IoHeart } from "react-icons/io5";
-import { FaPlay } from "react-icons/fa";
-import { FaPause } from "react-icons/fa";
+import styles from "./DetailView.module.css";
 
 interface Props {
   data: DetailViewData;
@@ -20,7 +18,7 @@ interface Props {
 }
 
 const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong, onDeletePlaylist }) => {
-  const { currentTrack, setPlaylist, isPlaying, togglePlay } = usePlayer();
+  const { currentTrack, setPlaylist, isPlaying, togglePlay } = usePlayerControls();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,7 +46,7 @@ const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong, onDeletePlayl
         <div className={styles.playlistBgOverlay} />
       </div>
 
-      <button onClick={onBack} className={styles.backButton}>
+      <button aria-label="Quay lại" onClick={onBack} className={styles.backButton}>
         <MdArrowBackIosNew />
       </button>
 
@@ -67,10 +65,6 @@ const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong, onDeletePlayl
 
             <div className={styles.playlistActions}>
               <div className={styles.playlistIcons}>
-                <IoHeart className={styles.icon} />
-                <span className={styles.count}>999K</span>
-                <IoShareOutline className={styles.icon}/>
-                <span className={styles.count}>0</span>
                 {onDeletePlaylist && data.type === "playlist" && (
                   <button
                     onClick={onDeletePlaylist}
@@ -87,7 +81,7 @@ const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong, onDeletePlayl
                     <IoTrashOutline className={styles.icon} style={{ color: "#ff4b4b" }} />
                   </button>
                 )}
-                <span className={`${styles.icon} ${styles.more}`}>⋯</span>
+
               </div>
 
               <button
@@ -133,13 +127,12 @@ const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong, onDeletePlayl
               <div
                 key={song.trackId}
                 className={`${styles.row} ${isActive ? styles.activeRow : ""}`}
-                onClick={() => handlePlaySong(index)}
               >
-                <div className={styles.colIndex}>{index + 1}</div>
+                <div className={styles.colIndex}><button aria-label={`Phát ${song.title}`} onClick={() => handlePlaySong(index)}>{index + 1}</button></div>
 
                 <div className={styles.colTitle}>
-                  <img src={song.imageUrl} alt={song.title} />
-                  <span>{song.title}</span>
+                  <img loading="lazy" decoding="async" width={48} height={48} src={song.imageUrl} alt={song.title} />
+                  <Link href={`/songs/${song.trackId}`} onClick={(e) => e.stopPropagation()}>{song.title}</Link>
                 </div>
 
                 <div className={styles.colArtist}>{song.artistName}</div>

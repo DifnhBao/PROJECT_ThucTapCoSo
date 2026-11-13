@@ -1,0 +1,7 @@
+{
+  "errors": 78,
+  "warnings": 72,
+  "baseline": "T08/lint.json",
+  "comparison": "path/rule/severity/first message line, ignoring shifted source positions",
+  "newDiagnostics": []
+}

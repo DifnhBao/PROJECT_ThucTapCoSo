@@ -1,10 +1,10 @@
 import http from "@/app/lib/http";
-import type {
-  RawRecommendationSong,
-  SongPairDebug,
-} from "./recommendation.types";
 import { mapRawToRecommendationSong } from "./recommendation.mapper";
-import type { RecommendationSong } from "./recommendation.types";
+import type {
+RawRecommendationSong,
+RecommendationSong,
+SongPairDebug,
+} from "./recommendation.types";
 
 interface RecommendationApiEnvelope {
   data?: RawRecommendationSong[];
@@ -29,14 +29,13 @@ function extractRecommendationItems(payload: unknown): RawRecommendationSong[] {
 }
 
 /**
- * GET /api/recommendations/users/:userId?limit=10
+ * GET /api/recommendations/me?limit=10
  * Trả về danh sách bài hát đề xuất cho user.
  */
 export async function getRecommendationsForUser(
-  userId: number,
   limit = 10,
 ): Promise<RecommendationSong[]> {
-  const endpoint = `/recommendations/users/${userId}?limit=${limit}`;
+  const endpoint = `/recommendations/me?limit=${limit}`;
   const res = await http.get<unknown>(endpoint);
   
   const raw = extractRecommendationItems(res.data);
@@ -71,6 +70,7 @@ export async function getSongPairDebug(
 ): Promise<SongPairDebug> {
   const res = await http.get<SongPairDebugEnvelope>(
     `/recommendations/debug/song-pair?songA=${songA}&songB=${songB}`,
+    { headers: { "x-auth-type": "admin" } },
   );
   return res.data.data;
 }

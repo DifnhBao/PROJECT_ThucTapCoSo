@@ -1,14 +1,14 @@
 "use client";
-
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import React,{ useRef,useState } from "react";
+import { FaChevronLeft,FaChevronRight } from "react-icons/fa";
 import { PiMusicNoteSimpleBold } from "react-icons/pi";
+import useSWR from 'swr';
 
+import { usePlayerControls } from "@/app/features/player/context/PlayerContext";
+import "@/app/features/recommendation/recommendation.css";
 import { getSimilarSongs } from "../recommendation.api";
 import type { RecommendationSong } from "../recommendation.types";
-import { usePlayer } from "@/app/features/player/context/PlayerContext";
 import RecommendSongCard from "./RecommendSongCard";
-import "@/app/features/recommendation/recommendation.css";
 
 interface Props {
   songId: number;
@@ -43,39 +43,13 @@ const DevModeToggle: React.FC<ToggleProps> = ({ checked, onChange }) => (
 /*  SimilarSongsSection                                                 */
 /* ------------------------------------------------------------------ */
 const SimilarSongsSection: React.FC<Props> = ({ songId, limit = 10 }) => {
-  const [songs, setSongs] = useState<RecommendationSong[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data: songs = [], error: failure, isLoading: loading } = useSWR<RecommendationSong[]>(songId ? ['similar', songId, limit] : null, () => getSimilarSongs(songId, limit));
+  const error = failure ? 'Không thể tải gợi ý. Vui lòng thử lại.' : null;
   const [isDevMode, setIsDevMode] = useState(false);
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  const { setPlaylist, currentTrack, isPlaying, togglePlay } = usePlayer();
+  const { setPlaylist, currentTrack, isPlaying, togglePlay } = usePlayerControls();
 
-  const fetchData = useCallback(async () => {
-    if (!songId) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await getSimilarSongs(songId, limit);
-      setSongs(data);
-    } catch (e: unknown) {
-      setError("Không thể tải bài hát tương tự.");
-      console.error("[SimilarSongsSection]", e);
-    } finally {
-      setLoading(false);
-    }
-  }, [songId, limit]);
-
-  // Refetch mỗi khi bài hát hiện tại đổi
-  useEffect(() => {
-    if (!songId) {
-      setSongs([]);
-      setError(null);
-      setLoading(false);
-      return;
-    }
-    fetchData();
-  }, [songId, fetchData]);
 
   const handlePlay = (index: number) => {
     const song = songs[index];

@@ -1,11 +1,8 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import "./Home.css"
-import Banner from "@/app/components/ui/Banner";
 import FeaturedPlaylists from "@/app/components/FeaturedPlaylists/FeaturedPlaylists";
-import type { Playlist, DetailViewData } from "@/app/types/music";
+import type { DetailViewData } from "@/app/types/music";
+import { useState } from "react";
+import "./Home.css";
 
 import DetailView from "@/app/features/playlist/components/DetailView";
 
@@ -22,7 +19,7 @@ export default function ExplorePage() {
     <div id="home" className="home-menu">
       {/* <Banner /> */}
 
-      <h1 className="main-title">Discovery</h1>     
+      <h1 className="main-title">Discovery</h1>
 
       <FeaturedPlaylists onSelect={setSelected} />
     </div>

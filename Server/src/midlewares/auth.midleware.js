@@ -1,84 +1,34 @@
-const jwt = require("jsonwebtoken");
-const { User } = require("../models");
-require("dotenv").config();
+const sessions = require('../services/session.service');
+const jwt = require('jsonwebtoken');
+const { principalFromClaims } = require('../utils/authorization');
+const { AppError } = require('../utils/app-error');
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-// Middleware bảo vệ USER routes
-// Đọc cookie "accessToken", kiểm tra scope === "user"
-const protect = async (req, res, next) => {
+function accessToken(req, scope) {
+  const primary = scope === 'admin' ? 'accessToken_admin' : 'accessToken';
+  const secondary = scope === 'admin' ? 'accessToken' : 'accessToken_admin';
+  return req.cookies?.[primary] || req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] || req.cookies?.[secondary];
+}
+function principal(token) {
+  if (!token) throw new AppError('Chưa đăng nhập.', 401, 'AUTH_REQUIRED');
+  try { return principalFromClaims(jwt.verify(token, process.env.JWT_SECRET)); }
+  catch { throw new AppError('Token không hợp lệ hoặc hết hạn.', 401, 'INVALID_TOKEN'); }
+}
+const protectScope = (scope) => async (req, res, next) => {
   try {
-    const token =
-      req.cookies?.accessToken ||
-      (req.headers.authorization?.startsWith("Bearer")
-        ? req.headers.authorization.split(" ")[1]
-        : null);
-
-    if (!token) {
-      return res.status(401).json({ message: "Không tìm thấy token!" });
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    // Chặn admin token dùng vào user routes
-    if (decoded.scope !== "user") {
-      return res.status(403).json({ message: "Không có quyền truy cập!" });
-    }
-
-    req.user = decoded;
-
+    req.auth = principal(accessToken(req, scope));
+    if (req.auth.scope !== scope) throw new AppError('Không có quyền truy cập.', 403, 'FORBIDDEN');
+    await sessions.validateAccessSession(req.auth);
     next();
-  } catch (error) {
-    console.error("Lỗi khi xác minh JWT:", error);
-    return res.status(401).json({ message: "Token không hợp lệ!" });
-  }
+  } catch (error) { next(error); }
 };
-
-// Middleware kiểm tra role (dùng sau protect hoặc protectAdmin)
-const authorizeRoles = (...roles) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Can't access!" });
-    }
-
-    next();
-  };
+const authorizeRoles = (...roles) => (req, res, next) => {
+  if (!req.auth) return next(new AppError('Chưa đăng nhập.', 401, 'AUTH_REQUIRED'));
+  if (!roles.includes(req.auth.role)) return next(new AppError('Không có quyền truy cập.', 403, 'FORBIDDEN'));
+  next();
 };
-
-// Middleware bảo vệ ADMIN routes
-// Đọc cookie "adminAccessToken", kiểm tra scope === "admin"
-const protectAdmin = async (req, res, next) => {
-  try {
-    const token = req.cookies?.accessToken_admin;
-
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    // Chặn user token dùng vào admin routes
-    if (decoded.scope !== "admin") {
-      return res
-        .status(403)
-        .json({ message: "Token không hợp lệ cho admin!" });
-    }
-
-    if (!["admin", "super_admin"].includes(decoded.role)) {
-      return res.status(403).json({ message: "Không có quyền truy cập!" });
-    }
-
-    req.user = decoded;
-
-    next();
-  } catch (err) {
-    console.error("Lỗi xác minh admin token:", err);
-    return res.status(401).json({ message: "Invalid token" });
-  }
+const optionalAuth = async (req, res, next) => {
+  const token = req.cookies?.accessToken_admin || accessToken(req, 'user');
+  if (!token) return next();
+  try { req.auth = principal(token); await sessions.validateAccessSession(req.auth); next(); } catch (error) { next(error); }
 };
-
-module.exports = { protect, authorizeRoles, protectAdmin };
+module.exports = { protect: protectScope('user'), protectAdmin: protectScope('admin'), authorizeRoles, optionalAuth };

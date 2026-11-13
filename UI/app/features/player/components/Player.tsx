@@ -1,14 +1,13 @@
 "use client";
-
-import React, { useEffect, useState, Suspense } from "react";
-import Link from "next/link";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useLikeContext } from "@/app/features/like/context/LikeContext";
 import "@/app/features/player/components/Player.css";
 import { usePlayer } from "@/app/features/player/context/PlayerContext";
-import { useLikeContext } from "@/app/features/like/context/LikeContext";
-import PopUp from "../../../components/ui/PopUp";
 import AddToPlaylistModal from "@/app/features/playlist/components/AddToPlaylistModal";
-import { IoHeart, IoHeartOutline } from "react-icons/io5";
+import Link from "next/link";
+import { usePathname,useRouter,useSearchParams } from "next/navigation";
+import React,{ Suspense,useEffect,useState } from "react";
+import { IoHeart,IoHeartOutline } from "react-icons/io5";
+import PopUp from "../../../components/ui/PopUp";
 
 const PlayerContent: React.FC = () => {
   const {
@@ -24,6 +23,7 @@ const PlayerContent: React.FC = () => {
     toggleShuffle,
     isRepeat,
     toggleRepeat,
+    repeatMode, isBuffering, audioError, queueError, loadingMore, retryAudio, retryQueue,
   } = usePlayer();
   const { likedMap, toggleLike, fetchLikeStatus } = useLikeContext();
 
@@ -120,31 +120,42 @@ const PlayerContent: React.FC = () => {
 
   return (
     <footer className="bottom-bar-player">
-      
+      {(audioError || queueError || isBuffering || loadingMore) && (
+        <div className="player-feedback" role={audioError || queueError ? 'alert' : 'status'}>
+          <span>{[audioError, queueError].filter(Boolean).join(' ') || (isBuffering ? 'Đang tải âm thanh…' : 'Đang tải bài tiếp theo…')}</span>
+          {(audioError || isBuffering) && <button onClick={retryAudio}>Thử lại</button>}
+          {queueError && <button onClick={() => void retryQueue()}>Thử tải tiếp</button>}
+          {audioError && <button onClick={() => void next()}>Bỏ qua</button>}
+        </div>
+      )}
+
       {/* ── TRÁI: Playback controls ── */}
       <div className="player-left">
         <button
           className="play"
           onClick={toggleShuffle}
+          aria-label="Phát ngẫu nhiên" aria-pressed={isShuffle}
           style={{ color: isShuffle ? "var(--tt-orange)" : "var(--tt-text-muted)" }}
         >
-          <i className="fa-solid fa-shuffle" />
+          <i aria-hidden="true" className="fa-solid fa-shuffle" />
         </button>
-        <button id="prevBtn" className="play" onClick={() => prev()}>
-          <i className="fa-solid fa-backward-step" />
+        <button id="prevBtn" className="play" aria-label="Bài trước" disabled={!currentTrack} onClick={() => prev()}>
+          <i aria-hidden="true" className="fa-solid fa-backward-step" />
         </button>
-        <button id="playBtn" className="play-btn" onClick={togglePlay}>
-          <i className={isPlaying ? "fas fa-pause" : "fas fa-play"} />
+        <button id="playBtn" className="play-btn" aria-label={isPlaying ? "Tạm dừng" : "Phát"} disabled={!currentTrack} onClick={togglePlay}>
+          <i aria-hidden="true" className={isPlaying ? "fas fa-pause" : "fas fa-play"} />
         </button>
-        <button id="nextBtn" className="play" onClick={() => next()}>
-          <i className="fa-solid fa-forward-step" />
+        <button id="nextBtn" className="play" aria-label="Bài tiếp theo" disabled={!currentTrack} onClick={() => void next()}>
+          <i aria-hidden="true" className="fa-solid fa-forward-step" />
         </button>
         <button
           className="play"
           onClick={toggleRepeat}
+          aria-label={`Lặp: ${repeatMode === 'off' ? 'Tắt' : repeatMode === 'one' ? 'Một bài' : 'Tất cả'}`}
+          title={repeatMode === 'off' ? 'Tắt lặp' : repeatMode === 'one' ? 'Lặp một bài' : 'Lặp tất cả'}
           style={{ color: isRepeat ? "var(--tt-orange)" : "var(--tt-text-muted)" }}
         >
-          <i className="fa-solid fa-repeat" />
+          <i aria-hidden="true" className="fa-solid fa-repeat" />{repeatMode === "one" && <small>1</small>}
         </button>
       </div>
 
@@ -154,13 +165,13 @@ const PlayerContent: React.FC = () => {
           {/* Hàng trên: Ảnh bìa + Text */}
           <div className="center-info">
             <Link
-              className="center-cover"
+              aria-label={currentTrack ? `Xem bài hát: ${currentTrack.title}` : "Trang chủ"} className="center-cover"
               scroll={false}
-              href={`/DetailSong?track=${currentTrack?.trackId ?? ""}`}
+              href={currentTrack ? `/songs/${currentTrack.trackId}` : "/Home"}
             >
-              <img
-                src={currentTrack?.imageUrl || "/images/default-song.jpg"}
-                alt="cover"
+              <img width={56} height={56}
+                src={currentTrack?.imageUrl || "/images/default-song.svg"}
+                alt=""
               />
             </Link>
             <div className="center-text">
@@ -175,6 +186,7 @@ const PlayerContent: React.FC = () => {
             <input
               type="range"
               className="seek-bar"
+              aria-label="Vị trí phát" aria-valuetext={`${formatTime(currentTime)} / ${formatTime(duration)}`}
               value={progress || 0}
               min={0}
               max={100}
@@ -193,7 +205,7 @@ const PlayerContent: React.FC = () => {
       <div className="player-right">
         <div className="song-actions">
           <button
-            className={`icon-btn like-icon ${liked ? "liked" : ""}`}
+            aria-label="Yêu thích bài hát" aria-pressed={liked} className={`icon-btn like-icon ${liked ? "liked" : ""}`}
             onClick={handleLikeClick}
             disabled={!currentTrack || isLiking}
             style={{
@@ -207,35 +219,32 @@ const PlayerContent: React.FC = () => {
               <IoHeartOutline className="fa-regular fa-heart" />
             )}
           </button>
-          
+
           <div className="menu-wrapper" style={{ position: "relative" }}>
             <button
-              className="icon-btn expand-icon"
+              aria-label="Tùy chọn bài hát" aria-expanded={showUserMenu} data-dialog-return className="icon-btn expand-icon"
               onClick={() => setShowUserMenu((v) => !v)}
             >
-              <i className="fa-solid fa-ellipsis" />
+              <i aria-hidden="true" className="fa-solid fa-ellipsis" />
             </button>
 
             {showUserMenu && (
               <PopUp show={showUserMenu} onClose={() => setShowUserMenu(false)}>
                 <div className="Other-options-popup">
-                  <button>
-                    <i className="fa-regular fa-heart" />
+                  <button onClick={handleLikeClick} disabled={!currentTrack || isLiking}>
+                    <i aria-hidden="true" className="fa-regular fa-heart" />
                     <span>Thêm vào yêu thích</span>
                   </button>
-                  <button
+                  <button aria-label="Thêm vào playlist"
                     onClick={() => {
                       setShowAddToPlaylist(true);
                       setShowUserMenu(false);
                     }}
                   >
-                    <i className="fa-solid fa-circle-plus" />
+                    <i aria-hidden="true" className="fa-solid fa-circle-plus" />
                     <span>Thêm vào playlist</span>
                   </button>
-                  <button>
-                    <i className="fa-regular fa-flag" />
-                    <span>Báo cáo</span>
-                  </button>
+
                 </div>
               </PopUp>
             )}
@@ -243,11 +252,11 @@ const PlayerContent: React.FC = () => {
         </div>
 
         <div className="vol">
-          <button className="volume" onClick={toggleMute}>
-            <i className={`fa-solid ${getVolumeIcon()}`} />
+          <button aria-label={isMuted ? "Bật âm thanh" : "Tắt âm thanh"} aria-pressed={isMuted} className="volume" onClick={toggleMute}>
+            <i aria-hidden="true" className={`fa-solid ${getVolumeIcon()}`} />
           </button>
           <input
-            className="seek-volume"
+            aria-label="Âm lượng" aria-valuetext={`${isMuted ? 0 : volumeUI}%`} className="seek-volume"
             type="range"
             value={isMuted ? 0 : volumeUI}
             min={0}
@@ -276,155 +285,7 @@ const PlayerContent: React.FC = () => {
     </footer>
   );
 
-  // return (
-  //   <footer className="info">
-  //     {/* ── Track info ── */}
-  //     <div className="info-player">
-  //       <Link
-  //         className="background-singer"
-  //         scroll={false}
-  //         href={`/DetailSong?track=${currentTrack?.trackId ?? ""}`}
-  //       >
-  //         <img
-  //           src={currentTrack?.imageUrl || "/images/default-song.jpg"}
-  //           alt="cover"
-  //         />
-  //       </Link>
-  //       <div className="song-row">
-  //         <div className="info-song">
-  //           <a className="song-tittle">{currentTrack?.title || "—"}</a>
-  //           <a className="artist-name">{currentTrack?.artistName || "—"}</a>
-  //         </div>
-  //         <div className="song-actions">
-  //           <button
-  //             className={`icon-btn like-icon ${liked ? "liked" : ""}`}
-  //             onClick={handleLikeClick}
-  //             disabled={!currentTrack || isLiking}
-  //             style={{
-  //               opacity: isLiking ? 0.5 : 1,
-  //               cursor: isLiking ? "wait" : "pointer",
-  //             }}
-  //           >
-  //             {liked ? (
-  //               <IoHeart className="fa-solid fa-heart" />
-  //             ) : (
-  //               <IoHeartOutline className="fa-regular fa-heart" />
-  //             )}
-  //           </button>
-  //           <button
-  //             className="icon-btn expand-icon"
-  //             onClick={() => setShowUserMenu((v) => !v)}
-  //           >
-  //             <i className="fa-solid fa-ellipsis" />
-  //           </button>
-  //         </div>
-  //       </div>
 
-  //       {showUserMenu && (
-  //         <PopUp show={showUserMenu} onClose={() => setShowUserMenu(false)}>
-  //           <div className="Other-options-popup">
-  //             <button>
-  //               <i className="fa-regular fa-heart" />
-  //               <span>Thêm vào yêu thích</span>
-  //             </button>
-  //             <button
-  //               onClick={() => {
-  //                 setShowAddToPlaylist(true);
-  //                 setShowUserMenu(false);
-  //               }}
-  //             >
-  //               <i className="fa-solid fa-circle-plus" />
-  //               <span>Thêm vào playlist</span>
-  //             </button>
-  //             <button>
-  //               <i className="fa-regular fa-flag" />
-  //               <span>Báo cáo</span>
-  //             </button>
-  //           </div>
-  //         </PopUp>
-  //       )}
-  //     </div>
-
-  //     {/* ── Add to Playlist Modal ── */}
-  //     {showAddToPlaylist && currentTrack && (
-  //       <AddToPlaylistModal
-  //         trackId={currentTrack.trackId}
-  //         trackTitle={currentTrack.title || "Bài hát"}
-  //         onClose={() => {
-  //           setShowAddToPlaylist(false);
-  //           setShowUserMenu(false);
-  //         }}
-  //         onSuccess={() => {
-  //           // Optional: refresh something if needed
-  //         }}
-  //       />
-  //     )}
-
-  //     {/* ── Playback controls ── */}
-  //     <div className="player-center">
-  //       <div className="run">
-  //         <span className="current-time">{formatTime(currentTime)}</span>
-  //         <input
-  //           type="range"
-  //           className="seek-bar"
-  //           value={progress}
-  //           min={0}
-  //           max={100}
-  //           onChange={handleSeek}
-  //         />
-  //         <span className="music-time">{formatTime(duration)}</span>
-  //       </div>
-
-  //       <div className="control">
-  //         {/* NÚT SHUFFLE ĐÃ ĐƯỢC CẬP NHẬT */}
-  //         <button
-  //           className="play"
-  //           onClick={toggleShuffle}
-  //           style={{
-  //             color: isShuffle ? "var(--tt-orange)" : "var(--tt-text-muted)",
-  //           }}
-  //         >
-  //           <i className="fa-solid fa-shuffle" />
-  //         </button>
-  //         <button id="prevBtn" className="play" onClick={() => prev()}>
-  //           <i className="fa-solid fa-backward-step" />
-  //         </button>
-  //         <button id="playBtn" className="play-btn" onClick={togglePlay}>
-  //           <i className={isPlaying ? "fas fa-pause" : "fas fa-play"} />
-  //         </button>
-  //         <button id="nextBtn" className="play" onClick={() => next()}>
-  //           <i className="fa-solid fa-forward-step" />
-  //         </button>
-
-  //         {/* NÚT REPEAT ĐÃ ĐƯỢC GẮN LOGIC */}
-  //         <button
-  //           className="play"
-  //           onClick={toggleRepeat}
-  //           style={{
-  //             color: isRepeat ? "var(--tt-orange)" : "var(--tt-text-muted)",
-  //           }}
-  //         >
-  //           <i className="fa-solid fa-repeat" />
-  //         </button>
-  //       </div>
-  //     </div>
-
-  //     {/* ── Volume ── */}
-  //     <div className="vol">
-  //       <button className="volume" onClick={toggleMute}>
-  //         <i className={`fa-solid ${getVolumeIcon()}`} />
-  //       </button>
-  //       <input
-  //         className="seek-volume"
-  //         type="range"
-  //         value={isMuted ? 0 : volumeUI}
-  //         min={0}
-  //         max={100}
-  //         onChange={handleVolumeChange}
-  //       />
-  //     </div>
-  //   </footer>
-  // );
 };
 
 const Player: React.FC = () => (

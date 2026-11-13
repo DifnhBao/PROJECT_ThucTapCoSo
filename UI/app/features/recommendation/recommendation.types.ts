@@ -5,8 +5,7 @@ type RawArtist =
   | string
   | { name: string }
   | { artist_id: number; name: string };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type RecommendationDetail = Record<string, any>;
+type RecommendationDetail = Record<string, unknown>;
 
 /** Raw shape trả về từ backend recommendation API */
 export interface RawRecommendationSong {

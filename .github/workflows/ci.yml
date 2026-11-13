@@ -1,0 +1,155 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+env:
+  API_INTERNAL_URL: http://127.0.0.1:5000
+  NEXT_TELEMETRY_DISABLED: '1'
+  CI_ENV_FILE: .local-backups/ci/env
+jobs:
+  ui:
+    name: UI quality
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '22.19.0'
+          cache: npm
+          cache-dependency-path: UI/package-lock.json
+      - run: npm ci --prefix UI
+      - run: node scripts/ci/command.cjs ui-typecheck --cwd UI -- node_modules/typescript/bin/tsc --noEmit --incremental false
+      - run: node scripts/ci/command.cjs ui-lint --cwd UI -- node_modules/eslint/bin/eslint.js .
+      - run: node scripts/ci/command.cjs ui-tests --cwd UI -- --import ./tests/helpers/register-typescript.mjs --test 'tests/unit/*.test.mjs' 'tests/components/*.test.mjs'
+      - run: node scripts/ci/command.cjs ui-build --cwd UI -- node_modules/next/dist/bin/next build --turbopack
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: always()
+        with:
+          name: ui-diagnostics
+          path: artifacts/ci/*.json
+          retention-days: 7
+  api:
+    name: API quality
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22.19.0'
+          cache: npm
+          cache-dependency-path: |
+            Server/package-lock.json
+            UI/package-lock.json
+      - run: npm ci --prefix Server && npm ci --prefix UI
+      - run: node scripts/ci/command.cjs api-lint --cwd Server -- ../UI/node_modules/eslint/bin/eslint.js .
+      - run: node scripts/ci/command.cjs api-tests --cwd Server -- --require ./tests/helpers/unit-setup.cjs --test --test-concurrency=2 'tests/unit/*.test.cjs' 'tests/api/*.test.cjs'
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: api-diagnostics
+          path: artifacts/ci/*.json
+          retention-days: 7
+  integration:
+    name: MySQL and browser E2E
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22.19.0'
+          cache: npm
+          cache-dependency-path: |
+            Server/package-lock.json
+            UI/package-lock.json
+      - run: npm ci --prefix Server && npm ci --prefix UI
+      - name: Disposable CI environment and database
+        run: |
+          node scripts/ci/prepare-env.cjs "$CI_ENV_FILE"
+          docker compose --env-file "$CI_ENV_FILE" -f docker-compose.test.yml -p ci up -d --wait --wait-timeout 180
+      - name: Pinned browser tooling
+        run: |
+          npm install --prefix .local-backups/ci/browser --no-save --package-lock=false --ignore-scripts playwright@1.62.1
+          .local-backups/ci/browser/node_modules/.bin/playwright install --with-deps chromium
+          echo "PLAYWRIGHT_MODULE_PATH=$GITHUB_WORKSPACE/.local-backups/ci/browser/node_modules/playwright" >> "$GITHUB_ENV"
+          echo "PLAYWRIGHT_CHANNEL=chromium" >> "$GITHUB_ENV"
+      - run: node scripts/ci/command.cjs e2e-ui-build --cwd UI -- node_modules/next/dist/bin/next build --turbopack
+      - run: node --env-file="$CI_ENV_FILE" scripts/ci/run-stack.cjs
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: browser-diagnostics
+          path: |
+            artifacts/ci/*.json
+            artifacts/ci/e2e-*.png
+          retention-days: 7
+      - name: Stop only isolated CI database
+        if: always()
+        run: docker compose --env-file "$CI_ENV_FILE" -f docker-compose.test.yml -p ci down --volumes
+  security:
+    name: Dependency and secret gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with: {node-version: '22.19.0'}
+      - run: bash scripts/ci/install-tools.sh "$RUNNER_TEMP/tools"
+      - run: '"$RUNNER_TEMP/tools/actionlint" -shellcheck= -pyflakes='
+      - name: Dependency audit (no automatic fixes)
+        run: |
+          mkdir -p .local-backups/ci
+          npm audit --prefix Server --json > .local-backups/ci/server-audit.json || true
+          npm audit --prefix UI --json > .local-backups/ci/ui-audit.json || true
+          node scripts/ci/check-audit.cjs .local-backups/ci/server-audit.json .local-backups/ci/ui-audit.json
+      - name: Secret scan current tree and introduced commits
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          python scripts/scan-secrets.py --gitleaks "$RUNNER_TEMP/tools/gitleaks" --output .local-backups/ci/security
+          node scripts/ci/check-secrets.cjs "$RUNNER_TEMP/tools/gitleaks"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: security-diagnostics
+          path: artifacts/ci/*.json
+          retention-days: 7
+  containers:
+    name: Container builds
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    needs: [ui, api, integration, security]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with: {node-version: '22.19.0'}
+      - run: node scripts/ci/prepare-env.cjs "$CI_ENV_FILE"
+      - run: docker compose --env-file "$CI_ENV_FILE" config --quiet
+      - run: docker compose --env-file "$CI_ENV_FILE" build api migrate web
+  required:
+    name: CI required
+    if: always()
+    needs: [ui, api, integration, security, containers]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with: {node-version: '22.19.0'}
+      - run: node scripts/ci/required.cjs
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}

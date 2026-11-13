@@ -1,0 +1,510 @@
+[
+  {
+    "path": "UI/app/(Pages)/(main)/DetailSong/page.tsx",
+    "sha256": "70f13150cb3682786dc604ae5e1752f03683710821e0a82446effd3aa966d377"
+  },
+  {
+    "path": "UI/app/(Pages)/(main)/error.tsx",
+    "sha256": "621281cba42c9d0d20a06eff2cd6270a6c54d397a98c8022eaa39e778513a988"
+  },
+  {
+    "path": "UI/app/(Pages)/(main)/Following/page.tsx",
+    "sha256": "643a6cefae483f2a1bb3273ccdf4442a9b0f03de7e11b3ca27e081ef93bb67bd"
+  },
+  {
+    "path": "UI/app/(Pages)/(main)/Home/page.tsx",
+    "sha256": "88c6bdf3604e2738f90e79862a5e0055a82693d6ebd2d8c98ef9482b7194b981"
+  },
+  {
+    "path": "UI/app/(Pages)/(main)/layout.tsx",
+    "sha256": "675d65c1761e13352a2440157d9e5fff3f5c02463f1648a7c0ad241231c9cb21"
+  },
+  {
+    "path": "UI/app/(Pages)/(main)/Library/page.tsx",
+    "sha256": "4ee2f841849d700e8dd5cfa3cdac5056176daadeae375c8d7d6ad75f21546bec"
+  },
+  {
+    "path": "UI/app/(Pages)/(main)/Playlist/page.tsx",
+    "sha256": "7aab502835bcc8ceab730df0001c9842702ba72707b0c7af358faa6bfaa57282"
+  },
+  {
+    "path": "UI/app/(Pages)/(main)/playlists/[id]/page.tsx",
+    "sha256": "8f94731ec15ab2749951ea8553e11fa53e773f1a39d2b95d8c987ebf019f8315"
+  },
+  {
+    "path": "UI/app/(Pages)/(main)/Profile/page.tsx",
+    "sha256": "4bae4c74548cb2836343983269ba4fb7a9a99c8686f82dcc24d6d94096d7e238"
+  },
+  {
+    "path": "UI/app/(Pages)/(main)/songs/[id]/page.tsx",
+    "sha256": "549a23cb4a6d4b77e3cdad530f7002af6d342e54cad3d2328e0cd439fb6cc20a"
+  },
+  {
+    "path": "UI/app/(Pages)/administrator/layout.tsx",
+    "sha256": "068782ba0692569933d2e345f97fd5860abdfae79003d0adb9afade4477264c8"
+  },
+  {
+    "path": "UI/app/(Pages)/administrator/login/page.tsx",
+    "sha256": "06b1fe14a4b9726bf6175c815eea05be23be3d809b580b8032fa32bf70b5e917"
+  },
+  {
+    "path": "UI/app/(Pages)/administrator/ManageAdmin/page.tsx",
+    "sha256": "0850c8b5c974756936c9ec150066eed5c0b2fda857056f0a3dd61345fa332bb4"
+  },
+  {
+    "path": "UI/app/(Pages)/administrator/ManageSong/page.tsx",
+    "sha256": "1879165e6693ea4b121672f9a8068c2e3bdf4c76f258017070defc84e083ae92"
+  },
+  {
+    "path": "UI/app/(Pages)/administrator/ManageUser/page.tsx",
+    "sha256": "03be3f3bee93327ec542802c14de041a68d9a81105304a9380753add40e20011"
+  },
+  {
+    "path": "UI/app/(Pages)/administrator/page.tsx",
+    "sha256": "8d675cc09ddc289700ced9f6c4fa5185f082ed5e98b50a9108b9ade4b3a405b0"
+  },
+  {
+    "path": "UI/app/(Pages)/administrator/PendingSongs/page.tsx",
+    "sha256": "390456d43a1cc918dc351189038b54c446d483975038379fec434b06e8d20629"
+  },
+  {
+    "path": "UI/app/(Pages)/administrator/PendingSongs/SongDetailModal.tsx",
+    "sha256": "6a1b777c012d90d93d602f4912057b6d349ddd215b2ae776d0234935dbb89fbb"
+  },
+  {
+    "path": "UI/app/(Pages)/administrator/Statistics/page.tsx",
+    "sha256": "ad8bbd5e80bb21a7e34f1ecb3cf19c697f09342e52f6bb210053419f106290fd"
+  },
+  {
+    "path": "UI/app/(Pages)/layout.tsx",
+    "sha256": "058321101b806cd22ee47cd9150dd277149d85e8c643efced7386a0e3d5aa64a"
+  },
+  {
+    "path": "UI/app/(Pages)/login/page.tsx",
+    "sha256": "d2a08c414f84fd5e899a2cd44ecd0f2efa37c0fa7172c0bf20bb0b963d964112"
+  },
+  {
+    "path": "UI/app/(Pages)/register/page.tsx",
+    "sha256": "5d57327211954abcf609d834bc2dbfa15857c9ff0d0976fc461911acfd45d339"
+  },
+  {
+    "path": "UI/app/components/FeaturedPlaylists/FeaturedPlaylists.tsx",
+    "sha256": "4fbb7b10f331fadce46973be367bd6a72388359309a4894371cabe21cd37ad8c"
+  },
+  {
+    "path": "UI/app/components/FeaturedPlaylists/PlaylistCover.tsx",
+    "sha256": "5f214ea6dc26c78f5cf4dcde2a733ca4376fa328529e9f380b3e8a6b2514b2ed"
+  },
+  {
+    "path": "UI/app/components/FeaturedPlaylists/TrackSection.tsx",
+    "sha256": "0c43207461f3def9aef243730b79e96b4354c20764c9023c4c8b630d93180929"
+  },
+  {
+    "path": "UI/app/components/layout/Footer/UserPage/Footer.tsx",
+    "sha256": "1999b1d870e38977a2ddcd3e584e59ecea38ab378d3577ba4ff0ae7a042c07b0"
+  },
+  {
+    "path": "UI/app/components/layout/Header/AdminPage/Header.tsx",
+    "sha256": "570f9371aa558f4803c7479ad529faa9b55e4266381dd02c1a51f01f620ad26b"
+  },
+  {
+    "path": "UI/app/components/layout/Header/UserPage/Header.tsx",
+    "sha256": "58c46b18522186a36c3e1c10890ff348395799cb3b8cc7b2bbd6f962d0736af1"
+  },
+  {
+    "path": "UI/app/components/layout/Sidebar/AdminPage/Sidebar.tsx",
+    "sha256": "29b958c6eb295510624440ae78c0f8203a9a641fe34069d2ce7e92855d09cd6e"
+  },
+  {
+    "path": "UI/app/components/layout/Sidebar/UserPage/Sidebar.tsx",
+    "sha256": "9322d87392a680596b19e77e54cd800bc024ce8a269c8a7a68f0428795c9f08d"
+  },
+  {
+    "path": "UI/app/components/ui/Logo.tsx",
+    "sha256": "5eb0a29dd11729a44d64c4be1e586d8253dd7d0e464e734d7207fb8a5e0f7eac"
+  },
+  {
+    "path": "UI/app/components/ui/Modal.tsx",
+    "sha256": "07ab26bddb36aa4486b09610b8cf7037ab85b02c91a215428638f1c74b9f47a1"
+  },
+  {
+    "path": "UI/app/components/ui/Pagination.tsx",
+    "sha256": "1cd5e12043fe2747c326c0c56de8d2536ab43efd4c570df35c9313ac2fe5eeb4"
+  },
+  {
+    "path": "UI/app/components/ui/PopUp.tsx",
+    "sha256": "1ec330e3f33929d21792e9dd61dfc57801ef8dae6f1a432f28c9f0e5b439bed5"
+  },
+  {
+    "path": "UI/app/components/ui/ResourceState.tsx",
+    "sha256": "6e780e2b2830240f2bdba6cf56f5bacaafea34c99f6c1253e10403300739aeb3"
+  },
+  {
+    "path": "UI/app/components/ui/SearchBar/SearchBar.tsx",
+    "sha256": "1824060f086b6a077fd66b174ffe0d7c235ca38d2ebddfd4294b45518a03b1bc"
+  },
+  {
+    "path": "UI/app/components/ui/SearchBar/SearchBarComponent.tsx",
+    "sha256": "3da73021d6e0fc135b5f65ef179f2fafca9648ae2862161d34ed24eead8e7001"
+  },
+  {
+    "path": "UI/app/components/ui/SearchBar/SearchResult.tsx",
+    "sha256": "b5d604b0ff579b57d6e5eae7d993ac7e2d0d32749c87c9599829274d31fae2b4"
+  },
+  {
+    "path": "UI/app/components/ui/SearchBar/SearchResultsList.tsx",
+    "sha256": "0be1a82b6b1e7460dd9190da75bd4a1ad6137e38573dbfdcd779d925874b56e1"
+  },
+  {
+    "path": "UI/app/context/ModalContext.tsx",
+    "sha256": "c753c59f2c212b14023cb455f07cdbde4595fb1edc7d9ed3451b50ae7aac4968"
+  },
+  {
+    "path": "UI/app/error.tsx",
+    "sha256": "211b1c930f0cfab1292b990fbb3c2b74f363e840574953ddb0392bb159067933"
+  },
+  {
+    "path": "UI/app/features/admin/api.ts",
+    "sha256": "8cf0137cf0dd060ed178056365881ae8edac60330fe414f3f8861901aef707d6"
+  },
+  {
+    "path": "UI/app/features/admin/components/AddAdmin.tsx",
+    "sha256": "23a96ee6d155e1f166a8a842aaaaf41925d0e8ebdc6559cdb53d134934c54456"
+  },
+  {
+    "path": "UI/app/features/admin/components/ResetAdminPassword.tsx",
+    "sha256": "ea037d8ca50379a967d2de0300ff35bd9f3d98fc6e7d477db090e552c2854f29"
+  },
+  {
+    "path": "UI/app/features/admin/components/SongFormModal.tsx",
+    "sha256": "7302550b395f1ca8939b06bf3e69ae452b9f03b93bc85af61fcfa4f421e846cf"
+  },
+  {
+    "path": "UI/app/features/admin/context/AdminUserContext.tsx",
+    "sha256": "236ea36b8a84fe93de9e824f29fc8d6165101c8f3eabef8879782cc4c06e2b44"
+  },
+  {
+    "path": "UI/app/features/admin/service.ts",
+    "sha256": "27677ea8203333bbbb2e6ca24e848f42d5be291334814c8def43eafc099762ec"
+  },
+  {
+    "path": "UI/app/features/admin/useAdmins.ts",
+    "sha256": "f8b52247ddbcfe89237fdbba70b4319b45f2d8066c26dcbc2a3bfa79e7aa5704"
+  },
+  {
+    "path": "UI/app/features/artist/artist.api.ts",
+    "sha256": "e7b7111638162e729ec1b5133c9ee64a375c060c58f0d9c6728b7f20ddbfd8ef"
+  },
+  {
+    "path": "UI/app/features/artist/artistService.ts",
+    "sha256": "c0f37f332cae8d90cac4efe0c2be4299964f3b4a3865faa951f4e31ee3ec381f"
+  },
+  {
+    "path": "UI/app/features/artist/components/ArtistSection.tsx",
+    "sha256": "a108ae7d57ac1357bd58915fd7e1fa92e3ecc9e3ddf0413c610ee9f2bf8c4b10"
+  },
+  {
+    "path": "UI/app/features/artist/hooks/useArtists.ts",
+    "sha256": "c45e9a81f88d0d3b120f985d9a2d0d03dd5a7caf27c20d585f9914307a265d84"
+  },
+  {
+    "path": "UI/app/features/artist/types/artist.types.ts",
+    "sha256": "fec9c59a39919af585d23bb65d7155422d0bb5b61a71e49ccd96712779546b3c"
+  },
+  {
+    "path": "UI/app/features/auth/api.ts",
+    "sha256": "e7bf8ae319f1c133c49142e35d437d923ec02b555b168db21bfc4d55324f0ef7"
+  },
+  {
+    "path": "UI/app/features/auth/authApi.ts",
+    "sha256": "f1e4931d413b631984a001ef253ec0810e42e1147d0cf4e8ed7bdeeb6c96b075"
+  },
+  {
+    "path": "UI/app/features/auth/components/ChangePassword.tsx",
+    "sha256": "41b4aa99b28bb4dc068a4e2e3864bda1b5242da783c47f891c271df536daba27"
+  },
+  {
+    "path": "UI/app/features/auth/service.ts",
+    "sha256": "1b380ed16e2a9c532b13b682b16d2f641a5105425e7ba93dfb07ba4a4fa5d330"
+  },
+  {
+    "path": "UI/app/features/auth/useLogout.ts",
+    "sha256": "a60d88dcf2e6b1b9e1573022229cdd3de8e1cf41feb0bdcee098c99f0dfb3879"
+  },
+  {
+    "path": "UI/app/features/like/context/LikeContext.tsx",
+    "sha256": "c11528dda1fc734b419bb5f99bcfe224f5dd120efca59e5ce6f1fb645e747ebf"
+  },
+  {
+    "path": "UI/app/features/like/favorite.api.ts",
+    "sha256": "405527f440a151b186757993e36d38ac431e8cd95a9db01205d17dacec9113e3"
+  },
+  {
+    "path": "UI/app/features/like/like.api.ts",
+    "sha256": "80b52709765c0e0eaed6c6857888034cb686d08f192ab79e1db866a07f888c86"
+  },
+  {
+    "path": "UI/app/features/player/activityDelivery.ts",
+    "sha256": "0f24268cac233db785d66dbd179fc2404f063597cffaabc943d9821f24fb2b7c"
+  },
+  {
+    "path": "UI/app/features/player/audioController.ts",
+    "sha256": "8f46ad955f2c64b9241e01ca7dbbb772f844d2488c10052a3a5f9d3da25e873b"
+  },
+  {
+    "path": "UI/app/features/player/components/Player.tsx",
+    "sha256": "d851fe9f9efc119bfc798882429576c6a1c0ebf7a8f831748e3ec7c53201df70"
+  },
+  {
+    "path": "UI/app/features/player/context/PlayerContext.tsx",
+    "sha256": "1e8773a5ffde890fcd536f5ce5c1825a8be01c4ecc27bb9547f0ab91b32836c8"
+  },
+  {
+    "path": "UI/app/features/player/hook/useActivityLogger.ts",
+    "sha256": "38506a66d9febfbd3a941a9d5e706fb63fc698d46e220ec881815e49619c6ae2"
+  },
+  {
+    "path": "UI/app/features/player/hook/useAudioEngine.ts",
+    "sha256": "4db69b4adde0cc7250323eedad04cd82a3df4d1641d83320c08fef9476c21bbe"
+  },
+  {
+    "path": "UI/app/features/player/listeningSession.ts",
+    "sha256": "b3b9948bf8ab203281b3c5b2e2b563fc12eb0f6e8fe6839fc801e2217ccdf9dd"
+  },
+  {
+    "path": "UI/app/features/player/persistence.ts",
+    "sha256": "c4c48324b5a563b7d40ca2dafc18ad8ab587a52dde26accab7822af5ee6fa99c"
+  },
+  {
+    "path": "UI/app/features/player/playerService.ts",
+    "sha256": "ae8a537edd715fb3287f639b945c1dcd6b93f32cf3f0ff6b1773ea8b55310534"
+  },
+  {
+    "path": "UI/app/features/player/queuePager.ts",
+    "sha256": "4b80d3ce1b5a83cd6bf04f17eaf71264e6833707e1e75f3fc849e42d9dd9abd2"
+  },
+  {
+    "path": "UI/app/features/playlist/api.ts",
+    "sha256": "35bfcbd370f8605bf3d9669aba048f40f6ee70d56da2db4f5c9d9b89d7675981"
+  },
+  {
+    "path": "UI/app/features/playlist/components/AddToPlaylistModal.tsx",
+    "sha256": "6c7cbaffa0918ddc4d31460d89e9422dc9e8b9cb5dc83c85da5baeda09b12acc"
+  },
+  {
+    "path": "UI/app/features/playlist/components/CreatePlaylistModal.tsx",
+    "sha256": "5c3bca76026589b5a9a369b78378446ceeabef7d85906dc228e309032ea2415e"
+  },
+  {
+    "path": "UI/app/features/playlist/components/DetailView.tsx",
+    "sha256": "dc5c586795d7e54fef8c829f79f7073355d0ee88872148b7207dd7eaa3ac1503"
+  },
+  {
+    "path": "UI/app/features/playlist/hooks/usePlaylistDetail.ts",
+    "sha256": "27243c2e315640ed514912df9923280dc1e7fc4df08663c1c393e8f576551385"
+  },
+  {
+    "path": "UI/app/features/playlist/hooks/usePlaylists.ts",
+    "sha256": "c4589106fc1dd49d538360d4a4c345f07384b4da2bdfe426387278f2ea62ac12"
+  },
+  {
+    "path": "UI/app/features/playlist/playlist.mapper.ts",
+    "sha256": "751a261cd5aed27ae6e6bcac96ae4483b94a4c1843817e38d936085a433d5349"
+  },
+  {
+    "path": "UI/app/features/playlist/service.ts",
+    "sha256": "55278fca597dc95bdbd30107951034170bede15a491510c04a4d407d0c9022f3"
+  },
+  {
+    "path": "UI/app/features/playlist/types.ts",
+    "sha256": "33f5a60672bd0c628c0a1160d11ea2182c445381369dc65d1461cf933ced90d0"
+  },
+  {
+    "path": "UI/app/features/rating/rating.api.ts",
+    "sha256": "d76ac6415ec71180ff7ca087423713bd2c336f7a81dc5a002964938946567e98"
+  },
+  {
+    "path": "UI/app/features/rating/useRating.ts",
+    "sha256": "283a05bedc266b5263ad800bbe2a4de530655171156a51e56d0c9448fa0fcabd"
+  },
+  {
+    "path": "UI/app/features/recommendation/components/RecommendationSection.tsx",
+    "sha256": "84b1596c5b7e3bd06d6d11d1f24eb9806413a9bc22b1c4701a7c3d38527d7839"
+  },
+  {
+    "path": "UI/app/features/recommendation/components/RecommendSongCard.tsx",
+    "sha256": "2a17ac739abc4de9540c4ad17f7d738246e3fbc58600485e71f32adb8fa0fd50"
+  },
+  {
+    "path": "UI/app/features/recommendation/components/SimilarSongsSection.tsx",
+    "sha256": "f1b9f07e3572857b1917526f91ace18d4383413ca6a086874f09873b67319f31"
+  },
+  {
+    "path": "UI/app/features/recommendation/recommendation.api.ts",
+    "sha256": "e1c960eb7adb794c45918cdb8ff660f8eea386fb766ca2212831be114ff57cb9"
+  },
+  {
+    "path": "UI/app/features/recommendation/recommendation.mapper.ts",
+    "sha256": "b161049baa494fddd45294340d7f138dd30b46ff3d4b00cfa8cf7211c976135e"
+  },
+  {
+    "path": "UI/app/features/recommendation/recommendation.types.ts",
+    "sha256": "92e4876813a8ceb3636bbc1980147b121eabf5749030a77b771e8f33baa35394"
+  },
+  {
+    "path": "UI/app/features/song/components/DetailSong/DetailSong.tsx",
+    "sha256": "adf863b4314e4ab83613bc688adb1123f8f661cd2bef821be3232a56caf3f1ab"
+  },
+  {
+    "path": "UI/app/features/song/components/EntityDetail.tsx",
+    "sha256": "53ff0a58083b5b9ef28528a5f5771d720e848125e365a280a1e6aa69bdb213ee"
+  },
+  {
+    "path": "UI/app/features/song/components/LibraryTable/LibraryTable.tsx",
+    "sha256": "11605106a8a41c1345ad3963044b053955b0dffa9001ca3a474ff11959a49d48"
+  },
+  {
+    "path": "UI/app/features/song/components/UploadSongModal.tsx",
+    "sha256": "cfc33ff9819bf5525eeb9cd123f8e69fdf013b40b968efa8e0a2e52aa0df8646"
+  },
+  {
+    "path": "UI/app/features/song/song.api.ts",
+    "sha256": "04d644e36105fc89b1f6f31aff7cfb25664e9250004bd92e1684fc45ae621f2d"
+  },
+  {
+    "path": "UI/app/features/user/accountApi.ts",
+    "sha256": "6fa979b9b63bd0c629106bbd0caab2a331301738d981649ca16880b969f6727d"
+  },
+  {
+    "path": "UI/app/features/user/api.ts",
+    "sha256": "5330552cb1c88bd88c8cf6d92c40517533cea4c78a8efa01e4814446ae3c60a6"
+  },
+  {
+    "path": "UI/app/features/user/components/EditUserProfile.tsx",
+    "sha256": "0362097f1d41e1389399c85a8945433dc169e200397fbcfe33e375b8fccb582a"
+  },
+  {
+    "path": "UI/app/features/user/components/Profile.tsx",
+    "sha256": "0ab9a367037af5a015fa4a00debc18b4b24367d1b77c1f43ba91e0428543e8da"
+  },
+  {
+    "path": "UI/app/features/user/context/UserContext.tsx",
+    "sha256": "5a78d37dda1af2c46b0fdc02ad6f8b5969779791d92875c880446a745e5883b4"
+  },
+  {
+    "path": "UI/app/features/user/hooks/useProfile.ts",
+    "sha256": "e37192dab3f1b03644e67a30352e1fbcce3db805881f42aaa4f80276ba163e9e"
+  },
+  {
+    "path": "UI/app/features/user/service.ts",
+    "sha256": "b4c16f069dac1d56d3eeff3e87edd681422efc00edbd03e05854dc0995ffd2de"
+  },
+  {
+    "path": "UI/app/features/user/useUsers.ts",
+    "sha256": "f513d8d1e41cbea23e338941b2c385968f15a9b21d4aa4743f31604135571bcc"
+  },
+  {
+    "path": "UI/app/hooks/useProfileForm.ts",
+    "sha256": "7aaf8417d5f58764474d43960f466c4574ce3f67d73b0db06a36fd4b693a737d"
+  },
+  {
+    "path": "UI/app/layout.tsx",
+    "sha256": "c1ba0183432766f2bec7115fc2735150a5d2ffddfc64a4f2dc7e3b4e9d3f5b9b"
+  },
+  {
+    "path": "UI/app/lib/AccountCacheBoundary.tsx",
+    "sha256": "4f67db62bfaa752c8f11c62c7edef506c3166bf6a92ad037a3cd53dcfb803f78"
+  },
+  {
+    "path": "UI/app/lib/api-contract.ts",
+    "sha256": "033e4b6144f8ae1e54711d9d08abb4e845130561cef5bedd0cf11474ab5a0e44"
+  },
+  {
+    "path": "UI/app/lib/api-request.ts",
+    "sha256": "ddbdb90162012247d2e11546d740d29084810b5b8ffaf214eaa4e926073d0bd9"
+  },
+  {
+    "path": "UI/app/lib/api-transport.ts",
+    "sha256": "8c0bb7693c1c49f10254c758f8e05529aae4de90c9fb3ab8f960e52adfbf188a"
+  },
+  {
+    "path": "UI/app/lib/auth-actions.ts",
+    "sha256": "642d3370ac6e4a3bd02c1a2eaff4016b98dd2e0733ae396da5d96f5e0853c339"
+  },
+  {
+    "path": "UI/app/lib/auth-state.ts",
+    "sha256": "c34632c6779d236e9533e6afd238e7c5696b1a1a341f00b7b75422af53594d6b"
+  },
+  {
+    "path": "UI/app/lib/auth-sync.ts",
+    "sha256": "32816d77290bc037d9245e2fd7d70541278c19c69a9cc13bb8bf580af590ed53"
+  },
+  {
+    "path": "UI/app/lib/error-message.ts",
+    "sha256": "f96ad196d370973f53b23903b0dc34b525f2b84426a2d9a5ad59c5f262aa7895"
+  },
+  {
+    "path": "UI/app/lib/form-error.ts",
+    "sha256": "9bcf46d83197ea9e7a32b83177096f357cf5ae0c951b82b762d364460e6c0268"
+  },
+  {
+    "path": "UI/app/lib/http.ts",
+    "sha256": "dcb9be4ce545654caef54bc250c6b0fc86fed7ec7832baade6e4b7d6dbf66884"
+  },
+  {
+    "path": "UI/app/lib/refresh-session.ts",
+    "sha256": "23194c858dab0a4168bace1c19fe81dd73b228f53f4dcbc88c4536f2c7351c6f"
+  },
+  {
+    "path": "UI/app/lib/upload-key.ts",
+    "sha256": "a44de18f148da29aa1b05047d17c9c7cdadfae59d8a8ea97f8933e6773bcdbdf"
+  },
+  {
+    "path": "UI/app/lib/use-auth-state.ts",
+    "sha256": "4acbe965f526835cbd0eab09b762116509c5deca65eb4b6cca08bb9575480439"
+  },
+  {
+    "path": "UI/app/lib/use-client-ready.ts",
+    "sha256": "ccbc5fc7e9ac367d27a0adde8ea7f2cb9592f91ffbf5ef4e3213201f6c95ec2c"
+  },
+  {
+    "path": "UI/app/not-found.tsx",
+    "sha256": "9ce9335b3dd57454342e7f28cbab405c3319ff643eea08ffb5bb963647648f09"
+  },
+  {
+    "path": "UI/app/page.tsx",
+    "sha256": "a6c7193e94ec8f51628d78575bee90bcb4fa0a04350299c92022bd8c6ca9de95"
+  },
+  {
+    "path": "UI/app/types/api.ts",
+    "sha256": "fdf8c1c17cb43f7e5293c9cdb369d92ae8180f4d139125d94fff7cc6f8110593"
+  },
+  {
+    "path": "UI/app/types/music.d.ts",
+    "sha256": "89480beb8576dc243cb806fd8055c24b1bdcf02672f9910eebc25416905ac69e"
+  },
+  {
+    "path": "UI/app/utils/dateHelper.ts",
+    "sha256": "ba159165bc0610fa5bb15aad02931c61562d568a77b341ad766dbcc13f49f496"
+  },
+  {
+    "path": "UI/app/utils/passwordValidator.ts",
+    "sha256": "5cc0eebe0e3fcc49da81de883420fa81a6583ffed3313f4e80c418b682bced14"
+  },
+  {
+    "path": "UI/app/utils/refreshToken.ts",
+    "sha256": "3f9d03a4a456e03a093c3543781e582e36ec43f407e8b8759c40e8741ae1e582"
+  },
+  {
+    "path": "UI/app/utils/song.mapper.ts",
+    "sha256": "4eed0e1cda12e67c980eba0fc148deeb1010221bcc994d640857ff1cc5ff75f7"
+  },
+  {
+    "path": "UI/package.json",
+    "sha256": "bfd6ad0192b3e3fd92aed8dcf8256407220770e3365edb37c8ea09462bdde232"
+  },
+  {
+    "path": "UI/tests/browser/page-flows.mjs",
+    "sha256": "cc93b791a74ac26b95d46f3f26521fa023790514db30bac4d95a5774c684788c"
+  }
+]

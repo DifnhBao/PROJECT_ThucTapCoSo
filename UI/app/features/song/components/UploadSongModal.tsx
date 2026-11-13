@@ -1,27 +1,23 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import styles from "./UploadSongModal.module.css";
 import { useModal } from "@/app/context/ModalContext";
 import { useUser } from "@/app/features/user/context/UserContext";
-import { uploadSongByUser } from "../song.api";
-import { IoIosMusicalNote } from "react-icons/io";
+import { formError } from "@/app/lib/form-error";
+import { useRef,useState } from "react";
 import { FcPicture } from "react-icons/fc";
+import { IoIosMusicalNote } from "react-icons/io";
+import { uploadSongByUser } from "../song.api";
+import styles from "./UploadSongModal.module.css";
 
 export default function UploadSongModal() {
   const { closeModal } = useModal();
   const { user } = useUser();
 
   const [title, setTitle] = useState("");
-  const [artist, setArtist] = useState("");
+  const [artist, setArtist] = useState(user?.username ?? "");
   const [genre, setGenre] = useState("");
   const [duration, setDuration] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-
-  // Khởi tạo artist mặc định là username
-  useEffect(() => {
-    if (user?.username) setArtist(user.username);
-  }, [user]);
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -75,8 +71,8 @@ export default function UploadSongModal() {
       await uploadSongByUser(formData);
 
       setSuccess(true);
-    } catch (err: any) {
-      setError(err.message || "Đã xảy ra lỗi khi đăng bài hát.");
+    } catch (err: unknown) {
+      setError(formError(err));
     } finally {
       setSubmitting(false);
     }
@@ -90,7 +86,7 @@ export default function UploadSongModal() {
           <div className={styles.successIcon}>✓</div>
           <h3>Gửi bài hát thành công!</h3>
           <p>
-            Bài hát <strong>"{title}"</strong> đã được gửi đến quản trị viên.
+            Bài hát <strong>&quot;{title}&quot;</strong> đã được gửi đến quản trị viên.
             <br />
             Bài hát sẽ được hiển thị sau khi quản trị viên duyệt.
           </p>

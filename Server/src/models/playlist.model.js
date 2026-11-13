@@ -28,6 +28,7 @@ const Playlist = sequelize.define(
 
     is_public: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
       defaultValue: true,
     },
 

@@ -1,0 +1,18 @@
+ D .env.example
+ M UI/UI.zip
+ M UI/hash.js
+?? Benchmark/Bieu-Do-Danh-Gia-He-Khuyen-Nghi.png
+?? Server/server.zip
+?? db/recommendation_demo_expected_results.md
+?? db/recommendation_demo_full_seed.sql
+?? db/recommendation_demo_seed.sql
+?? db/recommendation_demo_test_cases.md
+?? db/recommendation_evaluation_queries.sql
+?? docs/INTERN_PORTFOLIO_EXECUTION_PLAN_VI.md
+?? docs/MODEL_SELECTION_GUIDE_VI.md
+?? docs/audit/TECHNICAL_AUDIT_VI.md
+?? docs/audit/evidence/server-npm-audit.json
+?? docs/audit/evidence/ui-eslint.json
+?? docs/audit/evidence/ui-npm-audit.json
+?? docs/audit/evidence/verification.md
+?? init.sql

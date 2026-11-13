@@ -1,0 +1,34 @@
+[
+  {
+    "path": "scripts/verify-t19.cjs",
+    "sha256": "4c4c03ed9adcd423847c31bbcb03b714976c5d674c2896cfd3c4a4715edec254"
+  },
+  {
+    "path": "UI/tests/e2e/full-stack.test.mjs",
+    "sha256": "dbf076b13470b4b3730c62498442995224c6eaac3f3758a600a0828641edd3c5"
+  },
+  {
+    "path": "Server/tests/helpers/run-integration.cjs",
+    "sha256": "03951db4d4795d722f5e47fbb692f863f533491946cc0cf0ba81e61c3b1bbf5e"
+  },
+  {
+    "path": "Server/tests/integration/schema-and-policies.test.cjs",
+    "sha256": "71635c9fa8f5e80d59cf9f6b5007aee669c95964ea3f18db77e2c2d7a0bc0ea6"
+  },
+  {
+    "path": "Server/tests/unit/t19-runner-guard.test.cjs",
+    "sha256": "feb9b7836a29deceb5ebb530fa29e46e63468b96cd4e6eb389f124b287ca0c4a"
+  },
+  {
+    "path": "UI/app/(Pages)/layout.tsx",
+    "sha256": "005dd1eb5c3ad21b16da9d1895bf7c7797c4b9f97837c6e20b189e7b850b50e3"
+  },
+  {
+    "path": "UI/app/(Pages)/administrator/layout.tsx",
+    "sha256": "069f64527eddaefc4407b3eaab4f5c3be56657d2b5c68f9ade012dee2f1baa1d"
+  },
+  {
+    "path": "UI/package.json",
+    "sha256": "f5ce85ca27dc358c789d49df0a94e1fe9b299d753b8a8c59861b180d327404dc"
+  }
+]

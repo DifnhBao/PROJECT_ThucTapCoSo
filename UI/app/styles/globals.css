@@ -6,7 +6,7 @@
 }
 
 :root {
-  --tt-orange: #ff7e3a;
+  --tt-orange: #b34700;
   --tt-orange-light: #ffd7c2;
   --tt-orange-pale: #fff0e8;
   --tt-brown: #73391a;
@@ -19,7 +19,7 @@
 
   --tt-text-primary: #1c0e06;
   --tt-text-secondary: #5c5c68;
-  --tt-text-muted: #9898a6;
+  --tt-text-muted: #666674;
 
   --tt-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
   --tt-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -27,7 +27,7 @@
 
 :root {
   /* Layout */
-  --sidebar-width: 260px;
+  --sidebar-width: 250px;
   --sidebar-min: 70px;
 
   /* Background */
@@ -112,7 +112,6 @@ body {
   min-height: 100vh;
   background: var(--background-color);
 
-  padding-right: 300px;
   transition: all 0.3s ease;
 }
 
@@ -127,7 +126,7 @@ body {
 }
 
 #content{
-  width: 128%;
+  width: 100%;
 }
 
 /* ========== EXPLORE PAGE ========== */
@@ -371,3 +370,33 @@ body {
     gap: 5px;
   }
 }
+/* T17: shared shell dimensions and visible keyboard focus. */
+:root { --player-reserve: 150px; }
+*, *::before, *::after { box-sizing: border-box; }
+.main { margin-left: var(--sidebar-width); padding: 24px 24px var(--player-reserve); min-width: 0; }
+#content { width: 100%; min-width: 0; }
+:focus-visible { outline: 3px solid #164ac4; outline-offset: 3px; }
+button, input, select, textarea { font: inherit; }
+button, a, input[type=range] { touch-action: manipulation; }
+img { max-width: 100%; }
+h1, h2, h3, p { overflow-wrap: anywhere; }
+[role=dialog] { max-width: min(94vw, 640px); max-height: 85dvh; overflow-y: auto; overscroll-behavior: contain; }
+[role=dialog] input:not([type=checkbox]):not([type=radio]), [role=dialog] textarea { max-width: 100%; }
+@media(max-width:900px) {
+ :root { --sidebar-width:0px; --player-reserve:210px; }
+ .main { margin-left:0; margin-top:170px; padding:16px 12px var(--player-reserve); }
+ .main .greeting-text { font-size:26px; }
+ .detail-container .content-wrapper { padding:20px 12px; width:100%; gap:16px; }
+}
+@media(max-height:500px) { [role=dialog] { max-height:94dvh; } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
+:root { --tt-text-muted:#666674; --tt-orange:#b34700; }
+:focus-visible { box-shadow:0 0 0 2px white; }
+@media(max-width:900px) { .detail-container .right-section { order:-1; } }
+.detail-container .song-info p { color:#ffae76; }
+.create-playlist-content .submit-btn, .create-playlist-nested-content .submit-btn { background:#a83e00; color:white; }
+input::placeholder, textarea::placeholder { color:#60606c; opacity:1; }
+button { min-height:32px; min-width:32px; }
+/* Keep the back action outside the title at small widths and isolate text from artwork. */
+.detail-container .back-btn-detail { position:relative; align-self:flex-start; top:auto; left:auto; margin:12px; background:#292929; color:white; flex-shrink:0; }
+.detail-container .content-wrapper { background:#111; color:white; border-radius:12px; }

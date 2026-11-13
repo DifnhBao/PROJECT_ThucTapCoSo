@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "steps": [
+    {
+      "name": "live/ready through Next same-origin proxy"
+    },
+    {
+      "name": "non-root/read-only/no local artifacts/no runtime CLI/no public DB",
+      "api": {
+        "uid": 1000,
+        "node": "v22.19.0",
+        "envFile": false,
+        "tests": false,
+        "git": false,
+        "backup": false,
+        "typescript": false,
+        "cli": false,
+        "image": "sha256:6a64d2d618db575353ff0de50fa8730ad6c8750a816cec036b16dd6b2d872bd9",
+        "readOnly": true,
+        "logs": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      },
+      "web": {
+        "uid": 1000,
+        "node": "v22.19.0",
+        "envFile": false,
+        "tests": false,
+        "git": false,
+        "backup": false,
+        "typescript": false,
+        "cli": false,
+        "image": "sha256:287bbcb65385cc5f365cd598ad644c9df5e063ea445a22e88808e1a727384fe4",
+        "readOnly": true,
+        "logs": {
+          "max-file": "3",
+          "max-size": "10m"
+        }
+      }
+    },
+    {
+      "name": "API app account cannot execute DDL"
+    },
+    {
+      "name": "fresh guarded demo seed"
+    },
+    {
+      "name": "real Docker browser login/search/audio/favorite/playlist/recommendation/fallback SVG",
+      "pageErrors": [],
+      "apiMocked": false,
+      "media": "self-generated 6s tone"
+    },
+    {
+      "name": "SIGTERM graceful exit0 and API restart preserves session/favorite/playlist"
+    },
+    {
+      "name": "DB down returns ready503 while live200",
+      "readinessMs": 1017
+    },
+    {
+      "name": "DB restart restores readiness and persisted playlist"
+    },
+    {
+      "name": "startup refuses un-migrated schema"
+    },
+    {
+      "name": "backup restored into distinct empty DB with matching all-table row counts",
+      "sha256": "120437ad99280350d9abff5a1eea366981af7703db81498f3a29ba2339915074",
+      "tables": 19
+    },
+    {
+      "name": "structured requestId/route/status/duration logs"
+    }
+  ]
+}

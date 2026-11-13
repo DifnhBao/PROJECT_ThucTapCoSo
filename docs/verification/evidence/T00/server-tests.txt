@@ -1,0 +1,81 @@
+
+> music-backend@1.0.0 test
+> node --require ./tests/helpers/unit-setup.cjs --test tests/unit/*.test.cjs tests/api/*.test.cjs
+
+TAP version 13
+# Subtest: root response remains available
+ok 1 - root response remains available
+  ---
+  duration_ms: 184.4404
+  type: 'test'
+  ...
+# Subtest: real protected route rejects an anonymous request without touching DB/cloud
+ok 2 - real protected route rejects an anonymous request without touching DB/cloud
+  ---
+  duration_ms: 26.1201
+  type: 'test'
+  ...
+# Subtest: allowed CORS origin retains credential support
+ok 3 - allowed CORS origin retains credential support
+  ---
+  duration_ms: 28.4354
+  type: 'test'
+  ...
+# Subtest: real app imports and creates without listen, timers, DB, or signal handlers
+ok 4 - real app imports and creates without listen, timers, DB, or signal handlers
+  ---
+  duration_ms: 3272.1015
+  type: 'test'
+  ...
+# API listening on port 60040
+# Subtest: startup DB failure never opens a port and closes the DB client
+ok 5 - startup DB failure never opens a port and closes the DB client
+  ---
+  duration_ms: 1245.0395
+  type: 'test'
+  ...
+# Subtest: explicit startup and shutdown release port, timer, signal handlers and DB client
+ok 6 - explicit startup and shutdown release port, timer, signal handlers and DB client
+  ---
+  duration_ms: 72.8827
+  type: 'test'
+  ...
+# Subtest: uses explicit test settings including the port
+ok 7 - uses explicit test settings including the port
+  ---
+  duration_ms: 13.3033
+  type: 'test'
+  ...
+# Subtest: missing test variables never fall back to development DB variables
+ok 8 - missing test variables never fall back to development DB variables
+  ---
+  duration_ms: 7.4197
+  type: 'test'
+  ...
+# Subtest: rejects non-test environments, unsafe names, hosts, and invalid connection fields
+ok 9 - rejects non-test environments, unsafe names, hosts, and invalid connection fields
+  ---
+  duration_ms: 2.423
+  type: 'test'
+  ...
+# Subtest: destructive integration work needs a separate explicit opt-in
+ok 10 - destructive integration work needs a separate explicit opt-in
+  ---
+  duration_ms: 1.7506
+  type: 'test'
+  ...
+# Subtest: runtime and migration config both reject DB_* fallback in a fresh process
+ok 11 - runtime and migration config both reject DB_* fallback in a fresh process
+  ---
+  duration_ms: 1398.5878
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5439.4832

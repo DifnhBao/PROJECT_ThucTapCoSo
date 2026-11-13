@@ -1,0 +1,76 @@
+{
+  "task": "T11",
+  "date": "2026-10-27",
+  "status": "VERIFIED_LOCAL",
+  "branch": "feat/t11-listening-events",
+  "serverTests": {
+    "tests": 88,
+    "pass": 88,
+    "fail": 0,
+    "skipped": 0
+  },
+  "uiTests": {
+    "tests": 43,
+    "pass": 43,
+    "fail": 0,
+    "skipped": 0
+  },
+  "mysqlIntegration": {
+    "tests": 49,
+    "pass": 49,
+    "fail": 0,
+    "skipped": 0
+  },
+  "t11MysqlCases": 10,
+  "typecheck": "PASS",
+  "productionBuild": "PASS",
+  "browser": {
+    "browser": "Chromium/Edge",
+    "component": "actual Player + PlayerProvider + AudioController; Next navigation shim; fixture API",
+    "emptyStartupRequests": 0,
+    "shufflePreservesTrack": true,
+    "stalePageDiscarded": true,
+    "catalogNextPage": 2,
+    "emptyPageStops": true,
+    "errorRetrySkip": true,
+    "autoplayRejectionRecoverable": true,
+    "repeatOneAndAllNativeEnded": true,
+    "offlinePageAttempts": 2,
+    "offlineNoLoop": true,
+    "catalogListStrictModePages": [
+      1,
+      2
+    ],
+    "catalogListManualRetry": true,
+    "restorePausedAtSavedTime": true,
+    "failedAudioViewCount": 0,
+    "mobileWidth": 390,
+    "unexpectedPageErrors": [],
+    "listeningSourceSnapshot": true,
+    "listeningLostAckSamePayload": true,
+    "seekEndActualListenedUnder2Seconds": true,
+    "separateViewRequests": 0
+  },
+  "lint": {
+    "errors": 78,
+    "warnings": 72,
+    "baseline": "T10/lint.json",
+    "newDiagnostics": []
+  },
+  "syntaxFiles": 12,
+  "trackedT11DiffCheck": "PASS",
+  "currentTreeSecretFindings": 0,
+  "liveProviderCalls": false,
+  "applicationDbChanged": false,
+  "committed": false,
+  "pushed": false,
+  "deployed": false,
+  "limits": [
+    "No persistent client outbox or exactly-once delivery guarantee",
+    "Browser uses fixture API/Next routing shim; DB durability covered by integration",
+    "DB unavailable simulated by transaction fault injection",
+    "Short (<20s) and unknown canonical duration tracks do not increment views",
+    "Existing lint debt and T08 legacy media remain",
+    "Auth transport unification/refresh remains T12"
+  ]
+}

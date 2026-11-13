@@ -1,41 +1,13 @@
 "use client";
-
-import { useEffect, useState, useCallback } from "react";
-import { Playlist } from "../types";
-import { getPlaylistDetailService } from "../service";
-import { mapToPlaylist } from "../playlist.mapper";
-
+import { useCallback } from 'react';
+import useSWR from 'swr';
+import { useAuthState } from '../../../lib/use-auth-state';
+import { mapToPlaylist } from '../playlist.mapper';
+import { getPlaylistDetailService } from '../service';
 export function usePlaylistDetail(playlistId?: number | null) {
-  const [playlist, setPlaylist] = useState<Playlist | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchPlaylistDetail = useCallback(async () => {
-    if (!playlistId) return;
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await getPlaylistDetailService(playlistId);
-      
-      const rawData = response?.data || response;
-
-      const playlistData: Playlist = mapToPlaylist(rawData);
-
-      setPlaylist(playlistData);
-    } catch (error: any) {
-      const errorMsg = error?.message || "Lỗi khi tải chi tiết playlist";
-      setError(errorMsg);
-      setPlaylist(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [playlistId]);
-
-  useEffect(() => {
-    fetchPlaylistDetail();
-  }, [fetchPlaylistDetail]);
-
-  return { playlist, loading, error, fetchPlaylistDetail };
+  const auth = useAuthState('user');
+  const { data, error, isLoading, mutate } = useSWR(playlistId ? ['playlist-detail', auth.principal?.userId ?? 'guest', auth.epoch, playlistId] : null,
+    async () => mapToPlaylist((await getPlaylistDetailService(playlistId!)).data));
+  const fetchPlaylistDetail = useCallback(async () => { await mutate(); }, [mutate]);
+  return { playlist: data ?? null, loading: isLoading, error: error instanceof Error ? error.message : null, fetchPlaylistDetail };
 }

@@ -1,10 +1,11 @@
 "use client";
+import type { SongDto } from '@/app/types/api';
+import { formatDate,formatDuration } from "@/app/utils/dateHelper";
 import { useEffect } from "react";
 import styles from "./SongDetailModal.module.css";
-import { formatDuration, formatDate } from "@/app/utils/dateHelper";
 
 interface Props {
-  song: any;
+  song: SongDto;
   onClose: () => void;
   onApprove: (id: number) => void;
   onReject: (id: number) => void;
@@ -28,9 +29,9 @@ export default function SongDetailModal({
   }, [onClose]);
 
   const genres =
-    song.genres?.map((g: any) => g.name).join(", ") || "Chưa có";
+    song.genres?.map((g) => g.name).join(", ") || "Chưa có";
   const artists =
-    song.artists?.map((a: any) => a.name).join(", ") || "Unknown";
+    song.artists?.map((a) => a.name).join(", ") || "Unknown";
 
   return (
     <div className={styles.overlay} onClick={onClose}>

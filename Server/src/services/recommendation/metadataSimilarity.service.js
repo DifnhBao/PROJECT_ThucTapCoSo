@@ -1,4 +1,5 @@
-const { Song, Genre, Artist } = require("../../models");
+const weights = require("./config").metadata;
+const { AppError } = require("../../utils/app-error");
 const { calculateLyricsSimilarity } = require("./lyricsSimilarity.service");
 
 /* =========================================================
@@ -130,6 +131,7 @@ function durationSimilarity(durationA, durationB) {
  * @throws {Error} Nếu bài hát không tồn tại hoặc đã bị ẩn
  */
 async function getSongMetadata(songId) {
+  const { Song, Genre, Artist } = require("../../models");
   const song = await Song.findByPk(songId, {
     attributes: ["song_id", "title", "duration", "mood", "keywords", "lyrics"],
     include: [
@@ -149,7 +151,7 @@ async function getSongMetadata(songId) {
   });
 
   if (!song) {
-    throw new Error(`Song không tồn tại: song_id = ${songId}`);
+    throw new AppError("Không tìm thấy bài hát.", 404, "SONG_NOT_FOUND");
   }
 
   // Chuẩn hóa: đảm bảo các trường JSON luôn là Array kể cả khi DB trả về null
@@ -174,11 +176,11 @@ async function getSongMetadata(songId) {
  *
  * Công thức Hybrid weighted sum:
  * metadata_score =
- *   0.25 * genre_similarity
+ *   weights.genre * genre_similarity
  * + 0.20 * mood_similarity
- * + 0.15 * artist_similarity
+ * + weights.artist * artist_similarity
  * + 0.10 * keyword_similarity
- * + 0.25 * lyrics_similarity
+ * + weights.lyrics * lyrics_similarity
  * + 0.05 * duration_similarity
  *
  * @param {Object} songA  — kết quả từ getSongMetadata()
@@ -197,12 +199,12 @@ function calculateMetadataSimilarity(songA, songB) {
 
   // Điểm tổng hợp theo trọng số
   const score =
-    0.25 * genre_similarity +
-    0.2 * mood_similarity +
-    0.15 * artist_similarity +
-    0.1 * keyword_similarity +
-    0.25 * lyrics_similarity +
-    0.05 * dur_similarity;
+    weights.genre * genre_similarity +
+    weights.mood * mood_similarity +
+    weights.artist * artist_similarity +
+    weights.keyword * keyword_similarity +
+    weights.lyrics * lyrics_similarity +
+    weights.duration * dur_similarity;
 
   // Tập giao (để lưu vào cột `reason` / `detail`)
   const common_genres = songA.genres.filter((g) => songB.genres.includes(g));

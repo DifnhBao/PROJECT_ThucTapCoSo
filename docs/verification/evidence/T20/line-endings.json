@@ -1,0 +1,6 @@
+{
+  "beforeCRLF": 16,
+  "afterCRLF": 0,
+  "fix": ".gitattributes *.sh text eol=lf",
+  "observedInitialFailure": "bad interpreter: /bin/sh^M"
+}

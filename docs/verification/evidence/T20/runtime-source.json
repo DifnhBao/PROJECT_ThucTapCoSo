@@ -1,0 +1,29 @@
+{
+  "normalizedImageSourceMatchesCurrent": true,
+  "files": [
+    {
+      "path": "src/server.js",
+      "sha256": "3d7487209c25b8fe498c0a07b2d37d5e76aa07c76868bbcd99b76d84b5da7c34"
+    },
+    {
+      "path": "src/app.js",
+      "sha256": "1e0c69954646b6a604e2349f5b16e3bfcf21d966f9c8c151c3eade3953ea2bd1"
+    },
+    {
+      "path": "src/operations/health.js",
+      "sha256": "1281f2f4d705c2355b406ddb9d97ee0f6e30238f8289a74d8502666fc81e5666"
+    },
+    {
+      "path": "src/operations/access-log.js",
+      "sha256": "2a7167aa2c472c5c511660871c5824f4524daebe8579eec6303fd94da6540356"
+    },
+    {
+      "path": "src/operations/shutdown.js",
+      "sha256": "7fe9b385215ea37dd8f090c2eff04051ed07b678e8e18404e9407d89af32f46a"
+    },
+    {
+      "path": "database/seed.cjs",
+      "sha256": "206ba72c7cf9d15a24580a9ff5f0eb0d9061ae2ee96a2bb57de07cea1b9e6cb6"
+    }
+  ]
+}

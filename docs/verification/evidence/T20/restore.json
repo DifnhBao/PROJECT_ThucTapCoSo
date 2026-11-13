@@ -1,0 +1,82 @@
+{
+  "restoredDatabase": "tunetrek_restore_t20",
+  "tableCounts": [
+    {
+      "table": "SequelizeMeta",
+      "count": 6
+    },
+    {
+      "table": "UserActivities",
+      "count": 2
+    },
+    {
+      "table": "artists",
+      "count": 3
+    },
+    {
+      "table": "favorites",
+      "count": 5
+    },
+    {
+      "table": "genres",
+      "count": 4
+    },
+    {
+      "table": "media_assets",
+      "count": 0
+    },
+    {
+      "table": "playlist_songs",
+      "count": 9
+    },
+    {
+      "table": "playlists",
+      "count": 3
+    },
+    {
+      "table": "ratings",
+      "count": 1
+    },
+    {
+      "table": "recommendation_neighbors",
+      "count": 0
+    },
+    {
+      "table": "recommendation_runs",
+      "count": 0
+    },
+    {
+      "table": "recommendation_state",
+      "count": 1
+    },
+    {
+      "table": "refresh_tokens",
+      "count": 1
+    },
+    {
+      "table": "song_artists",
+      "count": 28
+    },
+    {
+      "table": "song_genres",
+      "count": 28
+    },
+    {
+      "table": "song_similarities",
+      "count": 6
+    },
+    {
+      "table": "songs",
+      "count": 28
+    },
+    {
+      "table": "upload_receipts",
+      "count": 0
+    },
+    {
+      "table": "users",
+      "count": 5
+    }
+  ],
+  "sha256": "120437ad99280350d9abff5a1eea366981af7703db81498f3a29ba2339915074"
+}

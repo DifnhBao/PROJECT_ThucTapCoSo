@@ -1,0 +1,17 @@
+{
+  "actualNextUI": true,
+  "actualExpress": true,
+  "actualMySQL": true,
+  "externalStorageMocked": true,
+  "apiResponsesMocked": false,
+  "steps": [
+    "register/login through real forms",
+    "search/play/favorite persisted in MySQL",
+    "create playlist and add song through nested dialog",
+    "recommendation explanation is returned by real backend",
+    "upload pending song using real multipart and mocked external storage",
+    "admin UI approves and guest can then read song",
+    "logout/login B does not expose A private library"
+  ],
+  "unexpectedPageErrors": []
+}

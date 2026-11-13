@@ -1,0 +1,1 @@
+Destructive tests require TEST_DB_RESET_ALLOWED=yes
