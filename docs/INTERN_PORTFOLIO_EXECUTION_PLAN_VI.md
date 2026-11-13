@@ -61,7 +61,7 @@ Phiên bản `portfolio-v1` cần đáp ứng đủ các điều sau:
 | [x] | [T18](#t18) | Đo và sửa frontend performance | P2 | T13, T17 |
 | [x] | [T19](#t19) | Hoàn thiện regression/integration/E2E suite | P1 | T01–T18 |
 | [x] | [T20](#t20) | Docker toàn stack, health, logs và shutdown | P1 | T03, T04, T06, T11, T19 |
-| [ ] | [T21](#t21) | CI và quy trình release | P1 | T19, T20 |
+| [x] | [T21](#t21) | CI và quy trình release | P1 | T19, T20 |
 | [ ] | [T22](#t22) | Hoàn thiện tài liệu nghiệp vụ BA | P2 | Rule đã chốt ở các task trước |
 | [ ] | [T23](#t23) | Deploy demo và kiểm tra vận hành | P1 | T20, T21, T22 |
 | [ ] | [T24](#t24) | README, showcase và nội dung CV | P1 | T15, T18, T22, T23 |
@@ -636,7 +636,7 @@ Bằng chứng2026-11-08: [verification/T20.md](verification/T20.md), [OPERATION
 
 ### T21 — CI và quy trình release có kiểm tra
 
-Tiến độ 2026-11-13: đã triển khai và kiểm chứng phần lớn gates local; chưa nghiệm thu remote. Xem [báo cáo T21](verification/T21.md). Giữ trạng thái chưa hoàn tất cho tới khi có PR red → green và run xanh đúng SHA.
+Hoàn tất 2026-11-13 trong phạm vi CI/quy trình release: PR #2 red → green, đủ sáu job trên GitHub, bảo vệ main và environment release. Xem [báo cáo T21](verification/T21.md). Chưa merge/deploy hoặc publish release tag.
 
 **Vị trí tạo mới:** `.github/workflows/ci.yml`, tài liệu release; scripts đã thêm ở các task trước.
 
@@ -653,9 +653,9 @@ Tiến độ 2026-11-13: đã triển khai và kiểm chứng phần lớn gates
 
 **Nghiệm thu:**
 
-- [ ] Một PR thử cố tình làm fail regression bị CI phát hiện; sửa lại pipeline xanh.
-- [ ] Migrate DB rỗng chạy trong CI, không phụ thuộc DB máy cá nhân.
-- [ ] Logs/artifacts không chứa credentials; failure traces đủ để debug.
+- [x] Một PR thử cố tình làm fail regression bị CI phát hiện; sửa lại pipeline xanh (PR #2, run 43439497735 → 43440318536).
+- [x] Migrate DB rỗng chạy trong CI, không phụ thuộc DB máy cá nhân.
+- [x] Logs/artifacts không chứa credentials; failure traces đủ để debug (artifact thật scan 0 findings; failure summary và trace helper theo phạm vi báo cáo T21).
 
 **Bàn giao:** workflow và một run xanh trên remote; nếu chưa có quyền remote, trạng thái chưa VERIFIED và ghi blocker cụ thể.
 
@@ -760,7 +760,7 @@ Tiến độ 2026-11-13: đã triển khai và kiểm chứng phần lớn gates
 
 ## 4. Ma trận nghiệm thu xuyên hệ thống
 
-Các ID sau nên được đưa vào tên test hoặc tài liệu test để dễ truy vết. AT01–AT22 đã kiểm chứng ở [verification/T19.md](verification/T19.md); AT23 ở [verification/T20.md](verification/T20.md), theo phạm vi clone snapshot local. AT24–AT26 chưa nghiệm thu.
+Các ID sau nên được đưa vào tên test hoặc tài liệu test để dễ truy vết. AT01–AT22 đã kiểm chứng ở [verification/T19.md](verification/T19.md); AT23 ở [verification/T20.md](verification/T20.md), theo phạm vi clone snapshot local; AT24 ở [verification/T21.md](verification/T21.md), theo commit ứng viên PR. AT25–AT26 chưa nghiệm thu.
 
 | ID | Kịch bản kiểm tra | Kết quả phải đạt | Task chính | Kết quả hiện tại |
 |---|---|---|---|---|
@@ -787,7 +787,7 @@ Các ID sau nên được đưa vào tên test hoặc tài liệu test để d�
 | AT21 | Mobile375/768/1440, zoom200%, keyboard | Không mất controls/che nội dung; thao tác chính dùng được | T17 | PASS (reflow mô phỏng) |
 | AT22 | Audio timeupdate trong Profiler | Lists không rerender chỉ vì progress đổi | T18 | PASS |
 | AT23 | Clone sạch/Compose, DB down, restart/restore | Setup tái lập; readiness đúng; dữ liệu/backup dùng được | T20 | PASS (snapshot local T20) |
-| AT24 | CI đúng release commit | Type/lint/unit/integration/E2E/build đạt | T19, T21 | NOT_RUN |
+| AT24 | CI đúng release commit | Type/lint/unit/integration/E2E/build đạt | T19, T21 | PASS ứng viên PR a9cbd8b; chưa release/deploy |
 | AT25 | Demo HTTPS listener + moderation flow | Hoạt động trên domain thật, không URL localhost | T23 | NOT_RUN |
 | AT26 | README metric/features/contribution review | Có bằng chứng, scope thật, không claim giả | T22, T24 | NOT_RUN |
 
