@@ -26,25 +26,14 @@ function calculateActivityScore(activity) {
     seek_count = 0,
   } = activity;
 
-  // Tỉ lệ nghe & hoàn thành, clamp về [0, 1]
-  // listen_ratio: tổng thời gian thực sự nghe / tổng thời lượng bài
-  // (user có thể pause/resume nhiều lần, nên đây là implicit engagement)
-  const listen_ratio = song_duration > 0 ? Math.min(1, Math.max(0, total_listened_time / song_duration)) : 0;
-
-  // completion_ratio: user đã kéo/nghe đến vị trí xa nhất nào của bài
-  const completion_ratio = song_duration > 0 ? Math.min(1, Math.max(0, max_position_reached / song_duration)) : 0;
-
-  // Điểm cơ sở
-  // Mỗi lần phát hợp lệ (đã qua validation >20s ở view_count) = +1
-  let score = 1;
-
-  // Bonus hoàn thành (+0 đến +4)
-  // User nghe hết bài → tín hiệu mạnh nhất của sự yêu thích
-  score += 4 * completion_ratio;
-
-  // Bonus thời gian nghe thực tế (+0 đến +3)
-  // Phân biệt user "để chạy nền" với user "thật sự nghe"
-  score += 3 * listen_ratio;
+  const duration = Number(song_duration), listened = Number(total_listened_time);
+  if (!Number.isFinite(duration) || duration <= 0 || !Number.isFinite(listened) || listened < 0) return 0;
+  const listen_ratio = Math.min(1, listened / duration);
+  // A seek to the end is not completion. Cap positional evidence by actual listening.
+  const position = Number(max_position_reached);
+  const completion_ratio = Number.isFinite(position) ? Math.min(listen_ratio, Math.max(0, position / duration)) : 0;
+  const qualified = activity.event_version === 1 ? activity.qualified : duration >= 20 && listened >= 20;
+  let score = (qualified ? 1 : 0) + 4 * completion_ratio + 3 * listen_ratio;
 
   // Penalty bỏ qua sớm (-4)
   // Nếu user chủ động skip VÀ chưa nghe đến 30% → tín hiệu không thích
@@ -55,7 +44,7 @@ function calculateActivityScore(activity) {
   // Penalty tua nhiều (-0.2 mỗi lần, tối đa -1)
   // Seek nhiều có thể là do bài không hay hoặc user đang tìm đoạn cụ thể;
   // áp nhẹ để không phạt oan những bài có nhiều đoạn hay
-  const seek_penalty = Math.min(1, seek_count * 0.2);
+  const seek_penalty = Math.min(1, Math.max(0, Number(seek_count) || 0) * 0.2);
   score -= seek_penalty;
 
   return score;
@@ -165,6 +154,8 @@ async function buildUserSongInteractionMatrix() {
     attributes: [
       "user_id",
       "song_id",
+      "event_version",
+      "qualified",
       "total_listened_time",
       "song_duration",
       "max_position_reached",

@@ -1,54 +1,40 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import styles from "@/app/styles/AdminPage/ManageSong.module.css";
-import pendingStyles from "./PendingSongs.module.css";
-import {
-  fetchPendingSongs,
-  approveSongApi,
-  rejectSongApi,
-} from "@/app/features/song/song.api";
 import Pagination from "@/app/components/ui/Pagination";
-import { formatDuration, formatDate } from "@/app/utils/dateHelper";
+import {
+approveSongApi,
+fetchPendingSongs,
+rejectSongApi,
+} from "@/app/features/song/song.api";
+import { errorMessage } from "@/app/lib/error-message";
+import { useAuthState } from '@/app/lib/use-auth-state';
+import styles from "@/app/styles/AdminPage/ManageSong.module.css";
+import type { SongDto,SongPageDto } from '@/app/types/api';
+import { formatDate,formatDuration } from "@/app/utils/dateHelper";
+import { useSearchParams } from "next/navigation";
+import { Suspense,useState } from "react";
+import useSWR from 'swr';
+import pendingStyles from "./PendingSongs.module.css";
 import SongDetailModal from "./SongDetailModal";
 
 function PendingSongsContent() {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
-  const [songs, setSongs] = useState<any[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [selectedSong, setSelectedSong] = useState<any | null>(null);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const res = await fetchPendingSongs({
-        page: currentPage,
-        limit: 20,
-      });
-      setSongs(res.data);
-      setTotalPages(res.pagination.totalPages);
-    } catch (error) {
-      console.error("Fetch pending songs failed:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [currentPage]);
+  const auth = useAuthState('admin');
+  const { data, error, isLoading, mutate } = useSWR<SongPageDto>(auth.principal ? ['pending-songs', auth.principal.userId, auth.epoch, currentPage] : null, () => fetchPendingSongs({ page: currentPage, limit: 20 }));
+  const songs = data?.data ?? [], totalPages = data?.pagination.totalPages ?? 1;
+  const [busy, setLoading] = useState(false);
+  const loading = isLoading || busy;
+  const [selectedSong, setSelectedSong] = useState<SongDto | null>(null);
 
   const handleApprove = async (songId: number) => {
     if (!confirm("Bạn có chắc muốn duyệt bài hát này?")) return;
     try {
       setLoading(true);
       await approveSongApi(songId);
-      setSongs((prev) => prev.filter((s) => s.song_id !== songId));
+      await mutate();
       if (selectedSong?.song_id === songId) setSelectedSong(null);
-    } catch (error: any) {
-      alert(error.message || "Duyệt thất bại");
+    } catch (error: unknown) {
+      alert(errorMessage(error, "Duyệt thất bại"));
     } finally {
       setLoading(false);
     }
@@ -59,10 +45,10 @@ function PendingSongsContent() {
     try {
       setLoading(true);
       await rejectSongApi(songId);
-      setSongs((prev) => prev.filter((s) => s.song_id !== songId));
+      await mutate();
       if (selectedSong?.song_id === songId) setSelectedSong(null);
-    } catch (error: any) {
-      alert(error.message || "Từ chối thất bại");
+    } catch (error: unknown) {
+      alert(errorMessage(error, "Từ chối thất bại"));
     } finally {
       setLoading(false);
     }
@@ -71,6 +57,7 @@ function PendingSongsContent() {
   return (
     <div className={styles.container}>
       <h2 className={styles.header}>Duyệt bài hát</h2>
+      {error && <div role="alert">Không tải được danh sách.<button onClick={() => void mutate()}>Thử lại</button></div>}
 
       {songs.length === 0 && !loading ? (
         <div className={pendingStyles.emptyState}>
@@ -117,7 +104,7 @@ function PendingSongsContent() {
                   </div>
                 </td>
                 <td>
-                  {song.artists?.map((a: any) => a.name).join(", ") ||
+                  {song.artists?.map((a) => a.name).join(", ") ||
                     "Unknown"}
                 </td>
                 <td>
@@ -125,7 +112,7 @@ function PendingSongsContent() {
                     {song.uploader?.username || "—"}
                   </span>
                 </td>
-                <td>{song.genres?.map((g: any) => g.name).join(", ") || "—"}</td>
+                <td>{song.genres?.map((g) => g.name).join(", ") || "—"}</td>
                 <td>{formatDate(song.created_at)}</td>
                 <td>{formatDuration(song.duration)}</td>
                 <td>

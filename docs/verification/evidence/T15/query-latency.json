@@ -1,0 +1,543 @@
+{
+  "synthetic": true,
+  "mysql": "8.0.46",
+  "config": {
+    "version": "node-hybrid-v1",
+    "topK": 50,
+    "maxCatalog": 500,
+    "maxSignals": 20000,
+    "maxLyrics": 10000,
+    "maxSeeds": 20,
+    "maxUserSignals": 200,
+    "favoriteWeight": 5,
+    "highRatingWeight": 2,
+    "listenWeight": 1,
+    "repeatCap": 3,
+    "lowRating": 2,
+    "highRating": 4,
+    "metadataWeight": 0.6,
+    "behavioralWeight": 0.4,
+    "metadata": {
+      "genre": 0.25,
+      "mood": 0.2,
+      "artist": 0.15,
+      "keyword": 0.1,
+      "lyrics": 0.25,
+      "duration": 0.05
+    },
+    "behavioralShrinkage": 5
+  },
+  "measurements": [
+    {
+      "label": "similar-25",
+      "calls": [
+        {
+          "state": "first-call",
+          "latency_ms": 18.125,
+          "queries": 3,
+          "returned": 10,
+          "sql": [
+            "SELECT `song_id` FROM `songs` AS `Song` WHERE `Song`.`song_id` = 1 AND `Song`.`status` = 'approved' AND `Song`.`is_visible` = true;",
+            "SELECT n.*, s.title AS seed_title, r.algorithm_version\n    FROM recommendation_state st\n    STRAIGHT_JOIN recommendation_runs r ON r.run_id=st.active_run_id\n    STRAIGHT_JOIN recommendation_neighbors n FORCE INDEX (ix_neighbor_rank)\n      ON n.run_id=r.run_id AND n.seed_id IN (1)\n    STRAIGHT_JOIN songs s ON s.song_id=n.seed_id AND s.status='approved' AND s.is_visible=1\n    STRAIGHT_JOIN songs c ON c.song_id=n.song_id AND c.status='approved' AND c.is_visible=1\n    WHERE st.id=1\n    ORDER BY n.seed_id, n.final_score DESC, n.song_id ASC",
+            "SELECT `Song`.`song_id`, `Song`.`title`, `Song`.`duration`, `Song`.`audio_url`, `Song`.`image_url`, `Song`.`view_count`, `artists`.`artist_id` AS `artists.artist_id`, `artists`.`name` AS `artists.name`, `genres`.`genre_id` AS `genres.genre_id`, `genres`.`name` AS `genres.name` FROM `songs` AS `Song` LEFT OUTER JOIN ( `song_artists` AS `artists->SongArtist` INNER JOIN `artists` AS `artists` ON `artists`.`artist_id` = `artists->SongArtist`.`artist_id`) ON `Song`.`song_id` = `artists->SongArtist`.`song_id` LEFT OUTER JOIN ( `song_genres` AS `genres->SongGenre` INNER JOIN `genres` AS `genres` ON `genres`.`genre_id` = `genres->SongGenre`.`genre_id`) ON `Song`.`song_id` = `genres->SongGenre`.`song_id` WHERE `Song`.`song_id` IN (13, 25, 5, 9, 17, 21, 4, 7, 10, 16, 19, 22, 2, 3, 6, 8, 11, 12, 14, 15, 18, 20, 23, 24) AND `Song`.`status` = 'approved' AND `Song`.`is_visible` = true;"
+          ]
+        },
+        {
+          "state": "warm",
+          "latency_ms": 13.037,
+          "queries": 3,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 12.808,
+          "queries": 3,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 13.243,
+          "queries": 3,
+          "returned": 10
+        }
+      ]
+    },
+    {
+      "label": "personal-25",
+      "calls": [
+        {
+          "state": "first-call",
+          "latency_ms": 19.196,
+          "queries": 6,
+          "returned": 10,
+          "sql": [
+            "SELECT `song_id`, `event_version`, `qualified`, `song_duration`, `total_listened_time` FROM `UserActivities` AS `UserActivity` WHERE `UserActivity`.`user_id` = 1 AND `UserActivity`.`event_version` = 1 AND `UserActivity`.`qualified` = true ORDER BY `UserActivity`.`id` DESC LIMIT 200;",
+            "SELECT `song_id` FROM `favorites` AS `Favorite` WHERE `Favorite`.`user_id` = 1 ORDER BY `Favorite`.`song_id` ASC LIMIT 200;",
+            "SELECT `song_id`, `score` FROM `ratings` AS `Rating` WHERE `Rating`.`user_id` = 1 ORDER BY `Rating`.`song_id` ASC LIMIT 200;",
+            "SELECT n.*, s.title AS seed_title, r.algorithm_version\n    FROM recommendation_state st\n    STRAIGHT_JOIN recommendation_runs r ON r.run_id=st.active_run_id\n    STRAIGHT_JOIN recommendation_neighbors n FORCE INDEX (ix_neighbor_rank)\n      ON n.run_id=r.run_id AND n.seed_id IN (1, 26, 27, 28)\n    STRAIGHT_JOIN songs s ON s.song_id=n.seed_id AND s.status='approved' AND s.is_visible=1\n    STRAIGHT_JOIN songs c ON c.song_id=n.song_id AND c.status='approved' AND c.is_visible=1\n    WHERE st.id=1\n    ORDER BY n.seed_id, n.final_score DESC, n.song_id ASC",
+            "SELECT `song_id` FROM `ratings` AS `Rating` WHERE `Rating`.`user_id` = 1 AND `Rating`.`score` <= 2 AND `Rating`.`song_id` IN (1, 26, 27, 28, 13, 25, 5, 9, 17, 21, 4, 7, 10, 16, 19, 22, 2, 3, 6, 8, 11, 12, 14, 15, 18, 20, 23, 24) LIMIT 28;",
+            "SELECT `Song`.`song_id`, `Song`.`title`, `Song`.`duration`, `Song`.`audio_url`, `Song`.`image_url`, `Song`.`view_count`, `artists`.`artist_id` AS `artists.artist_id`, `artists`.`name` AS `artists.name`, `genres`.`genre_id` AS `genres.genre_id`, `genres`.`name` AS `genres.name` FROM `songs` AS `Song` LEFT OUTER JOIN ( `song_artists` AS `artists->SongArtist` INNER JOIN `artists` AS `artists` ON `artists`.`artist_id` = `artists->SongArtist`.`artist_id`) ON `Song`.`song_id` = `artists->SongArtist`.`song_id` LEFT OUTER JOIN ( `song_genres` AS `genres->SongGenre` INNER JOIN `genres` AS `genres` ON `genres`.`genre_id` = `genres->SongGenre`.`genre_id`) ON `Song`.`song_id` = `genres->SongGenre`.`song_id` WHERE `Song`.`song_id` IN (13, 25, 5, 9, 17, 21, 4, 7, 10, 16, 19, 22, 2, 3, 6, 8, 11, 12, 14, 15, 18, 20, 23, 24) AND `Song`.`status` = 'approved' AND `Song`.`is_visible` = true;"
+          ]
+        },
+        {
+          "state": "warm",
+          "latency_ms": 16.244,
+          "queries": 6,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 16.037,
+          "queries": 6,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 17.11,
+          "queries": 6,
+          "returned": 10
+        }
+      ]
+    },
+    {
+      "label": "cold-start-25",
+      "calls": [
+        {
+          "state": "first-call",
+          "latency_ms": 9.127,
+          "queries": 4,
+          "returned": 10,
+          "sql": [
+            "SELECT `song_id`, `event_version`, `qualified`, `song_duration`, `total_listened_time` FROM `UserActivities` AS `UserActivity` WHERE `UserActivity`.`user_id` = 5 AND `UserActivity`.`event_version` = 1 AND `UserActivity`.`qualified` = true ORDER BY `UserActivity`.`id` DESC LIMIT 200;",
+            "SELECT `song_id` FROM `favorites` AS `Favorite` WHERE `Favorite`.`user_id` = 5 ORDER BY `Favorite`.`song_id` ASC LIMIT 200;",
+            "SELECT `song_id`, `score` FROM `ratings` AS `Rating` WHERE `Rating`.`user_id` = 5 ORDER BY `Rating`.`song_id` ASC LIMIT 200;",
+            "SELECT `Song`.*, `artists`.`artist_id` AS `artists.artist_id`, `artists`.`name` AS `artists.name`, `genres`.`genre_id` AS `genres.genre_id`, `genres`.`name` AS `genres.name` FROM (SELECT `Song`.`song_id`, `Song`.`title`, `Song`.`duration`, `Song`.`audio_url`, `Song`.`image_url`, `Song`.`view_count` FROM `songs` AS `Song` WHERE NOT EXISTS (SELECT 1 FROM ratings veto WHERE veto.user_id=5 AND veto.song_id=Song.song_id AND veto.score<=2) AND `Song`.`status` = 'approved' AND `Song`.`is_visible` = true ORDER BY `Song`.`view_count` DESC, `Song`.`song_id` ASC LIMIT 10) AS `Song` LEFT OUTER JOIN ( `song_artists` AS `artists->SongArtist` INNER JOIN `artists` AS `artists` ON `artists`.`artist_id` = `artists->SongArtist`.`artist_id`) ON `Song`.`song_id` = `artists->SongArtist`.`song_id` LEFT OUTER JOIN ( `song_genres` AS `genres->SongGenre` INNER JOIN `genres` AS `genres` ON `genres`.`genre_id` = `genres->SongGenre`.`genre_id`) ON `Song`.`song_id` = `genres->SongGenre`.`song_id` ORDER BY `Song`.`view_count` DESC, `Song`.`song_id` ASC;"
+          ]
+        },
+        {
+          "state": "warm",
+          "latency_ms": 9.069,
+          "queries": 4,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 8.787,
+          "queries": 4,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 7.75,
+          "queries": 4,
+          "returned": 10
+        }
+      ]
+    },
+    {
+      "label": "similar-128",
+      "calls": [
+        {
+          "state": "first-call",
+          "latency_ms": 12.568,
+          "queries": 3,
+          "returned": 10,
+          "sql": [
+            "SELECT `song_id` FROM `songs` AS `Song` WHERE `Song`.`song_id` = 1 AND `Song`.`status` = 'approved' AND `Song`.`is_visible` = true;",
+            "SELECT n.*, s.title AS seed_title, r.algorithm_version\n    FROM recommendation_state st\n    STRAIGHT_JOIN recommendation_runs r ON r.run_id=st.active_run_id\n    STRAIGHT_JOIN recommendation_neighbors n FORCE INDEX (ix_neighbor_rank)\n      ON n.run_id=r.run_id AND n.seed_id IN (1)\n    STRAIGHT_JOIN songs s ON s.song_id=n.seed_id AND s.status='approved' AND s.is_visible=1\n    STRAIGHT_JOIN songs c ON c.song_id=n.song_id AND c.status='approved' AND c.is_visible=1\n    WHERE st.id=1\n    ORDER BY n.seed_id, n.final_score DESC, n.song_id ASC",
+            "SELECT `Song`.`song_id`, `Song`.`title`, `Song`.`duration`, `Song`.`audio_url`, `Song`.`image_url`, `Song`.`view_count`, `artists`.`artist_id` AS `artists.artist_id`, `artists`.`name` AS `artists.name`, `genres`.`genre_id` AS `genres.genre_id`, `genres`.`name` AS `genres.name` FROM `songs` AS `Song` LEFT OUTER JOIN ( `song_artists` AS `artists->SongArtist` INNER JOIN `artists` AS `artists` ON `artists`.`artist_id` = `artists->SongArtist`.`artist_id`) ON `Song`.`song_id` = `artists->SongArtist`.`song_id` LEFT OUTER JOIN ( `song_genres` AS `genres->SongGenre` INNER JOIN `genres` AS `genres` ON `genres`.`genre_id` = `genres->SongGenre`.`genre_id`) ON `Song`.`song_id` = `genres->SongGenre`.`song_id` WHERE `Song`.`song_id` IN (13, 25, 5, 9, 17, 21, 4, 7, 10, 16, 19, 22, 2, 3, 6, 8, 11, 12, 14, 15, 18, 20, 23, 24, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125) AND `Song`.`status` = 'approved' AND `Song`.`is_visible` = true;"
+          ]
+        },
+        {
+          "state": "warm",
+          "latency_ms": 14.603,
+          "queries": 3,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 13.229,
+          "queries": 3,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 25.13,
+          "queries": 3,
+          "returned": 10
+        }
+      ]
+    },
+    {
+      "label": "personal-128",
+      "calls": [
+        {
+          "state": "first-call",
+          "latency_ms": 19.939,
+          "queries": 6,
+          "returned": 10,
+          "sql": [
+            "SELECT `song_id`, `event_version`, `qualified`, `song_duration`, `total_listened_time` FROM `UserActivities` AS `UserActivity` WHERE `UserActivity`.`user_id` = 1 AND `UserActivity`.`event_version` = 1 AND `UserActivity`.`qualified` = true ORDER BY `UserActivity`.`id` DESC LIMIT 200;",
+            "SELECT `song_id` FROM `favorites` AS `Favorite` WHERE `Favorite`.`user_id` = 1 ORDER BY `Favorite`.`song_id` ASC LIMIT 200;",
+            "SELECT `song_id`, `score` FROM `ratings` AS `Rating` WHERE `Rating`.`user_id` = 1 ORDER BY `Rating`.`song_id` ASC LIMIT 200;",
+            "SELECT n.*, s.title AS seed_title, r.algorithm_version\n    FROM recommendation_state st\n    STRAIGHT_JOIN recommendation_runs r ON r.run_id=st.active_run_id\n    STRAIGHT_JOIN recommendation_neighbors n FORCE INDEX (ix_neighbor_rank)\n      ON n.run_id=r.run_id AND n.seed_id IN (1, 26, 27, 28)\n    STRAIGHT_JOIN songs s ON s.song_id=n.seed_id AND s.status='approved' AND s.is_visible=1\n    STRAIGHT_JOIN songs c ON c.song_id=n.song_id AND c.status='approved' AND c.is_visible=1\n    WHERE st.id=1\n    ORDER BY n.seed_id, n.final_score DESC, n.song_id ASC",
+            "SELECT `song_id` FROM `ratings` AS `Rating` WHERE `Rating`.`user_id` = 1 AND `Rating`.`score` <= 2 AND `Rating`.`song_id` IN (1, 26, 27, 28, 13, 25, 5, 9, 17, 21, 4, 7, 10, 16, 19, 22, 2, 3, 6, 8, 11, 12, 14, 15, 18, 20, 23, 24, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125) LIMIT 54;",
+            "SELECT `Song`.`song_id`, `Song`.`title`, `Song`.`duration`, `Song`.`audio_url`, `Song`.`image_url`, `Song`.`view_count`, `artists`.`artist_id` AS `artists.artist_id`, `artists`.`name` AS `artists.name`, `genres`.`genre_id` AS `genres.genre_id`, `genres`.`name` AS `genres.name` FROM `songs` AS `Song` LEFT OUTER JOIN ( `song_artists` AS `artists->SongArtist` INNER JOIN `artists` AS `artists` ON `artists`.`artist_id` = `artists->SongArtist`.`artist_id`) ON `Song`.`song_id` = `artists->SongArtist`.`song_id` LEFT OUTER JOIN ( `song_genres` AS `genres->SongGenre` INNER JOIN `genres` AS `genres` ON `genres`.`genre_id` = `genres->SongGenre`.`genre_id`) ON `Song`.`song_id` = `genres->SongGenre`.`song_id` WHERE `Song`.`song_id` IN (13, 25, 5, 9, 17, 21, 4, 7, 10, 16, 19, 22, 2, 3, 6, 8, 11, 12, 14, 15, 18, 20, 23, 24, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125) AND `Song`.`status` = 'approved' AND `Song`.`is_visible` = true;"
+          ]
+        },
+        {
+          "state": "warm",
+          "latency_ms": 15.602,
+          "queries": 6,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 15.21,
+          "queries": 6,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 14.581,
+          "queries": 6,
+          "returned": 10
+        }
+      ]
+    },
+    {
+      "label": "personal-20seeds-128",
+      "calls": [
+        {
+          "state": "first-call",
+          "latency_ms": 30.332,
+          "queries": 6,
+          "returned": 10,
+          "sql": [
+            "SELECT `song_id`, `event_version`, `qualified`, `song_duration`, `total_listened_time` FROM `UserActivities` AS `UserActivity` WHERE `UserActivity`.`user_id` = 1 AND `UserActivity`.`event_version` = 1 AND `UserActivity`.`qualified` = true ORDER BY `UserActivity`.`id` DESC LIMIT 200;",
+            "SELECT `song_id` FROM `favorites` AS `Favorite` WHERE `Favorite`.`user_id` = 1 ORDER BY `Favorite`.`song_id` ASC LIMIT 200;",
+            "SELECT `song_id`, `score` FROM `ratings` AS `Rating` WHERE `Rating`.`user_id` = 1 ORDER BY `Rating`.`song_id` ASC LIMIT 200;",
+            "SELECT n.*, s.title AS seed_title, r.algorithm_version\n    FROM recommendation_state st\n    STRAIGHT_JOIN recommendation_runs r ON r.run_id=st.active_run_id\n    STRAIGHT_JOIN recommendation_neighbors n FORCE INDEX (ix_neighbor_rank)\n      ON n.run_id=r.run_id AND n.seed_id IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)\n    STRAIGHT_JOIN songs s ON s.song_id=n.seed_id AND s.status='approved' AND s.is_visible=1\n    STRAIGHT_JOIN songs c ON c.song_id=n.song_id AND c.status='approved' AND c.is_visible=1\n    WHERE st.id=1\n    ORDER BY n.seed_id, n.final_score DESC, n.song_id ASC",
+            "SELECT `song_id` FROM `ratings` AS `Rating` WHERE `Rating`.`user_id` = 1 AND `Rating`.`score` <= 2 AND `Rating`.`song_id` IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 26, 27, 28, 25, 21, 22, 23, 24, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125) LIMIT 54;",
+            "SELECT `Song`.`song_id`, `Song`.`title`, `Song`.`duration`, `Song`.`audio_url`, `Song`.`image_url`, `Song`.`view_count`, `artists`.`artist_id` AS `artists.artist_id`, `artists`.`name` AS `artists.name`, `genres`.`genre_id` AS `genres.genre_id`, `genres`.`name` AS `genres.name` FROM `songs` AS `Song` LEFT OUTER JOIN ( `song_artists` AS `artists->SongArtist` INNER JOIN `artists` AS `artists` ON `artists`.`artist_id` = `artists->SongArtist`.`artist_id`) ON `Song`.`song_id` = `artists->SongArtist`.`song_id` LEFT OUTER JOIN ( `song_genres` AS `genres->SongGenre` INNER JOIN `genres` AS `genres` ON `genres`.`genre_id` = `genres->SongGenre`.`genre_id`) ON `Song`.`song_id` = `genres->SongGenre`.`song_id` WHERE `Song`.`song_id` IN (25, 22, 23, 21, 24, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125) AND `Song`.`status` = 'approved' AND `Song`.`is_visible` = true;"
+          ]
+        },
+        {
+          "state": "warm",
+          "latency_ms": 29.478,
+          "queries": 6,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 32.893,
+          "queries": 6,
+          "returned": 10
+        },
+        {
+          "state": "warm",
+          "latency_ms": 32.172,
+          "queries": 6,
+          "returned": 10
+        }
+      ]
+    }
+  ],
+  "note": "First call and warm calls; no MySQL buffer flush. Small local synthetic fixture, not production capacity.",
+  "rebuild": {
+    "run_id": "9aa0878d-51e8-4d98-895c-8182f8f1e1da",
+    "algorithm_version": "node-hybrid-v1",
+    "song_count": 128,
+    "edge_count": 6400,
+    "interaction_count": 6,
+    "duration_ms": 927
+  },
+  "explain": {
+    "activityBefore": [
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "UserActivities",
+        "partitions": null,
+        "type": "ref",
+        "possible_keys": "uq_activity_user_event,idx_user_created,idx_user_song_created",
+        "key": "uq_activity_user_event",
+        "key_len": "4",
+        "ref": "const",
+        "rows": 1,
+        "filtered": 50,
+        "Extra": "Using where; Using filesort"
+      }
+    ],
+    "activityAfter": [
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "UserActivities",
+        "partitions": null,
+        "type": "ref",
+        "possible_keys": "uq_activity_user_event,idx_user_created,idx_user_song_created,ix_activity_user_qualified_recent",
+        "key": "uq_activity_user_event",
+        "key_len": "4",
+        "ref": "const",
+        "rows": 1,
+        "filtered": 50,
+        "Extra": "Using where; Using filesort"
+      }
+    ],
+    "neighborBefore": [
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "recommendation_neighbors",
+        "partitions": null,
+        "type": "ref",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "148",
+        "ref": "const,const",
+        "rows": 50,
+        "filtered": 100,
+        "Extra": "Using where; Using filesort"
+      }
+    ],
+    "neighborAfter": [
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "recommendation_neighbors",
+        "partitions": null,
+        "type": "ref",
+        "possible_keys": "PRIMARY,ix_neighbor_rank",
+        "key": "ix_neighbor_rank",
+        "key_len": "148",
+        "ref": "const,const",
+        "rows": 50,
+        "filtered": 100,
+        "Extra": "Using where; Using index"
+      }
+    ],
+    "actualServingBefore": [
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "st",
+        "partitions": null,
+        "type": "const",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "1",
+        "ref": "const",
+        "rows": 1,
+        "filtered": 100,
+        "Extra": "Using filesort"
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "r",
+        "partitions": null,
+        "type": "const",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "144",
+        "ref": "const",
+        "rows": 1,
+        "filtered": 100,
+        "Extra": null
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "n",
+        "partitions": null,
+        "type": "ref",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "148",
+        "ref": "const,const",
+        "rows": 50,
+        "filtered": 100,
+        "Extra": "Using where"
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "s",
+        "partitions": null,
+        "type": "const",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "4",
+        "ref": "const",
+        "rows": 1,
+        "filtered": 5,
+        "Extra": "Using where"
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "c",
+        "partitions": null,
+        "type": "eq_ref",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "4",
+        "ref": "tunetrek_test_t04.n.song_id",
+        "rows": 1,
+        "filtered": 5,
+        "Extra": "Using where"
+      }
+    ],
+    "actualServingAfter": [
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "st",
+        "partitions": null,
+        "type": "const",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "1",
+        "ref": "const",
+        "rows": 1,
+        "filtered": 100,
+        "Extra": null
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "r",
+        "partitions": null,
+        "type": "const",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "144",
+        "ref": "const",
+        "rows": 1,
+        "filtered": 100,
+        "Extra": null
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "n",
+        "partitions": null,
+        "type": "ref",
+        "possible_keys": "ix_neighbor_rank",
+        "key": "ix_neighbor_rank",
+        "key_len": "148",
+        "ref": "const,const",
+        "rows": 50,
+        "filtered": 100,
+        "Extra": "Using index condition"
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "s",
+        "partitions": null,
+        "type": "const",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "4",
+        "ref": "const",
+        "rows": 1,
+        "filtered": 5,
+        "Extra": "Using where"
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "c",
+        "partitions": null,
+        "type": "eq_ref",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "4",
+        "ref": "tunetrek_test_t04.n.song_id",
+        "rows": 1,
+        "filtered": 5,
+        "Extra": "Using where"
+      }
+    ],
+    "batchServing": [
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "st",
+        "partitions": null,
+        "type": "const",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "1",
+        "ref": "const",
+        "rows": 1,
+        "filtered": 100,
+        "Extra": null
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "r",
+        "partitions": null,
+        "type": "const",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "144",
+        "ref": "const",
+        "rows": 1,
+        "filtered": 100,
+        "Extra": null
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "n",
+        "partitions": null,
+        "type": "range",
+        "possible_keys": "ix_neighbor_rank",
+        "key": "ix_neighbor_rank",
+        "key_len": "148",
+        "ref": null,
+        "rows": 1000,
+        "filtered": 100,
+        "Extra": "Using index condition"
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "s",
+        "partitions": null,
+        "type": "eq_ref",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "4",
+        "ref": "tunetrek_test_t04.n.seed_id",
+        "rows": 1,
+        "filtered": 5,
+        "Extra": "Using where"
+      },
+      {
+        "id": 1,
+        "select_type": "SIMPLE",
+        "table": "c",
+        "partitions": null,
+        "type": "eq_ref",
+        "possible_keys": "PRIMARY",
+        "key": "PRIMARY",
+        "key_len": "4",
+        "ref": "tunetrek_test_t04.n.song_id",
+        "rows": 1,
+        "filtered": 5,
+        "Extra": "Using where"
+      }
+    ]
+  },
+  "counts": {
+    "songs": 131,
+    "activities": 2,
+    "favorites": 24,
+    "ratings": 2
+  }
+}

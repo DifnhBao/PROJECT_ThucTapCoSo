@@ -1,10 +1,9 @@
+const { AppError } = require("../utils/app-error");
 const {
   User,
   Song,
   Artist,
   SongArtist,
-  Album,
-  Favorites,
   PlaylistSong,
   Genre,
   SongGenre,
@@ -12,6 +11,9 @@ const {
   sequelize,
 } = require("../models");
 const { Op } = require("sequelize");
+const { publicSongWhere, requirePublicSong } = require("../policies/publication.policy");
+const { AuthorizationError, requireId, requirePermission } = require("../utils/authorization");
+const { isAdmin } = require("../policies/user.policy");
 // const cloudinary = require("cloudinary").v2;
 // const { Sequelize } = require("sequelize");
 // const { v4: uuidv4 } = require("uuid");
@@ -105,8 +107,8 @@ const createSong = async ({
   image_url,
   status,
   uploaded_by,
-}) => {
-  const t = await sequelize.transaction();
+}, { transaction: outer } = {}) => {
+  const t = outer || await sequelize.transaction();
 
   try {
     // 1. Create song
@@ -240,27 +242,10 @@ const createSong = async ({
       );
     }
 
-    await t.commit();
-
-    // 4. Return full data
-    return await Song.findByPk(songId, {
-      include: [
-        {
-          model: Artist,
-          as: "artists",
-          attributes: ["artist_id", "name"],
-          through: { attributes: [] },
-        },
-        {
-          model: Genre,
-          as: "genres",
-          attributes: ["genre_id", "name"],
-          through: { attributes: [] },
-        },
-      ],
-    });
+    if (!outer) await t.commit();
+    return newSong;
   } catch (err) {
-    await t.rollback();
+    if (!outer && !t.finished) await t.rollback();
     throw err;
   }
 };
@@ -303,18 +288,17 @@ const getAllSongs = async ({ page, limit, search }) => {
 
 // Lấy một bài hát
 const getSongById = async (songId) => {
-  const song = Song.findByPk(songId, {
-    include: [{ model: Artist }, { model: Album }, { model: Genre }],
+  return requirePublicSong(songId, {
+    include: [{ model: Artist, as: "artists" }, { model: Genre, as: "genres" }],
   });
+};
 
-  if (!song) {
-    throw new Error("Không tìm thấy bài hát với ID này!");
-  }
-
-  if (song.is_visible === false) {
-    throw new Error("Bài hát này hiện không khả dụng.");
-  }
-
+const getSongPreview = async (songId, actor) => {
+  requirePermission(isAdmin(actor));
+  const song = await Song.findByPk(requireId(songId), {
+    include: [{ model: Artist, as: "artists" }, { model: Genre, as: "genres" }],
+  });
+  if (!song) throw new AuthorizationError("Không tìm thấy bài hát.", 404, "SONG_NOT_FOUND");
   return song;
 };
 
@@ -322,7 +306,7 @@ async function getSongs({ page = 1, limit = 20 }) {
   const offset = (page - 1) * limit;
 
   const { rows: songs, count } = await Song.findAndCountAll({
-    where: { is_visible: true },
+    where: publicSongWhere(),
     include: [
       {
         model: Artist,
@@ -346,18 +330,13 @@ async function getSongs({ page = 1, limit = 20 }) {
 }
 
 const incrementSongView = async (songId) => {
-  const song = await Song.findByPk(songId);
+  const song = await requirePublicSong(songId);
 
   if (!song) {
-    throw new Error("Song not found");
+    throw new AppError("Song not found", 404, "SONG_NOT_FOUND");
   }
 
-  await song.increment("view_count", { by: 1 });
-
-  return {
-    song_id: song.song_id,
-    view_count: song.view_count + 1,
-  };
+  throw new AppError('Gửi finalized listening event để ghi nhận lượt nghe.', 410, 'VIEW_ENDPOINT_RETIRED');
 };
 
 /* --- CHỨC NĂNG CHO ADMIN */
@@ -370,7 +349,7 @@ const updateSongById = async (songId, updateData) => {
   try {
     const song = await Song.findByPk(songId, { transaction: t });
     if (!song) {
-      throw new Error("Bài hát không tồn tại.");
+      throw new AppError("Bài hát không tồn tại.", 404, "SONG_NOT_FOUND");
     }
 
     // 1. Cập nhật thông tin cơ bản
@@ -526,9 +505,7 @@ const deleteSongById = async (songId) => {
     const song = await Song.findByPk(songId, { transaction: t });
 
     if (!song) {
-      const error = new Error("Không tìm thấy bài hát.");
-      error.status = 404;
-      throw error;
+      throw new AppError("Không tìm thấy bài hát.", 404, "SONG_NOT_FOUND");
     }
 
     await SongArtist.destroy({
@@ -566,7 +543,7 @@ const deleteSongById = async (songId) => {
 
 const toggleSongVisibility = async (songId, adminUser) => {
   const song = await Song.findByPk(songId);
-  if (!song) throw new Error("Không tìm thấy bài hát");
+  if (!song) throw new AppError("Không tìm thấy bài hát", 404, "SONG_NOT_FOUND");
 
   song.is_visible = !song.is_visible;
   await song.save();
@@ -580,13 +557,12 @@ const toggleSongVisibility = async (songId, adminUser) => {
 
 const searchSongs = async (keyword, limit) => {
   return Song.findAll({
-    where: {
-      is_visible: true,
+    where: publicSongWhere({
       [Op.or]: [
         { title: { [Op.like]: `%${keyword}%` } },
         { "$artists.name$": { [Op.like]: `%${keyword}%` } },
       ],
-    },
+    }),
 
     include: [
       {
@@ -655,8 +631,8 @@ const getPendingSongsCount = async () => {
 
 const approveSong = async (songId) => {
   const song = await Song.findByPk(songId);
-  if (!song) throw new Error("Không tìm thấy bài hát.");
-  if (song.status !== "pending") throw new Error("Bài hát không ở trạng thái chờ duyệt.");
+  if (!song) throw new AppError("Không tìm thấy bài hát.", 404, "SONG_NOT_FOUND");
+  if (song.status !== "pending") throw new AppError("Bài hát không ở trạng thái chờ duyệt.", 409, "INVALID_SONG_STATE");
 
   await song.update({ status: "approved", is_visible: true });
 
@@ -669,8 +645,8 @@ const approveSong = async (songId) => {
 
 const rejectSong = async (songId) => {
   const song = await Song.findByPk(songId);
-  if (!song) throw new Error("Không tìm thấy bài hát.");
-  if (song.status !== "pending") throw new Error("Bài hát không ở trạng thái chờ duyệt.");
+  if (!song) throw new AppError("Không tìm thấy bài hát.", 404, "SONG_NOT_FOUND");
+  if (song.status !== "pending") throw new AppError("Bài hát không ở trạng thái chờ duyệt.", 409, "INVALID_SONG_STATE");
 
   await song.update({ status: "rejected", is_visible: false });
 
@@ -685,6 +661,7 @@ module.exports = {
   createSong,
   getAllSongs,
   getSongById,
+  getSongPreview,
   updateSongById,
   deleteSongById,
   toggleSongVisibility,

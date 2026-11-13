@@ -1,10 +1,9 @@
 "use client";
-
-import React, { useState, useEffect, useRef } from "react";
-import styles from "./search.module.css";
-import { FaSearch, FaTimes } from "react-icons/fa";
 import { searchSongs } from "@/app/features/song/song.api";
 import { Track } from "@/app/types/music";
+import { useEffect,useRef,useState } from "react";
+import { FaSearch,FaTimes } from "react-icons/fa";
+import styles from "./search.module.css";
 
 interface SearchBarProps {
   setResults: (results: Track[]) => void;
@@ -21,6 +20,7 @@ const SearchBar = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    let active = true;
     const handler = setTimeout(async () => {
       const value = input.trim();
 
@@ -32,17 +32,15 @@ const SearchBar = ({
       try {
         const tracks = await searchSongs(value, 10);
 
-        setResults(tracks || []);
+        if (active) setResults(tracks || []);
       } catch (err) {
         console.error("Search error:", err);
-        const errorMessage =
-          err instanceof Error ? err.message : "Lỗi tìm kiếm";
-        setResults([]);
+        if (active) setResults([]);
       }
     }, 300);
 
-    return () => clearTimeout(handler);
-  }, [input]);
+    return () => { active = false; clearTimeout(handler); };
+  }, [input, setResults]);
 
   const handleChange = (value: string) => {
     setInput(value);

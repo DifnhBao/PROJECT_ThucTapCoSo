@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const playlistController = require("../controllers/playlist.controller");
 const dailyMixController = require("../controllers/dailyMix.controller");
-const { protect } = require("../midlewares/auth.midleware");
+const { protect, optionalAuth } = require("../midlewares/auth.midleware");
 const { route } = require("./auth.routes");
 
 // 6. Lay daily mix hom nay
@@ -26,7 +26,7 @@ router.post(
 );
 
 // Lấy danh sách phát của playlist
-router.get("/:playlistId", playlistController.getPlaylistDetail);
+router.get("/:playlistId", optionalAuth, playlistController.getPlaylistDetail);
 
 // 5. Xoa bai hat khoi playlist
 router.delete(

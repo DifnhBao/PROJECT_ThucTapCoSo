@@ -24,4 +24,6 @@ router.use("/favorites", favoriteRoutes);
 router.use("/activity", userActivityRoutes);
 router.use("/recommendations", recommendationRoutes);
 
+router.use("/media", require("./media.routes"));
+
 module.exports = router;

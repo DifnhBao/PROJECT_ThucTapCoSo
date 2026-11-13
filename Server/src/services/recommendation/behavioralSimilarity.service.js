@@ -1,4 +1,4 @@
-const { buildUserSongInteractionMatrix } = require("./interactionScoring.service");
+const config = require("./config");
 
 /* =========================================================
    PHẦN 1: HÀM TIỆN ÍCH (Utility Functions)
@@ -86,7 +86,7 @@ function calculateBehavioralSimilarity(songIdA, songIdB, matrix) {
   }
 
   const { score: rawCosineScore, common_user_count } = cosineSimilarity(vectorA, vectorB);
-  const confidence = common_user_count / (common_user_count + 5);
+  const confidence = common_user_count / (common_user_count + config.behavioralShrinkage);
   // const behavioralScore = common_user_count === 0 ? 0 : rawCosineScore * confidence;
   
   const positiveCosineScore = Math.max(0, rawCosineScore);

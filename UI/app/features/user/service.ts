@@ -1,4 +1,4 @@
-import { getCurrentUserApi, uploadAvatarApi } from "./api";
+import { getCurrentUserApi,uploadAvatarApi } from "./api";
 
 export const getCurrentUserService = async () => {
   const res = await getCurrentUserApi();

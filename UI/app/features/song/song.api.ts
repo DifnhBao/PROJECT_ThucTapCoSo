@@ -1,9 +1,13 @@
-import { Track } from "../../types/music";
-import { adminFetch, userFetch } from "../../utils/refreshToken";
 import { mapSongToTrack } from "@/app/utils/song.mapper";
+import { readApiResponse } from "../../lib/api-contract";
+import { apiFetch } from '../../lib/api-transport';
+import { uploadKey } from '../../lib/upload-key';
+import type { SongDto,SongMetadata,SongMutationDto,SongPageDto } from '../../types/api';
+import { Track } from "../../types/music";
+import { adminFetch,userFetch } from "../../utils/refreshToken";
 
 export const URL =
-  (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000") + "/api";
+  "/api";
 
 type PaginatedSongs = {
   page: number;
@@ -15,14 +19,11 @@ type PaginatedSongs = {
 export async function fetchDailySongs(
   limit = 20,
   page = 1,
+  signal?: AbortSignal,
 ): Promise<PaginatedSongs> {
-  const res = await fetch(`${URL}/songs?page=${page}&limit=${limit}`);
+  const res = await apiFetch(`${URL}/songs?page=${page}&limit=${limit}`, { signal });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch songs");
-  }
-
-  const data = await res.json();
+  const data = await readApiResponse<{ songs: SongDto[]; page: number; limit: number; total: number }>(res);
 
   return {
     page: data.page,
@@ -49,10 +50,10 @@ export async function fetchSongsForManage({
     credentials: "include",
   });
 
-  return res.json();
+  return readApiResponse<SongPageDto>(res);
 }
 
-export async function updateSong(id: number, data: any) {
+export async function updateSong(id: number, data: SongMetadata) {
   const res = await adminFetch(`${URL}/songs/${id}`, {
     method: "PUT",
     headers: {
@@ -64,7 +65,7 @@ export async function updateSong(id: number, data: any) {
 
   if (!res.ok) throw new Error("Update failed");
 
-  return res.json();
+  return readApiResponse<SongMutationDto>(res);
 }
 
 export async function deleteSong(songId: number) {
@@ -73,7 +74,7 @@ export async function deleteSong(songId: number) {
     credentials: "include",
   });
 
-  const json = await res.json();
+  const json = await readApiResponse<{ message?: string }>(res);
 
   if (!res.ok) {
     throw new Error(json.message || "Delete song failed");
@@ -82,83 +83,20 @@ export async function deleteSong(songId: number) {
   return json;
 }
 
-// like/unlike song
-export async function likeSong(songId: number) {
-  const res = await userFetch(`${URL}/songs/${songId}/like`, {
-    method: "POST",
-    credentials: "include",
-  });
-
-  if (!res.ok) throw new Error("Like failed");
-  return res.json();
-}
-
-export async function unlikeSong(songId: number) {
-  const res = await userFetch(`${URL}/songs/${songId}/like`, {
-    method: "DELETE",
-    credentials: "include",
-  });
-
-  if (!res.ok) throw new Error("Unlike failed");
-  return res.json();
-}
-
-export async function getLikeStatus(songId: number) {
-  const res = await userFetch(`${URL}/songs/${songId}/like-status`, {
-    credentials: "include",
-  });
-
-  if (!res.ok) throw new Error("Fetch like status failed");
-  return res.json();
-}
-
-export async function fetchLikedSongs() {
-  const res = await userFetch(`${URL}/songs/me/favorites`, {
-    method: "GET",
-    credentials: "include",
-  });
-
-  const json = await res.json();
-
-  if (!res.ok) {
-    throw new Error(json.message || "Fetch liked songs failed");
-  }
-
-  return json.data;
-}
-
-// ẩn hiện bài hát
 export async function toggleSongVisibility(songId: number) {
-  const res = await userFetch(`${URL}/songs/${songId}/toggle-invisibility`, {
-    method: "PATCH",
-    credentials: "include",
-  });
-
-  const json = await res.json();
-
-  if (!res.ok) {
-    throw new Error(json.message || "Toggle visibility failed");
-  }
-
-  return json;
-}
-
-// tăng view
-export async function increaseSongView(songId: number) {
-  await userFetch(`${URL}/songs/${songId}/view`, {
-    method: "POST",
-    credentials: "include",
-  });
+  const response = await adminFetch(`${URL}/songs/${songId}/toggle-invisibility`, { method: 'PATCH' });
+  return readApiResponse<{ isVisible: boolean; message?: string }>(response);
 }
 
 // tìm kiếm
 export async function searchSongs(
   keyword: string,
   limit = 10,
+  signal?: AbortSignal,
 ): Promise<Track[]> {
-  const res = await fetch(
+  const res = await apiFetch(
     `${URL}/songs/search?q=${encodeURIComponent(keyword)}&limit=${limit}`,
-    {
+    { signal,
       credentials: "include",
     },
   );
@@ -167,64 +105,23 @@ export async function searchSongs(
     throw new Error("Search failed");
   }
 
-  const json = await res.json();
-
-  if (!json.data || !Array.isArray(json.data)) {
-    return [];
-  }
-
-  return json.data.map(
-    (song: any): Track => ({
-      trackId: song.song_id,
-      title: song.title,
-      duration: song.duration || 0,
-      imageUrl: song.image_url,
-      artistName:
-        song.artists?.length > 0
-          ? song.artists.map((a: any) => a.name).join(", ")
-          : "Unknown",
-      audioUrl: song.audio_url,
-      genre: song.genre ?? "Other",
-      viewCount: 0,
-      isVisible:
-        song.isVisible !== undefined
-          ? song.isVisible
-          : song.is_visible !== undefined
-            ? song.is_visible
-            : true,
-    }),
-  );
+  const json = await readApiResponse<{ data: SongDto[] }>(res);
+  return json.data.map(mapSongToTrack);
 }
 
 export async function createSong(formData: FormData) {
-  const res = await adminFetch(`${URL}/songs`, {
-    method: "POST",
-    credentials: "include",
-    body: formData, //
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Create song failed");
-  }
-
-  return res.json();
+  const attempt = await uploadKey(formData, 'admin-song');
+  const res = await adminFetch(`${URL}/songs`, { method: 'POST', credentials: 'include', headers: { 'Idempotency-Key': attempt.key }, body: formData });
+  const result = await readApiResponse<SongMutationDto>(res);
+  attempt.done();
+  return result;
 }
-
 export async function uploadSongByUser(formData: FormData) {
-  const res = await userFetch(`${URL}/songs/upload`, {
-    method: "POST",
-    credentials: "include",
-    body: formData,
-  });
-
-  const json = await res.json();
-
-  if (!res.ok) {
-    throw new Error(json.message || "Upload bài hát thất bại");
-  }
-
-  return json;
+  const attempt = await uploadKey(formData, 'user-song');
+  const res = await userFetch(`${URL}/songs/upload`, { method: 'POST', credentials: 'include', headers: { 'Idempotency-Key': attempt.key }, body: formData });
+  const result = await readApiResponse<SongMutationDto>(res);
+  attempt.done();
+  return result;
 }
 
 /* --- DUYỆT BÀI HÁT (ADMIN) --- */
@@ -244,7 +141,7 @@ export async function fetchPendingSongs({
   });
 
   if (!res.ok) throw new Error("Fetch pending songs failed");
-  return res.json();
+  return readApiResponse<SongPageDto>(res);
 }
 
 export async function fetchPendingSongsCount() {
@@ -254,7 +151,7 @@ export async function fetchPendingSongsCount() {
   });
 
   if (!res.ok) return 0;
-  const json = await res.json();
+  const json = await readApiResponse<{ count: number }>(res);
   return json.count || 0;
 }
 
@@ -264,7 +161,7 @@ export async function approveSongApi(songId: number) {
     credentials: "include",
   });
 
-  const json = await res.json();
+  const json = await readApiResponse<{ message?: string }>(res);
   if (!res.ok) throw new Error(json.message || "Duyệt bài hát thất bại");
   return json;
 }
@@ -275,7 +172,7 @@ export async function rejectSongApi(songId: number) {
     credentials: "include",
   });
 
-  const json = await res.json();
+  const json = await readApiResponse<{ message?: string }>(res);
   if (!res.ok) throw new Error(json.message || "Từ chối bài hát thất bại");
   return json;
 }

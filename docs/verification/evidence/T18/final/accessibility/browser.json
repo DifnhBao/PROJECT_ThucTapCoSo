@@ -1,0 +1,37 @@
+{
+  "actualNextRoutes": true,
+  "fixtureApi": true,
+  "layouts": [
+    {
+      "width": 375,
+      "viewport": 375,
+      "scroll": 375
+    },
+    {
+      "width": 768,
+      "viewport": 768,
+      "scroll": 768
+    },
+    {
+      "width": 1440,
+      "viewport": 1440,
+      "scroll": 1440
+    }
+  ],
+  "contrast": {
+    "--tt-text-primary": 18.837118119279566,
+    "--tt-text-secondary": 6.59171789054403,
+    "--tt-text-muted": 5.648660687806059,
+    "--tt-orange": 5.500209420142428
+  },
+  "longTitleNoOverflow": true,
+  "zoom200EquivalentViewport": true,
+  "zoomDeviceScaleFactor": 2,
+  "shortViewport": {
+    "width": 375,
+    "height": 450
+  },
+  "keyboardSearchPlayLikeAddPlaylist": true,
+  "nestedDialogTrapEscapeRestore": true,
+  "unexpectedPageErrors": []
+}

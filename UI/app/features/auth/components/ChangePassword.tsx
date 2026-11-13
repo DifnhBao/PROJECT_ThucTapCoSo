@@ -1,14 +1,13 @@
-import { useState } from "react";
 import styles from "@/app/styles/form.module.css";
-import { useModal } from "@/app/context/ModalContext";
-import { changePassword } from "../../user/accountApi";
 import { validatePassword } from "@/app/utils/passwordValidator";
+import { useState } from "react";
+import { readApiResponse } from "../../../lib/api-contract";
+import { changePassword } from "../../user/accountApi";
 
 export default function ChangePassword() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPW, setConfirmPW] = useState("");
-  const { openModal } = useModal();
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,9 +25,9 @@ export default function ChangePassword() {
 
     try {
       const res = await changePassword(oldPassword, confirmPW);
-      const data = await res.json();
+      const data = await readApiResponse<{ message?: string }>(res);
       alert(data.message);
-    } catch (error) {
+    } catch {
       console.error("Lỗi khi gọi api changPassword.");
     }
   };

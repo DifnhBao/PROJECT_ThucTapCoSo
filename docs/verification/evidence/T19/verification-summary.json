@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-08",
+  "status": "VERIFIED",
+  "stages": 7,
+  "counts": {
+    "backend-unit-api": 102,
+    "frontend-unit-component": 56,
+    "mysql-integration": 58,
+    "full-stack-e2e": 1
+  },
+  "adminBootstrapBefore": "EXPECTED_FAIL",
+  "adminBootstrapAfter": "PASS",
+  "uiTypecheck": "PASS",
+  "uiLint": {
+    "errors": 0,
+    "warnings": 24
+  },
+  "apiBusinessResponsesMockedInE2E": false,
+  "externalStorageMocked": true,
+  "productionBuild": "user rebuilt; tested on port3016",
+  "committed": false,
+  "pushed": false,
+  "deployed": false
+}

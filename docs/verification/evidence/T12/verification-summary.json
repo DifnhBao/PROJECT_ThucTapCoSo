@@ -1,0 +1,89 @@
+{
+  "task": "T12",
+  "date": "2026-10-29",
+  "status": "VERIFIED_LOCAL",
+  "branch": "feat/t12-http-account-cache",
+  "uiTests": {
+    "tests": 53,
+    "pass": 53,
+    "fail": 0,
+    "skipped": 0
+  },
+  "typecheck": "PASS",
+  "productionBuild": "PASS",
+  "lint": {
+    "errors": 71,
+    "warnings": 70,
+    "baseline": "T11/lint.json",
+    "newDiagnostics": []
+  },
+  "accountBrowser": {
+    "browser": "Chromium/Edge",
+    "fixtureApi": true,
+    "actualProvidersAndTransport": true,
+    "library41SongsAcross3Pages": true,
+    "pageFailureManualRetry": true,
+    "statusOutsidePagePreserved": true,
+    "optimisticRollbackToast": true,
+    "lostToggleResponseReconciledWithoutPostReplay": true,
+    "failedToggleRequests": 1,
+    "concurrentRefreshPerScope": {
+      "user": 1,
+      "admin": 1
+    },
+    "listeningSessionSurvivesRefresh": true,
+    "staleAccountResponsesDiscarded": true,
+    "staleMutationRollbackCannotAffectB": true,
+    "privateQueueCleared": true,
+    "refreshFailureExpiresWithoutLoop": true,
+    "adminSurvivesUserSwitch": true,
+    "crossTabLogoutAndLogin": true,
+    "unexpectedPageErrors": []
+  },
+  "privateModalDataClearedInBrowser": true,
+  "playerBrowser": {
+    "browser": "Chromium/Edge",
+    "component": "actual Player + PlayerProvider + AudioController; Next navigation shim; fixture API",
+    "emptyStartupRequests": 0,
+    "shufflePreservesTrack": true,
+    "stalePageDiscarded": true,
+    "catalogNextPage": 2,
+    "emptyPageStops": true,
+    "errorRetrySkip": true,
+    "autoplayRejectionRecoverable": true,
+    "repeatOneAndAllNativeEnded": true,
+    "offlinePageAttempts": 2,
+    "offlineNoLoop": true,
+    "catalogListStrictModePages": [
+      1,
+      2
+    ],
+    "catalogListManualRetry": true,
+    "restorePausedAtSavedTime": true,
+    "failedAudioViewCount": 0,
+    "mobileWidth": 390,
+    "unexpectedPageErrors": [],
+    "listeningSourceSnapshot": true,
+    "listeningLostAckSamePayload": true,
+    "seekEndActualListenedUnder2Seconds": true,
+    "separateViewRequests": 0
+  },
+  "currentTreeSecretFindings": 0,
+  "historyScanRerun": false,
+  "trackedT12DiffCheck": "PASS",
+  "backendTestsRerun": false,
+  "mysqlTestsRerun": false,
+  "applicationDatabaseChanged": false,
+  "liveProviderCalls": false,
+  "newDependencies": false,
+  "committed": false,
+  "pushed": false,
+  "deployed": false,
+  "limits": [
+    "Browser fixtures use actual components/transport with fixture API and Next routing shim; not deployed full-stack E2E",
+    "Existing lint debt deferred to T13",
+    "Refresh single-flight within tab; Web Locks serialize across tabs when available",
+    "Offset favorite pagination is not a concurrent snapshot",
+    "No persistent listening outbox/exactly-once guarantee; T08 legacy media remains outstanding"
+  ]
+}

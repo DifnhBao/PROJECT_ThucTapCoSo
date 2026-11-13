@@ -1,0 +1,5 @@
+
+> music-backend@1.0.0 test:integration
+> node tests/helpers/run-integration.cjs
+
+Test database requires NODE_ENV=test and explicit TEST_DB_* variables

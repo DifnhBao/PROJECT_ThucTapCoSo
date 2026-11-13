@@ -1,0 +1,66 @@
+[
+  {
+    "event": "http_request",
+    "requestId": "2241b3b2-6e92-4ca4-bd2a-38f07bfaea8e",
+    "method": "GET",
+    "route": "/health/ready",
+    "status": 503,
+    "durationMs": 7.48
+  },
+  {
+    "event": "http_request",
+    "requestId": "8726dff3-a8cb-45b8-b810-641121214db8",
+    "method": "GET",
+    "route": "/health/ready",
+    "status": 503,
+    "durationMs": 7.08
+  },
+  {
+    "event": "http_request",
+    "requestId": "331cf927-126a-4c46-8bdf-7b742f8e4cc7",
+    "method": "GET",
+    "route": "/health/ready",
+    "status": 503,
+    "durationMs": 7.53
+  },
+  {
+    "event": "http_request",
+    "requestId": "5b58cee0-2f49-4ae6-a003-dcb6eb04abb9",
+    "method": "GET",
+    "route": "/health/ready",
+    "status": 503,
+    "durationMs": 12.82
+  },
+  {
+    "event": "http_request",
+    "requestId": "3c1046be-799d-40fb-9093-6a585e6fb830",
+    "method": "GET",
+    "route": "/health/ready",
+    "status": 200,
+    "durationMs": 23.13
+  },
+  {
+    "event": "http_request",
+    "requestId": "eec3b3c3-5e30-45d4-b29c-c7a049770cb5",
+    "method": "GET",
+    "route": "/api/playlists/me",
+    "status": 200,
+    "durationMs": 30.88
+  },
+  {
+    "event": "http_request",
+    "requestId": "128070f4-290a-45fd-b2c9-805c83481a37",
+    "method": "GET",
+    "route": "/health/ready",
+    "status": 200,
+    "durationMs": 14.32
+  },
+  {
+    "event": "http_request",
+    "requestId": "7b932fea-aedc-4f7c-8e50-a2f1bc0ba224",
+    "method": "GET",
+    "route": "/health/ready",
+    "status": 200,
+    "durationMs": 18.77
+  }
+]

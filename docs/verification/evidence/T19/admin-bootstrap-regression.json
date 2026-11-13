@@ -1,0 +1,8 @@
+{
+  "scenario": "Pause real admin bootstrap request, type username, release real response, retain draft and sign in",
+  "before": "EXPECTED_FAIL on previous production build: username becomes empty",
+  "after": "PASS on rebuilt production UI",
+  "beforeEvidence": "admin-bootstrap-before.log",
+  "afterEvidence": "admin-bootstrap-after.log",
+  "apiResponsesMocked": false
+}

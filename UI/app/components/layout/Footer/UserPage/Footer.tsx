@@ -1,5 +1,4 @@
 "use client";
-
 import styles from "@/app/components/layout/Footer/UserPage/Footer.module.css";
 
 export default function Footer() {

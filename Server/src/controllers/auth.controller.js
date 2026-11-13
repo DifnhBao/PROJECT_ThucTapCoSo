@@ -1,217 +1,44 @@
-const authService = require("../services/auth.service");
+const authService = require('../services/auth.service');
+const { cookieOptions } = require('../config/security');
+const optionsFor = (req) => cookieOptions({ NODE_ENV: req.app.locals.securityConfig.production ? 'production' : 'development' });
 
+function setTokens(req, res, tokens, scope) {
+  const options = optionsFor(req);
+  const suffix = scope === 'admin' ? '_admin' : '';
+  res.cookie(`accessToken${suffix}`, tokens.accessToken, { ...options, maxAge: tokens.accessExpiresIn });
+  res.cookie(`refreshToken${suffix}`, tokens.refreshToken, { ...options, expires: new Date(tokens.refreshExpiresAt) });
+}
 const register = async (req, res, next) => {
+  try { res.status(201).json({ message: 'Register successfully!', data: await authService.registerUser(req.body) }); }
+  catch (error) { next(error); }
+};
+const login = (scope) => async (req, res, next) => {
   try {
-    const { email, password, username } = req.body;
-
-    const result = await authService.registerUser({
-      email,
-      password,
-      username,
-    });
-
-    res.status(201).json({
-      message: "Register successfully!",
-      data: result,
-    });
-  } catch (error) {
-    console.log(error.errors);
-    res.status(400).json({
-      message: error.message,
-      errors: error.errors,
-    });
-  }
+    const result = await (scope === 'admin' ? authService.loginAdmin : authService.loginUser)(req.body);
+    setTokens(req, res, result.tokens, scope);
+    res.set('Cache-Control', 'no-store');
+    if (scope === 'admin') res.json({ message: 'Admin login successfully', admin: result.admin });
+    else res.json({ message: 'Login successfully!', data: result });
+  } catch (error) { next(error); }
 };
-
-const ACCESS_TOKEN_TTL = 30 * 60 * 1000;
-const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
-
-const login = async (req, res, next) => {
-  const { username, password } = req.body;
-
+const refresh = (scope) => async (req, res, next) => {
   try {
-    const result = await authService.loginUser({ username, password });
-
-    res.cookie("accessToken", result.tokens.accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: ACCESS_TOKEN_TTL,
-    });
-
-    res.cookie("refreshToken", result.tokens.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: REFRESH_TOKEN_TTL,
-    });
-
-    res.status(200).json({
-      message: "Login successfully!",
-      data: result,
-    });
-  } catch (error) {
-    res.status(400).json({
-      message: error.message || "Login failed",
-    });
-  }
+    const raw = req.cookies?.[scope === 'admin' ? 'refreshToken_admin' : 'refreshToken'];
+    const result = await (scope === 'admin' ? authService.refreshAdminToken : authService.refreshToken)(raw);
+    setTokens(req, res, result, scope);
+    res.set('Cache-Control', 'no-store');
+    res.json({ message: 'Refresh token thành công', accessToken: result.accessToken });
+  } catch (error) { next(error); }
 };
-
-const requestRefreshToken = async (req, res, next) => {
+const logout = (scope) => async (req, res, next) => {
   try {
-    const refreshToken = req.cookies?.refreshToken;
-
-    const result = await authService.refreshToken(refreshToken);
-
-    // Nếu muốn set lại cookie access token tại đây:
-    res.cookie("accessToken", result.accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 30 * 60 * 1000,
-    });
-
-    return res.status(200).json({
-      message: "Refresh token thành công",
-      accessToken: result.accessToken,
-    });
-  } catch (error) {
-    console.error("Refresh token error:", error);
-    return res.status(403).json({ message: error.message });
-  }
+    const suffix = scope === 'admin' ? '_admin' : '';
+    await (scope === 'admin' ? authService.logoutAdmin : authService.logoutUser)(req.cookies?.[`refreshToken${suffix}`]);
+    res.clearCookie(`accessToken${suffix}`, optionsFor(req));
+    res.clearCookie(`refreshToken${suffix}`, optionsFor(req));
+    res.set('Cache-Control', 'no-store');
+    res.json({ message: 'Logout successfully.' });
+  } catch (error) { next(error); }
 };
-
-const logout = async (req, res, next) => {
-  try {
-    const refreshToken = req.cookies?.refreshToken;
-
-    if (!refreshToken) {
-      return res.status(200).json({
-        message: "Already logged out",
-      });
-    }
-
-    await authService.logoutUser(refreshToken);
-
-    // xóa cookie
-    res.clearCookie("accessToken", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    });
-
-    res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    });
-
-    res.status(200).json({
-      message: "Logout successfully.",
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// ADMIN PAGE
-const loginAdmin = async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    const result = await authService.loginAdmin({ username, password });
-
-    res.cookie("accessToken_admin", result.tokens.accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: ACCESS_TOKEN_TTL,
-    });
-
-    res.cookie("refreshToken_admin", result.tokens.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: REFRESH_TOKEN_TTL,
-    });
-
-    res.status(200).json({
-      message: "Admin login successfully",
-      admin: result.admin,
-    });
-  } catch (err) {
-    res.status(403).json({ message: err.message });
-  }
-};
-
-const logoutAdmin = async (req, res) => {
-  try {
-    const refreshToken = req.cookies.refreshToken_admin;
-
-    // Xóa refresh token trong DB (nếu có)
-    if (refreshToken) {
-      await authService.logoutAdmin(refreshToken);
-    }
-
-    // Xóa cookie admin
-    res.clearCookie("accessToken_admin", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    });
-
-    res.clearCookie("refreshToken_admin", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    });
-
-    return res.status(200).json({
-      message: "Admin logout successfully",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      message: "Admin logout failed",
-    });
-  }
-};
-
-const refreshAdminToken = async (req, res) => {
-  try {
-    const refreshToken = req.cookies?.refreshToken_admin;
-
-    if (!refreshToken) {
-      return res.status(401).json({
-        message: "Thiếu refresh token",
-      });
-    }
-
-    const result = await authService.refreshAdminToken(refreshToken);
-
-    res.cookie("accessToken_admin", result.accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 30 * 60 * 1000,
-    });
-
-    return res.status(200).json({
-      message: "Refresh admin token thành công",
-    });
-  } catch (error) {
-    console.error("Admin refresh token error:", error);
-    return res.status(403).json({
-      message: error.message,
-    });
-  }
-};
-
-module.exports = {
-  register,
-  login,
-  requestRefreshToken,
-  logout,
-  loginAdmin,
-  logoutAdmin,
-  refreshAdminToken,
-};
+module.exports = { register, login: login('user'), loginAdmin: login('admin'), requestRefreshToken: refresh('user'), refreshAdminToken: refresh('admin'), logout: logout('user'), logoutAdmin: logout('admin') };
+module.exports = require('../validation/validate-controller').withContracts(module.exports, require('../validation/contracts').contracts.auth);

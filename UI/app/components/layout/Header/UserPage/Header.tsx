@@ -1,14 +1,13 @@
 "use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import styles from "@/app/components/layout/Header/UserPage/Header.module.css";
-import PopUp from "../../../ui/PopUp";
-import SearchBarComponent from "../../../ui/SearchBar/SearchBarComponent";
 import { useModal } from "@/app/context/ModalContext";
 import { useUser } from "@/app/features/user/context/UserContext";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useLogout } from "../../../../features/auth/useLogout";
+import PopUp from "../../../ui/PopUp";
+import SearchBarComponent from "../../../ui/SearchBar/SearchBarComponent";
 
 export default function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false);

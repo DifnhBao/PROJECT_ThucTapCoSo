@@ -1,0 +1,116 @@
+[
+  {
+    "path": ".gitattributes",
+    "sourceSha256": "9b1e768243a44ffe6d44e3181c2c2ac81bb9fbe5f55d647e12dcd0be311e46eb",
+    "cloneSha256": "93ac725bc8613e3a696f9df7851a832a9f3f38dc8859d367a6286f883efe54e4",
+    "normalizedMatch": true
+  },
+  {
+    "path": "docker-compose.yml",
+    "sourceSha256": "f5ac71efe9036c479db5d39c33341bf158b626f3f9dfb763819a3de3ad41e26b",
+    "cloneSha256": "f5ac71efe9036c479db5d39c33341bf158b626f3f9dfb763819a3de3ad41e26b",
+    "normalizedMatch": true
+  },
+  {
+    "path": "docker-compose.local.yml",
+    "sourceSha256": "53deae83a211c26fae150c2afeb02a3911dbfcc4e0560febf5adf6f6459f25db",
+    "cloneSha256": "53deae83a211c26fae150c2afeb02a3911dbfcc4e0560febf5adf6f6459f25db",
+    "normalizedMatch": true
+  },
+  {
+    "path": "Server/Dockerfile",
+    "sourceSha256": "4c080fcc0dd650a398ea47c1f1eeea6a0126466c0e62bbebc2631352c96d053e",
+    "cloneSha256": "4c080fcc0dd650a398ea47c1f1eeea6a0126466c0e62bbebc2631352c96d053e",
+    "normalizedMatch": true
+  },
+  {
+    "path": "UI/Dockerfile",
+    "sourceSha256": "07cc23d7d8dd71a9ec8187c2f20f4c23beb02b3788afd0b012c14658de0ae404",
+    "cloneSha256": "07cc23d7d8dd71a9ec8187c2f20f4c23beb02b3788afd0b012c14658de0ae404",
+    "normalizedMatch": true
+  },
+  {
+    "path": "Server/.dockerignore",
+    "sourceSha256": "d1a287d9a9f0dd04595fd6aaa1e81838c24d5c9ee36c2ab0c70d1823b69eeee8",
+    "cloneSha256": "d1a287d9a9f0dd04595fd6aaa1e81838c24d5c9ee36c2ab0c70d1823b69eeee8",
+    "normalizedMatch": true
+  },
+  {
+    "path": "UI/.dockerignore",
+    "sourceSha256": "7d3ba5045b372fb78b45c3287a5abc308cf0a3325ec6aeae8f02196c5d7dc307",
+    "cloneSha256": "7d3ba5045b372fb78b45c3287a5abc308cf0a3325ec6aeae8f02196c5d7dc307",
+    "normalizedMatch": true
+  },
+  {
+    "path": "db/10-app-permissions.sh",
+    "sourceSha256": "6fa13a091adef46199d671380c7303f48e4b1dc251ff50625497d210f6e87aad",
+    "cloneSha256": "6fa13a091adef46199d671380c7303f48e4b1dc251ff50625497d210f6e87aad",
+    "normalizedMatch": true
+  },
+  {
+    "path": "Server/src/server.js",
+    "sourceSha256": "3d7487209c25b8fe498c0a07b2d37d5e76aa07c76868bbcd99b76d84b5da7c34",
+    "cloneSha256": "5b54b886a937e4a4f4b30e29152024f7486077075b81f513f3d15333da6bcad2",
+    "normalizedMatch": true
+  },
+  {
+    "path": "Server/src/app.js",
+    "sourceSha256": "1e0c69954646b6a604e2349f5b16e3bfcf21d966f9c8c151c3eade3953ea2bd1",
+    "cloneSha256": "cb1a5f2c888a1a46278bdf2db86b3588380db3250241c780f712ed0f7b82d478",
+    "normalizedMatch": true
+  },
+  {
+    "path": "Server/src/operations/health.js",
+    "sourceSha256": "1281f2f4d705c2355b406ddb9d97ee0f6e30238f8289a74d8502666fc81e5666",
+    "cloneSha256": "abcef8bc9f2933a9be3ff2d3db1a6978830c3ec93d24435d049709b117c71503",
+    "normalizedMatch": true
+  },
+  {
+    "path": "Server/src/operations/access-log.js",
+    "sourceSha256": "2a7167aa2c472c5c511660871c5824f4524daebe8579eec6303fd94da6540356",
+    "cloneSha256": "663854a98c6eb343b1fb64ddfcaf329d1ad1b07df4ee1827f3528ddf26822975",
+    "normalizedMatch": true
+  },
+  {
+    "path": "Server/src/operations/shutdown.js",
+    "sourceSha256": "7fe9b385215ea37dd8f090c2eff04051ed07b678e8e18404e9407d89af32f46a",
+    "cloneSha256": "a2987131eee3996fc5149a1a068ac24de2588e46f6dcde01ae2f51f022f5740e",
+    "normalizedMatch": true
+  },
+  {
+    "path": "Server/database/seed.cjs",
+    "sourceSha256": "206ba72c7cf9d15a24580a9ff5f0eb0d9061ae2ee96a2bb57de07cea1b9e6cb6",
+    "cloneSha256": "926f137025897004be3df0b5704f23eb805c5df1f37df669e08d966bbee2b3f7",
+    "normalizedMatch": true
+  },
+  {
+    "path": "UI/next.config.ts",
+    "sourceSha256": "422155e7ec99f00c8f0ec703941efb3094e45da63cefa78c260a2905714077f6",
+    "cloneSha256": "2e581db234ae56dc94650010209fbf1a83723d06592ce6df5d2e9d7327ac056d",
+    "normalizedMatch": true
+  },
+  {
+    "path": "UI/public/images/default-song.svg",
+    "sourceSha256": "bee644d727640bb699228df00aac9f85672134b7e6c2fdcfcd18e9221ab60f9f",
+    "cloneSha256": "bee644d727640bb699228df00aac9f85672134b7e6c2fdcfcd18e9221ab60f9f",
+    "normalizedMatch": true
+  },
+  {
+    "path": "UI/public/demo/tone.wav",
+    "sourceSha256": "6786b8cc82aa73008df2a951f3d100ed60bd13659410ecfd85bb3bb2798822cd",
+    "cloneSha256": "6786b8cc82aa73008df2a951f3d100ed60bd13659410ecfd85bb3bb2798822cd",
+    "normalizedMatch": true
+  },
+  {
+    "path": "scripts/stack-backup.cjs",
+    "sourceSha256": "8d5f603ab26e6500c74a6612b77b0f4da2b4c09459cbdc87aa450feb85ab4255",
+    "cloneSha256": "9f7333ac9e7a0ad336939cad2fc20e67775b34c50981dd064dc461bf0107a962",
+    "normalizedMatch": true
+  },
+  {
+    "path": "scripts/verify-t20-stack.cjs",
+    "sourceSha256": "b1a79fd1cc3fe55707a64efb710236805c7017d0001d095b8d491c8143df3750",
+    "cloneSha256": "394122d9fd5ea0bbf5eade98772a164d1b261939736a066b58e1283f8c0e65a5",
+    "normalizedMatch": true
+  }
+]

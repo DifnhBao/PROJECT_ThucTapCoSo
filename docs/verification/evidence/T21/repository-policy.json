@@ -1,0 +1,27 @@
+{
+  "verifiedAt": "2026-11-13T14:09:26.434Z",
+  "repository": "DifnhBao/PROJECT_ThucTapCoSo",
+  "branch": "main",
+  "requiredChecks": [
+    {
+      "context": "CI required",
+      "app_id": 15368
+    }
+  ],
+  "strict": true,
+  "enforceAdmins": true,
+  "requiresPullRequest": true,
+  "requiredApprovals": 0,
+  "allowForcePushes": false,
+  "allowDeletions": false,
+  "releaseEnvironment": {
+    "name": "release",
+    "reviewers": [
+      "DifnhBao"
+    ],
+    "branchPolicy": {
+      "protected_branches": true,
+      "custom_branch_policies": false
+    }
+  }
+}

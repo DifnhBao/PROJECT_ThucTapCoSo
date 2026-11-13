@@ -164,6 +164,7 @@ const syncDatabase = async () => {
 };
 
 module.exports = {
+  ...require("./upload.model"),
   sequelize,
   syncDatabase,
   User,

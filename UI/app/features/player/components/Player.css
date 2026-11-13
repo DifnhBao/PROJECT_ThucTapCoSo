@@ -4,20 +4,20 @@
   bottom: 24px ;
   left: 58% ;
   transform: translateX(-50%) ;
-  
+
   /* Độ rộng linh hoạt, chừa sidebar */
-  width: calc(100% - 280px) ; 
-  max-width: 800px ; 
-  height: 64px ; 
-  
+  width: calc(100% - 280px) ;
+  max-width: 800px ;
+  height: 64px ;
+
   /* Hiệu ứng kính mờ chuẩn Apple */
   background: rgba(245, 245, 247, .55);
   backdrop-filter: saturate(220%) blur(16px);
-  
-  border-radius: 32px; 
+
+  border-radius: 32px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.05);
-  
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -65,8 +65,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1; 
-  max-width: 480px; 
+  flex: 1;
+  max-width: 480px;
   margin: 0 20px;
 }
 
@@ -74,7 +74,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 5px; 
+  gap: 5px;
 }
 
 .center-info {
@@ -84,7 +84,7 @@
 }
 
 .center-cover {
-  width: 40px; 
+  width: 40px;
   height: 40px;
   border-radius: 5px;
   overflow: hidden;
@@ -149,11 +149,11 @@
 
 .run .seek-bar {
   flex: 1;
-  height: 2px; 
+  height: 2px;
   cursor: pointer;
   -webkit-appearance: none;
   border-radius: 10px;
-  background: rgba(0,0,0,0.1); 
+  background: rgba(0,0,0,0.1);
   transition: height 0.2s ease;
 }
 .run .seek-bar:hover {
@@ -162,7 +162,7 @@
 
 .run .seek-bar::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 0; 
+  width: 0;
   height: 0;
   border-radius: 50%;
   background-color: var(--tt-text-primary, #333);
@@ -176,12 +176,12 @@
   height:10px;
 }
 
-.current-time, .music-time { 
-  display: block; 
+.current-time, .music-time {
+  display: block;
   font-size: 10px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--tt-text-secondary, #666);
-  font-variant-numeric: tabular-nums; 
+  font-variant-numeric: tabular-nums;
   opacity: 0.8;
   min-width: 32px;
 }
@@ -247,7 +247,7 @@
 /* --- POPUP --- */
 .Other-options-popup {
   position: absolute;
-  bottom: 40px; 
+  bottom: 40px;
   right: -50px;
   width: 200px;
   background: var(--tt-surface, #fff);
@@ -280,4 +280,36 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+/* Playback recovery stays adjacent to the controls at all screen sizes. */
+.player-feedback {
+  position: absolute; bottom: calc(100% + 10px); left: 0; width: 100%;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  box-sizing: border-box; padding: 10px 14px; border-radius: 14px;
+  background: var(--tt-surface, #fff); color: var(--tt-text-primary, #111);
+  border: 1px solid rgba(128,128,128,.3); box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  font-size: 13px;
+}
+.player-feedback span { flex: 1 1 180px; }
+.player-feedback button { cursor: pointer; border: 1px solid #888; border-radius: 8px; padding: 6px 10px; background: transparent; color: inherit; }
+.bottom-bar-player button:disabled { opacity: .35; cursor: default; }
+@media (max-width: 900px) {
+  .bottom-bar-player { left: 50%; width: calc(100% - 24px); padding: 12px 16px; box-sizing: border-box; height: auto; min-height: 104px; bottom: 12px; border-radius: 20px; flex-wrap: wrap; gap: 10px; }
+  .bottom-bar-player .player-center { order: 1; flex: 1 1 100%; min-width: 0; max-width: none; margin: 0; }
+  .bottom-bar-player .player-left { order: 2; flex: 1; gap: 16px; }
+  .bottom-bar-player .player-right { order: 3; gap: 10px; }
+  .bottom-bar-player .center-wrapper { width: 100%; }
+  .bottom-bar-player .seek-volume { width: 42px; }
+}
+/* T17: player and content use the same shell dimensions. */
+.bottom-bar-player { left:calc(var(--sidebar-width, 0px) + (100% - var(--sidebar-width, 0px))/2); width:calc(100% - var(--sidebar-width, 0px) - 32px); height:auto; min-height:76px; background:#f5f5f7; }
+.bottom-bar-player button { min-width:32px; min-height:36px; }
+@media(max-width:900px) {
+ .bottom-bar-player { left:50%; width:calc(100% - 16px); bottom:8px; padding:8px 12px; gap:4px; }
+ .bottom-bar-player .player-center { flex:1 1 100%; order:0; }
+ .bottom-bar-player .player-left { flex:1 1 auto; gap:4px; }
+ .bottom-bar-player .player-right { flex:0 1 auto; gap:4px; }
+ .bottom-bar-player .center-cover { width:36px; height:36px; }
+ .bottom-bar-player .vol { gap:2px; }
+ .bottom-bar-player .seek-volume { width:40px; }
 }

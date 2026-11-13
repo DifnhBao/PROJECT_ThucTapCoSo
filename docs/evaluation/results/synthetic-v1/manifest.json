@@ -1,0 +1,47 @@
+{
+  "input": "Benchmark/fixtures/temporal-synthetic-v1.json",
+  "data_sha256": "98342fe6ae728554d6e3af3a3dd06a0e98d7caf66d4b4afbf4bebc287e6e09a0",
+  "source_sha256": {
+    "Server/src/services/recommendation/ranking.js": "4242767a7fafd4c560c03184f00700f5c8c501b39b2db2642103822caf0a5106",
+    "Server/src/services/recommendation/signals.js": "af4c5d2f921164174a94854e41998294f475a412a6b1df9713266a4fb08d0490",
+    "Server/src/services/recommendation/config.js": "7b12c092841496058cbd2d1143dbbe1ffc7d7f13c8a4ac87f67c5366efde1d76",
+    "Server/src/services/recommendation/hybridSimilarity.service.js": "166a6e267e4ce36ce0c52ef2b8474ddd755d7d7299351bf6e6b3f880ca4cc881",
+    "Server/src/services/recommendation/metadataSimilarity.service.js": "27e59d875efcbff74d840f863b10a50f956d3de7b077d00b2d5637c1af68689b",
+    "Server/src/services/recommendation/lyricsSimilarity.service.js": "c1140bc3b7720f6db4eca304491ceb9e91f7a7ceb67fd582b398200b9f8ad91f",
+    "Server/src/services/recommendation/behavioralSimilarity.service.js": "2c865256b174baad0d4f2645f37466aa3531049b430ac8cf637f8725626a720a",
+    "Server/src/evaluation/input.js": "2f4398b681f1087d328ee94d3e6bdb953692ba7f0cb4cd55c8275660d2b7f41a",
+    "Server/src/evaluation/evaluate.js": "bee08fdfc30783d74a90ae532175fa132f490284e85151c703aa15cc7ded199d",
+    "Server/src/evaluation/metrics.js": "33e05fc447f68d45f2b3b445ecadef12a1f36e7d6d733bfa642e414a2d7ac872"
+  },
+  "source_manifest_sha256": "4e9eb3d203ea41a8b46680ac81745d0b6234bafc39e4f14372615034cae995e9",
+  "node": "v22.19.0",
+  "seed": 150015,
+  "config": {
+    "version": "node-hybrid-v1",
+    "topK": 50,
+    "maxCatalog": 500,
+    "maxSignals": 20000,
+    "maxLyrics": 10000,
+    "maxSeeds": 20,
+    "maxUserSignals": 200,
+    "favoriteWeight": 5,
+    "highRatingWeight": 2,
+    "listenWeight": 1,
+    "repeatCap": 3,
+    "lowRating": 2,
+    "highRating": 4,
+    "metadataWeight": 0.6,
+    "behavioralWeight": 0.4,
+    "metadata": {
+      "genre": 0.25,
+      "mood": 0.2,
+      "artist": 0.15,
+      "keyword": 0.1,
+      "lyrics": 0.25,
+      "duration": 0.05
+    },
+    "behavioralShrinkage": 5
+  },
+  "tuning": "none; config fixed before validation/test",
+  "command": "node Benchmark/evaluate.cjs --input \"Benchmark/fixtures/temporal-synthetic-v1.json\" --out <output-directory> --k 5"
+}

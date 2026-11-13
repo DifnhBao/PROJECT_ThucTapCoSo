@@ -1,10 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect,useRef,useState } from "react";
 import {
-  updateProfile,
-  adminUpdateUserProfile,
+adminUpdateUserProfile,
+updateProfile,
 } from "../features/user/accountApi";
 import { getCurrentUserService } from "../features/user/service";
+import { readApiResponse } from "../lib/api-contract";
+import { formError } from '../lib/form-error';
 import { UserProfileData } from "../types/music";
 
 export function useProfileForm(
@@ -12,7 +14,8 @@ export function useProfileForm(
   mode: "user" | "admin" = "user",
   userId?: number,
 ) {
-  const [formData, setFormData] = useState<UserProfileData>({
+  const dirty = useRef(false);
+  const [formData, setFormData] = useState<UserProfileData>(initialData ?? {
     firstName: "",
     lastName: "",
     gender: "",
@@ -21,20 +24,17 @@ export function useProfileForm(
     address: "",
   });
 
+  const [submitting, setSubmitting] = useState(false);
   const [note, setNote] = useState("*Vui lòng nhập đầy đủ thông tin");
-  const [existingProfile, setExistingProfile] = useState(false);
+  const [existingProfile, setExistingProfile] = useState(Boolean(initialData));
 
   useEffect(() => {
-    // nếu có dữ liệu ban đầu, không cần fetch
-    if (initialData) {
-      setFormData(initialData);
-      setExistingProfile(true);
-      return;
-    }
-
+    if (initialData) return;
+    let active = true;
     const fetchProfile = async () => {
       try {
         const data = await getCurrentUserService();
+        if (!active || dirty.current) return;
 
         if (!data?.data) {
           setExistingProfile(false);
@@ -54,16 +54,19 @@ export function useProfileForm(
 
         setExistingProfile(true);
       } catch (err) {
-        console.error("Fetch profile error:", err);
+        if (!active) return;
+        setNote(formError(err));
         setExistingProfile(false);
       }
     };
-    fetchProfile();
+    void fetchProfile();
+    return () => { active = false; };
   }, [initialData]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    dirty.current = true;
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -82,6 +85,8 @@ export function useProfileForm(
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
 
     try {
       // Gọi API
@@ -93,7 +98,7 @@ export function useProfileForm(
         res = await updateProfile(formData);
       }
 
-      const data = await res.json();
+      const data = await readApiResponse<{ message?: string }>(res);
 
       if (!res.ok) {
         alert(data.message || "Có lỗi xảy ra khi gửi thông tin.");
@@ -101,13 +106,14 @@ export function useProfileForm(
       }
 
       alert(data.message || "Đã gửi thông tin thành công!");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Submit error:", err);
-      alert(err?.response?.data?.message || "Có lỗi xảy ra khi gửi thông tin.");
-    }
+      setNote(formError(err));
+    } finally { setSubmitting(false); }
   };
 
   return {
+    submitting,
     formData,
     note,
     existingProfile,

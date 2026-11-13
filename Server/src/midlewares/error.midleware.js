@@ -1,67 +1,29 @@
 const multer = require('multer');
+const { UniqueConstraintError, ForeignKeyConstraintError, ValidationError } = require('sequelize');
+const { AppError } = require('../utils/app-error');
 
-const globalErrorHandler = (err, req, res, next) => {
-    console.error("--- LỖI TOÀN CỤC ĐÃ BẮT ĐƯỢC ---");
-    console.error("Đối tượng lỗi (err):", err);
-
-    let errorMessage = "Đã có lỗi xảy ra nhưng không rõ nguyên nhân.";
-    let statusCode = 500;
-
-    if (err) {
-        if (typeof err === 'object' && err.message) {
-            errorMessage = err.message;
-        } else if (err instanceof Error) {
-            errorMessage = err.message;
-        } else if (typeof err === 'string') {
-            errorMessage = err;
-        }
+function globalErrorHandler(err, req, res, next) {
+  if (res.headersSent) return next(err);
+  let error = err;
+  if (!(error instanceof AppError)) {
+    if (err?.type === 'entity.parse.failed') error = new AppError('JSON không hợp lệ.', 400, 'INVALID_JSON');
+    else if (err instanceof URIError) error = new AppError('URL không hợp lệ.', 400, 'INVALID_URL');
+    else if (err?.type === 'entity.too.large') error = new AppError('Request quá lớn.', 413, 'PAYLOAD_TOO_LARGE');
+    else if (['charset.unsupported', 'encoding.unsupported'].includes(err?.type)) error = new AppError('Encoding không được hỗ trợ.', 415, 'UNSUPPORTED_ENCODING');
+    else if (['request.aborted', 'request.size.invalid'].includes(err?.type)) error = new AppError('Request không hợp lệ.', 400, 'INVALID_REQUEST');
+    else if (err instanceof multer.MulterError) error = new AppError('Upload không hợp lệ hoặc vượt giới hạn.', err.code === 'LIMIT_FILE_SIZE' ? 413 : 400, 'INVALID_UPLOAD');
+    else if (err instanceof UniqueConstraintError) error = new AppError('Dữ liệu đã tồn tại.', 409, 'DUPLICATE_RESOURCE');
+    else if (err instanceof ForeignKeyConstraintError) error = new AppError('Dữ liệu liên quan không tồn tại hoặc đang được sử dụng.', 409, 'REFERENCE_CONFLICT');
+    else if (err instanceof ValidationError) error = new AppError('Dữ liệu không hợp lệ.', 422, 'INVALID_RESOURCE');
+    else error = new AppError('Có lỗi xảy ra phía server.', 500, 'INTERNAL_ERROR');
+  }
+  if (error.statusCode >= 500) {
+    // Never serialize the original exception: SQL, parameters, bodies and credentials stay out of logs/responses.
+    console.error(JSON.stringify({ requestId: req.requestId, code: 'INTERNAL_ERROR', event: 'request_failed' }));
+    if (!(error.statusCode === 503 && error.code === 'UPLOAD_STATE_UNKNOWN') && !(error.statusCode === 502 && error.code === 'MEDIA_UNAVAILABLE')) {
+      error = new AppError('Có lỗi xảy ra phía server.', 500, 'INTERNAL_ERROR');
     }
-
-
-    // 1. Lỗi Multer (Giữ nguyên)
-    if (err instanceof multer.MulterError) {
-        if (err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).json({ message: 'File quá lớn, chỉ cho phép dưới 10MB.' });
-        }
-    }
-
-    // 2. Lỗi Validation (400 - Lỗi do người dùng)
-    const userErrorMessages = [
-        'Mật khẩu mới không được trùng với mật khẩu cũ',
-        'Mật khẩu cũ không chính xác',
-        'Vui lòng cung cấp mật khẩu cũ và mật khẩu mới',
-        'Email này đã được sử dụng',
-        'Username này đã được sử dụng',
-        'Tên nghệ sĩ này đã tồn tại',
-        'Tên thể loại này đã tồn tại',
-        'Định dạng file không hợp lệ',
-        'Thiếu "songId" trong body',
-    ];
-
-    if (userErrorMessages.some(msg => errorMessage.includes(msg))) {
-        statusCode = 400;
-        return res.status(statusCode).json({ message: errorMessage });
-    }
-
-    // 3. Lỗi "Không tìm thấy" (404)
-    const notFoundMessages = [
-        'Không tìm thấy người dùng',
-        'Không tìm thấy bài hát',
-        'Không tìm thấy nghệ sĩ',
-        'Không tìm thấy playlist',
-        'Không tìm thấy ID này',
-    ];
-
-    if (notFoundMessages.some(msg => errorMessage.includes(msg))) {
-        statusCode = 404;
-        return res.status(statusCode).json({ message: errorMessage });
-    }
-
-
-    return res.status(statusCode).json({
-        message: "Có lỗi xảy ra phía server!",
-        error: errorMessage
-    });
-};
-
+  }
+  res.status(error.statusCode).json({ error: { code: error.code, message: error.message, details: error.details }, requestId: req.requestId });
+}
 module.exports = globalErrorHandler;

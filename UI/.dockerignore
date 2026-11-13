@@ -1,2 +1,17 @@
 node_modules
 .next
+.git
+.env
+.env.*
+
+*.zip
+*.sql
+*.mp3
+.local-backups
+public/uploads/temp
+tests
+
+**/*.log
+**/*.bak
+coverage
+*.tsbuildinfo

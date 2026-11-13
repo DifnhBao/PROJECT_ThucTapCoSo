@@ -1,42 +1,30 @@
 "use client";
-import { useState, useEffect } from "react";
-import styles from "@/app/styles/AdminPage/ManageSong.module.css";
+import { formError } from '@/app/lib/form-error';
 import { useModal } from "@/app/context/ModalContext";
+import styles from "@/app/styles/AdminPage/ManageSong.module.css";
+import { useState } from "react";
+import type { SongSave } from '../../../context/ModalContext';
+import type { SongDto } from '../../../types/api';
 
 export default function SongFormModal({
   song,
   onSave,
 }: {
-  song: any | null;
-  onSave: (data: any) => Promise<void>;
+  song: SongDto | null;
+  onSave: SongSave;
 }) {
   const { closeModal } = useModal();
   const isEdit = Boolean(song);
 
-  const [title, setTitle] = useState("");
-  const [artist, setArtist] = useState("");
-  const [genre, setGenre] = useState("");
+  const [title, setTitle] = useState(song?.title ?? "");
+  const [artist, setArtist] = useState(song?.artists?.map((artist) => artist.name).join(", ") ?? "");
+  const [genre, setGenre] = useState(song?.genres?.map((genre) => genre.name).join(", ") ?? "");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [duration, setDuration] = useState("");
+  const [duration, setDuration] = useState(song?.duration?.toString() ?? "");
 
+  const [saveError, setSaveError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (song) {
-      setTitle(song.title ?? "");
-      
-      // Chuyển mảng artists thành chuỗi ngăn cách bởi dấu phẩy
-      const artistStr = song.artists?.map((a: any) => a.name).join(", ") || "";
-      setArtist(artistStr);
-
-      // Chuyển mảng genres thành chuỗi ngăn cách bởi dấu phẩy
-      const genreStr = song.genres?.map((g: any) => g.name).join(", ") || "";
-      setGenre(genreStr);
-      
-      setDuration(song.duration?.toString() ?? "");
-    }
-  }, [song]);
 
   const handleSubmit = async () => {
     if (submitting) return;
@@ -49,6 +37,7 @@ export default function SongFormModal({
     // ADD → FormData (có file)
     try {
       setSubmitting(true);
+      setSaveError("");
 
       if (!isEdit) {
         if (!audioFile) {
@@ -60,7 +49,7 @@ export default function SongFormModal({
         formData.append("title", title);
         formData.append("artist", artist);
         formData.append("genre", genre);
-        formData.append("duration", duration);
+        if (duration.trim()) formData.append("duration", duration);
         formData.append("audioFile", audioFile);
         if (imageFile) formData.append("imageFile", imageFile);
 
@@ -77,7 +66,7 @@ export default function SongFormModal({
       }
       closeModal();
     } catch (err) {
-      console.error("Save song failed:", err);
+      setSaveError(formError(err));
     } finally {
       setSubmitting(false);
     }
@@ -85,6 +74,7 @@ export default function SongFormModal({
 
   return (
     <div className={styles.modal}>
+      {saveError && <p role="alert">{saveError}</p>}
       <h3>{isEdit ? "Edit Song" : "Add New Song"}</h3>
 
       <input

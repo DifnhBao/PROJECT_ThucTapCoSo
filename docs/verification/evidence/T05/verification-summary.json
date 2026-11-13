@@ -1,0 +1,21 @@
+{
+  "openapiVersion": "3.1.0",
+  "paths": 49,
+  "operations": 56,
+  "serverAudit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 2,
+    "high": 0,
+    "critical": 0,
+    "total": 2
+  },
+  "serverProductionAudit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 2,
+    "high": 0,
+    "critical": 0,
+    "total": 2
+  }
+}

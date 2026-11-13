@@ -1,0 +1,27 @@
+{
+  "errors": 81,
+  "warnings": 76,
+  "baseline": "T05/lint.json",
+  "normalization": "Only diagnostic locations and code-frame line numbers; source and messages retained",
+  "newDiagnostics": [],
+  "removedDiagnostics": [
+    [
+      "D:\\code\\TTCS-PROJECT\\UI\\app\\lib\\http.ts",
+      "@typescript-eslint/no-explicit-any",
+      2,
+      "Unexpected any. Specify a different type."
+    ],
+    [
+      "D:\\code\\TTCS-PROJECT\\UI\\app\\lib\\http.ts",
+      "@typescript-eslint/no-explicit-any",
+      2,
+      "Unexpected any. Specify a different type."
+    ],
+    [
+      "D:\\code\\TTCS-PROJECT\\UI\\app\\lib\\http.ts",
+      "@typescript-eslint/no-explicit-any",
+      2,
+      "Unexpected any. Specify a different type."
+    ]
+  ]
+}

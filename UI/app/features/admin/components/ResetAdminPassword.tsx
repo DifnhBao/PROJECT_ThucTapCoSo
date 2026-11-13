@@ -1,14 +1,18 @@
 "use client";
-
-import { useState } from "react";
 import { useModal } from "@/app/context/ModalContext";
-import { changeAdminPassword } from "@/app/features/user/accountApi";
+import { useAdminUser } from "@/app/features/admin/context/AdminUserContext";
+import { changeAdminPassword,changeOwnAdminPassword } from "@/app/features/user/accountApi";
+import "@/app/styles/AdminPage/addAdmin.css";
 import { User } from "@/app/types/music";
 import { validatePassword } from "@/app/utils/passwordValidator";
-import "@/app/styles/AdminPage/addAdmin.css";
+import { useState } from "react";
+import { readApiResponse } from "../../../lib/api-contract";
 
 export default function ResetAdminPassword({ admin }: { admin: User }) {
   const { closeModal } = useModal();
+  const { admin: actor } = useAdminUser();
+  const isSelf = actor?.userId === admin.userId;
+  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPW, setConfirmPW] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,15 +33,17 @@ export default function ResetAdminPassword({ admin }: { admin: User }) {
 
     try {
       setLoading(true);
-      const res = await changeAdminPassword(admin.userId, newPassword);
-      const data = await res.json();
+      const res = isSelf
+        ? await changeOwnAdminPassword(oldPassword, newPassword)
+        : await changeAdminPassword(admin.userId, newPassword);
+      const data = await readApiResponse<{ message?: string }>(res);
 
       if (!res.ok) throw new Error(data.message);
 
       alert("Đặt lại mật khẩu thành công");
       closeModal();
-    } catch (err: any) {
-      alert(err.message || "Có lỗi xảy ra");
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Có lỗi xảy ra");
     } finally {
       setLoading(false);
     }
@@ -45,13 +51,18 @@ export default function ResetAdminPassword({ admin }: { admin: User }) {
 
   return (
     <div className="container">
-      <h1>Reset mật khẩu</h1>
+      <h1>{isSelf ? "Đổi mật khẩu" : "Reset mật khẩu"}</h1>
 
       <p className="name">
         Admin: <strong>{admin.username}</strong>
       </p>
 
       <form onSubmit={handleSubmit}>
+        {isSelf && (
+          <input type="password" placeholder="Mật khẩu hiện tại"
+            aria-label="Mật khẩu hiện tại" autoComplete="current-password"
+            value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
+        )}
         <input
           type="password"
           placeholder="Mật khẩu mới"

@@ -1,7 +1,8 @@
 import http from "@/app/lib/http";
+import type { PlaylistDto } from '../../types/api';
 
 export const createPlaylistApi = async (name: string, description?: string) => {
-  const response = await http.post("/playlists", {
+  const response = await http.post<{ data: PlaylistDto; message?: string }>("/playlists", {
     name,
     description,
   });
@@ -10,13 +11,13 @@ export const createPlaylistApi = async (name: string, description?: string) => {
 };
 
 export const getMyPlaylistsApi = async () => {
-  const response = await http.get("/playlists/me");
+  const response = await http.get<{ data: PlaylistDto[] }>("/playlists/me");
 
   return response.data;
 };
 
 export const getPlaylistDetailApi = async (playlistId: number) => {
-  const response = await http.get(`/playlists/${playlistId}`);
+  const response = await http.get<{ data: PlaylistDto }>(`/playlists/${playlistId}`);
 
   return response.data;
 };

@@ -54,3 +54,10 @@
 .icon {
   font-size: 18px;
 }
+/* T17: module selectors, shared shell width. */
+@media(max-width:900px) {
+ .menu { top:112px; height:52px; width:100%; min-width:0; padding:0; border-right:0; z-index:99; }
+ .nav { flex-direction:row; justify-content:center; overflow-x:auto; }
+ .link { min-height:44px; padding:8px 12px; margin:0; gap:6px; font-size:14px; }
+ .menu > :not(.nav) { display:none; }
+}

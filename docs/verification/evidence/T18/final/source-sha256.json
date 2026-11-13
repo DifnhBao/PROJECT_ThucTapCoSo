@@ -1,0 +1,18 @@
+[
+  {
+    "path": "UI/tests/browser/performance.mjs",
+    "sha256": "88673fca1b9cca95b0ce4b6d0d5a33863df7a878649153518e6b28dc88ed8052"
+  },
+  {
+    "path": "UI/tests/browser/accessibility.mjs",
+    "sha256": "99e126f8f5ca0fbb6462b5dd4cad7fe3395552818647798867ca9e83cbb71d5a"
+  },
+  {
+    "path": "UI/app/features/player/context/PlayerContext.tsx",
+    "sha256": "b79a073df61f864d0571f1ab2d9aca3d3bb261d119884f89e7b5d8cc45a01de0"
+  },
+  {
+    "path": "UI/app/layout.tsx",
+    "sha256": "72453d51138dbc1b8209ec272ab6686e23a747fbb3c382c2658dfe57f91f700d"
+  }
+]

@@ -1,10 +1,10 @@
 import {
-  createPlaylistApi,
-  getMyPlaylistsApi,
-  getPlaylistDetailApi,
-  addSongToPlaylistApi,
-  removeSongFromPlaylistApi,
-  deletePlaylistApi,
+addSongToPlaylistApi,
+createPlaylistApi,
+deletePlaylistApi,
+getMyPlaylistsApi,
+getPlaylistDetailApi,
+removeSongFromPlaylistApi,
 } from "./api";
 
 export const createPlaylistService = async (

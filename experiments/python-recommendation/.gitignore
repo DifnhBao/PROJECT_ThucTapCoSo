@@ -1,0 +1,15 @@
+# Bao giờ hoàn tất thì cài đặt .gitignore 
+# AI_Services/venv/
+# AI_Services/__pycache__/
+# AI_Services/.ipynb_checkpoints/
+
+
+# Môi trường ảo 
+venv/
+
+# Cache của Python sinh ra khi chạy script explore_data và process_rating
+__pycache__/
+*.pyc
+
+# File tạm của Jupyter (nếu nhóm có xài Notebook để test)
+.ipynb_checkpoints/

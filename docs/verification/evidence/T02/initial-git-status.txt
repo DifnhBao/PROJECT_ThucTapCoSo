@@ -1,0 +1,95 @@
+ D .env.example
+ M .gitignore
+ M Server/config/config.js
+ M Server/package.json
+ M Server/src/config/db.js
+ M Server/src/controllers/favorite.controller.js
+ M Server/src/controllers/playlist.controller.js
+ M Server/src/controllers/rating.controller.js
+ M Server/src/controllers/recommendation.controller.js
+ M Server/src/controllers/song.controller.js
+ M Server/src/controllers/user.controller.js
+ M Server/src/controllers/user_activity.controller.js
+ M Server/src/midlewares/auth.midleware.js
+ M Server/src/midlewares/error.midleware.js
+ M Server/src/midlewares/upload.midleware.js
+ M Server/src/routes/recommendation.routes.js
+ M Server/src/routes/user.routes.js
+ M Server/src/server.js
+ M Server/src/services/auth.service.js
+ M Server/src/services/playlist.service.js
+ M Server/src/services/user.service.js
+ M UI/UI.zip
+ M UI/app/(Pages)/administrator/ManageAdmin/page.tsx
+ M UI/app/features/admin/components/ResetAdminPassword.tsx
+ M UI/app/features/recommendation/components/RecommendationSection.tsx
+ M UI/app/features/recommendation/recommendation.api.ts
+ M UI/app/features/user/accountApi.ts
+ M UI/hash.js
+ M UI/package.json
+?? Benchmark/Bieu-Do-Danh-Gia-He-Khuyen-Nghi.png
+?? Server/.env.test.example
+?? Server/config/test-database.js
+?? Server/server.zip
+?? Server/src/app.js
+?? Server/src/policies/user.policy.js
+?? Server/src/utils/authorization.js
+?? Server/tests/api/app.test.cjs
+?? Server/tests/api/authorization.test.cjs
+?? Server/tests/fixtures/import-app.cjs
+?? Server/tests/helpers/run-integration.cjs
+?? Server/tests/helpers/unit-setup.cjs
+?? Server/tests/integration/README.md
+?? Server/tests/unit/app-import.test.cjs
+?? Server/tests/unit/password-reset-regression.test.cjs
+?? Server/tests/unit/refresh-identity.test.cjs
+?? Server/tests/unit/server-lifecycle.test.cjs
+?? Server/tests/unit/test-database.test.cjs
+?? Server/tests/unit/user-policy.test.cjs
+?? Server/tests/unit/user-service-authorization.test.cjs
+?? UI/tests/README.md
+?? UI/tests/components/playlist-cover.test.mjs
+?? UI/tests/helpers/register-typescript.mjs
+?? UI/tests/unit/authorization-api.test.mjs
+?? UI/tests/unit/player.test.mjs
+?? db/recommendation_demo_expected_results.md
+?? db/recommendation_demo_full_seed.sql
+?? db/recommendation_demo_seed.sql
+?? db/recommendation_demo_test_cases.md
+?? db/recommendation_evaluation_queries.sql
+?? docs/INTERN_PORTFOLIO_EXECUTION_PLAN_VI.md
+?? docs/MODEL_SELECTION_GUIDE_VI.md
+?? docs/PERMISSION_MATRIX_VI.md
+?? docs/PORTFOLIO_V1_SCOPE_VI.md
+?? docs/audit/TECHNICAL_AUDIT_VI.md
+?? docs/audit/evidence/server-npm-audit.json
+?? docs/audit/evidence/ui-eslint.json
+?? docs/audit/evidence/ui-npm-audit.json
+?? docs/audit/evidence/verification.md
+?? docs/verification/T00.md
+?? docs/verification/T01.md
+?? docs/verification/evidence/T00/import-before.txt
+?? docs/verification/evidence/T00/initial-files.json
+?? docs/verification/evidence/T00/initial-git-status.txt
+?? docs/verification/evidence/T00/integration-guard.txt
+?? docs/verification/evidence/T00/integration-no-opt-in.txt
+?? docs/verification/evidence/T00/integration-not-run.txt
+?? docs/verification/evidence/T00/lint-after.json
+?? docs/verification/evidence/T00/lint-before.json
+?? docs/verification/evidence/T00/lint-summary.json
+?? docs/verification/evidence/T00/preservation-check.json
+?? docs/verification/evidence/T00/server-npm-audit-current.json
+?? docs/verification/evidence/T00/server-tests.txt
+?? docs/verification/evidence/T00/typecheck-after.txt
+?? docs/verification/evidence/T00/typecheck-before.txt
+?? docs/verification/evidence/T00/ui-npm-audit-current.json
+?? docs/verification/evidence/T00/ui-tests.txt
+?? docs/verification/evidence/T01/initial-git-status.txt
+?? docs/verification/evidence/T01/lint-summary.json
+?? docs/verification/evidence/T01/lint.json
+?? docs/verification/evidence/T01/preservation-check.json
+?? docs/verification/evidence/T01/reset-regression-before.txt
+?? docs/verification/evidence/T01/server-tests.txt
+?? docs/verification/evidence/T01/typecheck.txt
+?? docs/verification/evidence/T01/ui-tests.txt
+?? init.sql

@@ -1,297 +1,140 @@
 "use client";
-
-import React, {
-  createContext,
-  useContext,
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
-import { useAudioEngine } from "@/app/features/player/hook/useAudioEngine";
-import { PlayerService } from "@/app/features/player/playerService";
-import type { Track } from "@/app/types/music";
-import { fetchDailySongs } from "@/app/features/song/song.api";
-import { useActivityLogger, ActivitySource } from "@/app/features/player/hook/useActivityLogger";
+import React,{ createContext,useCallback,useContext,useEffect,useMemo,useRef,useState } from 'react';
+import { getAuth } from '../../../lib/auth-state';
+import { useAuthState } from '../../../lib/use-auth-state';
+import type { Track } from '../../../types/music';
+import { fetchDailySongs } from '../../song/song.api';
+import { useActivityLogger,type ActivitySource } from '../hook/useActivityLogger';
+import { useAudioEngine } from '../hook/useAudioEngine';
+import { restorePlayer,type RepeatMode } from '../persistence';
+import { PlayerService } from '../playerService';
+import { QueuePager,type PagerState,type QueuePagination } from '../queuePager';
 
 type PlayerContextType = {
-  currentTrack: Track | null;
-  isPlaying: boolean;
-  play: () => void;
-  pause: () => void;
-  togglePlay: () => void;
-  setPlaylist: (tracks: Track[], index: number, source?: ActivitySource) => void;
-  next: () => Promise<void>;
-  prev: () => void;
-  audioState: { currentTime: number; duration: number };
-  seek: (time: number) => void;
-  setVolume: (volume: number) => void;
-  isShuffle: boolean;
-  toggleShuffle: () => void;
-  isRepeat: boolean;
-  toggleRepeat: () => void;
+  currentTrack: Track | null; isPlaying: boolean; isBuffering: boolean; audioError: string | null; queueError: string | null; loadingMore: boolean;
+  play: () => void; pause: () => void; togglePlay: () => void; retryAudio: () => void; retryQueue: () => Promise<void>;
+  setPlaylist: (tracks: Track[], index: number, source?: ActivitySource, pagination?: QueuePagination) => void;
+  next: () => Promise<void>; prev: () => void;
+  audioState: { currentTime: number; duration: number }; seek: (time: number) => void; setVolume: (volume: number) => void;
+  isShuffle: boolean; toggleShuffle: () => void; isRepeat: boolean; repeatMode: RepeatMode; toggleRepeat: () => void;
 };
-
-const PlayerContext = createContext<PlayerContextType | null>(null);
-
+type PlayerControls = Omit<PlayerContextType, 'audioState'>;
+const PlayerContext = createContext<PlayerControls | null>(null);
+const ProgressContext = createContext<PlayerContextType['audioState'] | null>(null);
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
-  const playerServiceRef = useRef(new PlayerService());
-
+  const auth = useAuthState('user');
+  const [service] = useState(() => new PlayerService());
+  const [pagerState, setPagerState] = useState<PagerState>({ loading: false, hasMore: false, error: null });
+  const [pager] = useState(() => new QueuePager(service, fetchDailySongs, setPagerState));
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-
-  const loadMoreRef = useRef<(() => Promise<void>) | null>(null);
-  const nextRef = useRef<(() => Promise<void>) | null>(null);
-  const loadTrackRef = useRef<
-    ((track: Track | null, autoPlay?: boolean, source?: ActivitySource) => void) | null
-  >(null);
-
-  // --- ACTIVITY SOURCE STATE ---
-  const activitySourceRef = useRef<ActivitySource>("playlist");
-
-  // --- SHUFFLE STATE ---
+  const trackRef = useRef<Track | null>(null);
+  const sourceRef = useRef<ActivitySource>('playlist');
+  const navigation = useRef(0);
+  const nextFlight = useRef<Promise<void> | null>(null);
+  const endedRef = useRef<() => void>(() => {});
   const [isShuffle, setIsShuffle] = useState(false);
-  const isShuffleRef = useRef(isShuffle);
-
-  useEffect(() => {
-    isShuffleRef.current = isShuffle;
-  }, [isShuffle]);
-
-  const toggleShuffle = useCallback(() => {
-    setIsShuffle((prev) => {
-      const nextShuffle = !prev;
-      playerServiceRef.current.setShuffle(nextShuffle);
-      return nextShuffle;
-    });
-  }, []);
-
-  // --- REPEAT STATE ---
-  const [isRepeat, setIsRepeat] = useState(false);
-  const isRepeatRef = useRef(isRepeat);
-
-  useEffect(() => {
-    isRepeatRef.current = isRepeat;
-  }, [isRepeat]);
-
-  const toggleRepeat = useCallback(() => {
-    setIsRepeat((prev) => !prev);
-  }, []);
-
-  const logger = useActivityLogger("playlist");
-
-  // Kết nối Audio Engine
-  const audio = useAudioEngine({
-    onEndedNative: (time) => {
-      logger.handleEnded();
-      // NẾU BẬT REPEAT -> Tua về 0 và phát lại luôn bài hiện tại
-      if (isRepeatRef.current) {
-        audio.seek(0);
-        audio.play();
-      } else {
-        nextRef.current?.(); // Nếu không thì qua bài tiếp theo
-      }
-    },
-    onPlayNative: logger.handlePlay,
-    onPauseNative: logger.handlePause,
-    onTimeUpdateNative: logger.handleTimeUpdate,
-    onSeekedNative: logger.handleSeek,
+  const shuffleRef = useRef(false);
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>('off');
+  const repeatRef = useRef<RepeatMode>('off');
+  const { initTrack, stopTrack, handlePlay, handlePause, handleSuspend, handleTimeUpdate, handleSeeking, handleSeek, handleDuration, handleEnded } = useActivityLogger('playlist');
+  const { state, load, play: enginePlay, pause, seek, setVolume } = useAudioEngine({
+    onEndedNative: (position) => { handleEnded(position); endedRef.current(); }, onPlayNative: handlePlay, onPauseNative: handlePause,
+    onWaitingNative: handleSuspend, onTimeUpdateNative: handleTimeUpdate, onSeekingNative: handleSeeking, onSeekedNative: handleSeek, onDurationNative: handleDuration,
   });
+  const timeRef = useRef(0);
+  useEffect(() => { timeRef.current = state.currentTime; }, [state.currentTime]);
 
-  const loadTrack = useCallback(
-    (track: Track | null, autoPlay = true, source?: ActivitySource) => {
-      if (!track?.audioUrl) return;
-      logger.initTrack(track.trackId, track.duration || 0, source);
-      audio.load(track.audioUrl);
-      setCurrentTrack(track);
-      if (autoPlay) {
-        setTimeout(() => audio.play(), 50);
+  const loadTrack = useCallback((track: Track | null, autoPlay = true, startTime = 0) => {
+    trackRef.current = track; setCurrentTrack(track);
+    if (!track) { stopTrack(); load(null); return; }
+    initTrack(track.trackId, track.duration || 0, sourceRef.current);
+    // Empty/invalid URLs remain recoverable rather than leaving the previous song playing.
+    load(track.audioUrl || '/api/media/unavailable', startTime);
+    if (autoPlay) void enginePlay();
+  }, [initTrack, stopTrack, load, enginePlay]);
+  const setPlaylist = useCallback((tracks: Track[], index: number, source: ActivitySource = 'playlist', pagination?: QueuePagination) => {
+    navigation.current++; nextFlight.current = null; sourceRef.current = source;
+    service.setPlaylist(tracks, index); pager.reset(pagination);
+    loadTrack(service.getCurrentTrack());
+  }, [service, pager, loadTrack]);
+  const next = useCallback((): Promise<void> => {
+    if (nextFlight.current) return nextFlight.current;
+    const intent = ++navigation.current, generation = pager.generation;
+    const task = (async () => {
+      if (!service.getCurrentTrack()) return;
+      let track = service.next();
+      if (!track && pager.state.hasMore) {
+        await pager.loadNext();
+        if (generation !== pager.generation || intent !== navigation.current) return;
+        track = service.next();
       }
-    },
-    [audio, logger],
-  );
-
-  useEffect(() => {
-    loadTrackRef.current = loadTrack;
-  }, [loadTrack]);
-
-  const loadMore = useCallback(async () => {
-    if (loadingMore || !hasMore) return;
-    setLoadingMore(true);
-    try {
-      const res = await fetchDailySongs(20, page + 1);
-      playerServiceRef.current.appendTracks(res.songs);
-      setPage(res.page);
-      if (playerServiceRef.current.getPlaylist().length >= res.total) {
-        setHasMore(false);
-      }
-    } catch (e) {
-      console.error("[PlayerContext] loadMore failed:", e);
-    } finally {
-      setLoadingMore(false);
-    }
-  }, [loadingMore, hasMore, page]);
-
-  useEffect(() => {
-    loadMoreRef.current = loadMore;
-  }, [loadMore]);
-
-  const next = useCallback(async () => {
-    let track = playerServiceRef.current.next();
-    if (!track && hasMore) {
-      await loadMoreRef.current?.();
-      track = playerServiceRef.current.next();
-    }
-
-    if (track) {
-      if (activitySourceRef.current === "search") {
-        activitySourceRef.current = "recommendation";
-      }
-      loadTrackRef.current?.(track, true, activitySourceRef.current);
-    }
-  }, [hasMore]);
-
-  useEffect(() => {
-    nextRef.current = next;
-  }, [next]);
-
+      if (!track && !pager.state.hasMore && repeatRef.current === 'all') track = service.next(true);
+      if (track) loadTrack(track); else pause();
+    })().finally(() => { if (nextFlight.current === task) nextFlight.current = null; });
+    nextFlight.current = task;
+    return task;
+  }, [service, pager, loadTrack, pause]);
+  useEffect(() => { endedRef.current = () => {
+    if (repeatRef.current === 'one') loadTrack(service.getCurrentTrack());
+    else void next();
+  }; }, [service, loadTrack, next]);
   const prev = useCallback(() => {
-    let track = playerServiceRef.current.prev();
-
-    if (activitySourceRef.current === "search") {
-      activitySourceRef.current = "recommendation";
-    }
-
-    loadTrack(track, true, activitySourceRef.current);
-  }, [loadTrack]);
-
-  useEffect(() => {
-    if (playerServiceRef.current.remaining() <= 2) {
-      loadMore();
-    }
-  }, [currentTrack, loadMore]);
-
-  useEffect(() => {
-    const raw = localStorage.getItem("player_state_v2");
-    if (!raw) return;
-    try {
-      const data = JSON.parse(raw);
-      if (!data.playlist?.length) return;
-
-      if (data.isShuffle !== undefined) {
-        setIsShuffle(data.isShuffle);
-        playerServiceRef.current.setShuffle(data.isShuffle);
-      }
-      if (data.isRepeat !== undefined) setIsRepeat(data.isRepeat);
-
-      playerServiceRef.current.setPlaylist(data.playlist, data.index);
-      const track = playerServiceRef.current.getCurrentTrack();
-
-      if (track?.audioUrl) {
-        logger.initTrack(track.trackId, track.duration || 0);
-        audio.load(track.audioUrl);
-        setTimeout(() => {
-          audio.seek(data.currentTime || 0);
-          if (data.isPlaying) audio.play();
-        }, 200);
-      }
-      setCurrentTrack(track);
-    } catch (e) {
-      console.error("[PlayerContext] restore failed:", e);
-    }
+    navigation.current++; nextFlight.current = null;
+    if (timeRef.current > 3) { seek(0); return; }
+    const track = service.prev(repeatRef.current === 'all') || service.getCurrentTrack();
+    if (track) loadTrack(track);
+  }, [service, loadTrack, seek]);
+  const toggleShuffle = useCallback(() => {
+    shuffleRef.current = !shuffleRef.current; service.setShuffle(shuffleRef.current); setIsShuffle(shuffleRef.current);
+  }, [service]);
+  const toggleRepeat = useCallback(() => {
+    repeatRef.current = repeatRef.current === 'off' ? 'one' : repeatRef.current === 'one' ? 'all' : 'off'; setRepeatMode(repeatRef.current);
   }, []);
+  const retryAudio = useCallback(() => { navigation.current++; nextFlight.current = null; if (trackRef.current) { load(trackRef.current.audioUrl || "/api/media/unavailable", timeRef.current); void enginePlay(); } }, [load, enginePlay]);
+  const retryQueue = useCallback(async () => { await pager.loadNext(true); }, [pager]);
+  const play = useCallback(() => { void enginePlay(); }, [enginePlay]);
+  const togglePlay = useCallback(() => { if (state.isPlaying) pause(); else void enginePlay(); }, [state.isPlaying, pause, enginePlay]);
 
-  // --- SYNC LOCALSTORAGE THÔNG MINH ---
-  // Dùng ref để giữ state mới nhất mà không gây re-render hay reset interval
-  const playerStateRef = useRef({
-    playlist: [] as Track[],
-    index: 0,
-    currentTime: 0,
-    isPlaying: false,
-    isShuffle: false,
-    isRepeat: false,
-  });
-
+  // One prefetch per track transition, never an effect keyed by loading/error state.
+  useEffect(() => { if (currentTrack && service.remaining() <= 2) void pager.loadNext(); }, [currentTrack, service, pager]);
+  useEffect(() => () => { pager.dispose(); navigation.current++; }, [pager]);
   useEffect(() => {
-    playerStateRef.current = {
-      playlist: playerServiceRef.current.getPlaylist(),
-      index: playerServiceRef.current.getOriginalIndex(),
-      currentTime: audio.state.currentTime,
-      isPlaying: audio.state.isPlaying,
-      isShuffle: isShuffleRef.current,
-      isRepeat: isRepeatRef.current,
-    };
-  }, [audio.state, isShuffle, isRepeat, currentTrack]);
-
+    let active = true;
+    queueMicrotask(() => {
+      if (!active || auth.status === 'unknown' || auth.status === 'changing') return;
+      let saved;
+      try { const raw = localStorage.getItem('player_state_v3'); if (!raw || JSON.parse(raw)?.owner !== (auth.principal?.userId ?? null)) return; saved = restorePlayer(raw); } catch { return; }
+      if (!saved) return;
+      sourceRef.current = saved.source; repeatRef.current = saved.repeatMode; setRepeatMode(saved.repeatMode);
+      shuffleRef.current = saved.isShuffle; service.setShuffle(saved.isShuffle); setIsShuffle(saved.isShuffle);
+      service.setPlaylist(saved.playlist, saved.index); pager.reset(saved.pagination);
+      loadTrack(service.getCurrentTrack(), false, saved.currentTime); // Restore paused; respect browser autoplay policy.
+    });
+    return () => { active = false; };
+  }, [service, pager, loadTrack, auth.epoch, auth.status, auth.principal?.userId]);
   useEffect(() => {
-    const saveState = () => {
-      // Chỉ lưu nếu có dữ liệu để tránh lưu đè lúc mới mở trang
-      if (playerStateRef.current.playlist.length > 0) {
-        localStorage.setItem(
-          "player_state_v2",
-          JSON.stringify(playerStateRef.current),
-        );
-      }
+    const save = () => {
+      try {
+        const auth = getAuth('user'); if (auth.status === 'unknown' || auth.status === 'changing') return;
+        const list = service.getPlaylist(), index = service.getOriginalIndex();
+        if (!list.length) { localStorage.removeItem('player_state_v3'); localStorage.removeItem('player_state_v2'); return; }
+        const start = Math.max(0, index - 500);
+        localStorage.setItem('player_state_v3', JSON.stringify({ owner: auth.principal?.userId ?? null, playlist: list.slice(start, start + 1000), index: index - start, currentTime: timeRef.current,
+          isShuffle: shuffleRef.current, repeatMode: repeatRef.current, source: sourceRef.current, pagination: pager.snapshot() }));
+      } catch { /* Storage unavailable must not interrupt playback. */ }
     };
+    const timer = setInterval(save, 5000); window.addEventListener('pagehide', save);
+    return () => { clearInterval(timer); window.removeEventListener('pagehide', save); };
+  }, [service, pager]);
 
-    // Lưu định kỳ mỗi 5 giây (giảm tải I/O so với 2 giây)
-    const interval = setInterval(saveState, 5000);
-
-    // Bắt buộc lưu ngay lập tức khi người dùng đóng trang / reload (đột ngột)
-    window.addEventListener("beforeunload", saveState);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("beforeunload", saveState);
-    };
-  }, []);
-
-  const setPlaylist = useCallback(
-    (tracks: Track[], index: number, source?: ActivitySource) => {
-      activitySourceRef.current = source || "playlist";
-      playerServiceRef.current.setPlaylist(tracks, index);
-      loadTrack(playerServiceRef.current.getCurrentTrack(), true, activitySourceRef.current);
-    },
-    [loadTrack],
-  );
-
-  const play = useCallback(() => audio.play(), [audio]);
-  const pause = useCallback(() => audio.pause(), [audio]);
-  const togglePlay = useCallback(() => {
-    audio.state.isPlaying ? audio.pause() : audio.play();
-  }, [audio]);
-
-  return (
-    <PlayerContext.Provider
-      value={{
-        currentTrack,
-        isPlaying: audio.state.isPlaying,
-        play,
-        pause,
-        togglePlay,
-        setPlaylist,
-        next,
-        prev,
-        audioState: {
-          currentTime: audio.state.currentTime,
-          duration: audio.state.duration,
-        },
-        seek: audio.seek,
-        setVolume: audio.setVolume,
-        isShuffle,
-        toggleShuffle,
-        isRepeat,
-        toggleRepeat,
-      }}
-    >
-      {children}
-    </PlayerContext.Provider>
-  );
+  const controls = useMemo<PlayerControls>(() => ({ currentTrack, isPlaying: state.isPlaying, isBuffering: state.isBuffering, audioError: state.error,
+    queueError: pagerState.error, loadingMore: pagerState.loading, play, pause, togglePlay, setPlaylist, next, prev, retryAudio, retryQueue,
+    seek, setVolume, isShuffle, toggleShuffle, isRepeat: repeatMode !== 'off', repeatMode, toggleRepeat }),
+    [currentTrack, state.isPlaying, state.isBuffering, state.error, pagerState.error, pagerState.loading, play, pause, togglePlay, setPlaylist, next, prev, retryAudio, retryQueue, seek, setVolume, isShuffle, toggleShuffle, repeatMode, toggleRepeat]);
+  const progress = useMemo(() => ({ currentTime: state.currentTime, duration: state.duration }), [state.currentTime, state.duration]);
+  return <PlayerContext.Provider value={controls}><ProgressContext.Provider value={progress}>{children}</ProgressContext.Provider></PlayerContext.Provider>;
 }
-
-export function usePlayer() {
-  const ctx = useContext(PlayerContext);
-  if (!ctx) throw new Error("usePlayer must be used inside PlayerProvider");
-  return ctx;
-}
+export function usePlayerControls() { const context = useContext(PlayerContext); if (!context) throw new Error('usePlayerControls must be used inside PlayerProvider'); return context; }
+export function usePlayerProgress() { const context = useContext(ProgressContext); if (!context) throw new Error('usePlayerProgress must be used inside PlayerProvider'); return context; }
+// Compatibility for the player UI and existing integrations requiring both subscriptions.
+export function usePlayer() { return { ...usePlayerControls(), audioState: usePlayerProgress() }; }

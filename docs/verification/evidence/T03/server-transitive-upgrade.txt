@@ -1,0 +1,23 @@
+npm warn deprecated dottie@2.0.7: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+
+added 1 package, removed 2 packages, changed 4 packages, and audited 204 packages in 10s
+
+48 packages are looking for funding
+  run `npm fund` for details
+
+# npm audit report
+
+uuid  <11.1.1
+Severity: moderate
+uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq
+fix available via `npm audit fix --force`
+Will install sequelize@3.30.0, which is a breaking change
+node_modules/uuid
+  sequelize  0.0.0-development || >=3.30.1
+  Depends on vulnerable versions of uuid
+  node_modules/sequelize
+
+2 moderate severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force

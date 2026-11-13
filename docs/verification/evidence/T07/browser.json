@@ -1,0 +1,12 @@
+{
+  "browser": "Chromium/Edge",
+  "topology": "same-origin /api reverse-proxy fixture",
+  "login": 200,
+  "refresh": 200,
+  "authenticatedRead": 200,
+  "hostileMutationWithRealCookie": 403,
+  "sessionPreservedAfterAttack": true,
+  "logout": 200,
+  "httpOnly": true,
+  "sameSite": "Lax"
+}

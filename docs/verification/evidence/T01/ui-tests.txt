@@ -1,0 +1,44 @@
+
+> my-app@0.1.0 test
+> node --import ./tests/helpers/register-typescript.mjs --test tests/unit/*.test.mjs tests/components/*.test.mjs
+
+TAP version 13
+# Subtest: empty playlist renders its fallback cover
+ok 1 - empty playlist renders its fallback cover
+  ---
+  duration_ms: 14.7158
+  type: 'test'
+  ...
+# Subtest: playlist cover limits the rendered artwork to four images
+ok 2 - playlist cover limits the rendered artwork to four images
+  ---
+  duration_ms: 3.451
+  type: 'test'
+  ...
+# Subtest: recommendation client uses /me and retains response mapping
+ok 3 - recommendation client uses /me and retains response mapping
+  ---
+  duration_ms: 253.2005
+  type: 'test'
+  ...
+# Subtest: admin self change sends current password to its own endpoint; reset keeps target endpoint
+ok 4 - admin self change sends current password to its own endpoint; reset keeps target endpoint
+  ---
+  duration_ms: 42.484
+  type: 'test'
+  ...
+# Subtest: player navigates a queue and stops at its end without browser or DB
+ok 5 - player navigates a queue and stops at its end without browser or DB
+  ---
+  duration_ms: 2.8456
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1295.2216

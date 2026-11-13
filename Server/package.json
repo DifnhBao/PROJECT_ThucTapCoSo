@@ -5,28 +5,41 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --require ./tests/helpers/unit-setup.cjs --test --test-concurrency=2 tests/unit/*.test.cjs tests/api/*.test.cjs",
+    "test:unit": "node --require ./tests/helpers/unit-setup.cjs --test --test-concurrency=2 tests/unit/*.test.cjs",
+    "test:api": "node --require ./tests/helpers/unit-setup.cjs --test --test-concurrency=2 tests/api/*.test.cjs",
+    "test:integration": "node tests/helpers/run-integration.cjs",
+    "db:migrate": "node scripts/db-migrate.cjs",
+    "db:seed:demo": "node scripts/db-seed.cjs demo",
+    "db:seed:test": "node scripts/db-seed.cjs test",
+    "docs:api": "node scripts/generate-openapi.cjs",
     "start": "node src/server.js ",
-    "dev": "nodemon src/server.js"
+    "dev": "node --watch src/server.js",
+    "uploads:cleanup": "node scripts/uploads-cleanup.cjs",
+    "recommendations:rebuild": "node scripts/recommendations-rebuild.cjs",
+    "test:recommendation:integration": "node --test tests/helpers/run-recommendation-integration.cjs",
+    "evaluate:recommendations": "node ../Benchmark/evaluate.cjs",
+    "lint": "node ../UI/node_modules/eslint/bin/eslint.js ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
-    "cloudinary": "^2.8.0",
+    "cloudinary": "^2.11.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0",
+    "express": "^5.3.0",
+    "file-type": "22.2.0",
     "fs-extra": "^11.3.2",
     "jsonwebtoken": "^9.0.2",
-    "multer": "^2.0.2",
-    "mysql2": "^3.15.3",
-    "sequelize": "^6.37.7"
+    "multer": "^2.4.0",
+    "mysql2": "^3.24.6",
+    "sequelize": "^6.37.8",
+    "zod": "4.6.7"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10",
-    "sequelize-cli": "^6.6.3"
+    "sequelize-cli": "^6.6.5"
   }
 }

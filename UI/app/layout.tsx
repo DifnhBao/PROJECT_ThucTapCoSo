@@ -1,5 +1,9 @@
 import { Metadata } from "next";
 import "./styles/globals.css";
+import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
+import "@fortawesome/fontawesome-free/css/solid.min.css";
+import "@fortawesome/fontawesome-free/css/regular.min.css";
+import "@fortawesome/fontawesome-free/css/brands.min.css";
 export const metadata: Metadata = {
   title: "Recommend Music Web",
 };
@@ -11,12 +15,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        />
-      </head>
       <body suppressHydrationWarning>{children}</body>
     </html>
   );

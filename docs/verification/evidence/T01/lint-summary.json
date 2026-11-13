@@ -1,0 +1,13 @@
+{
+  "T00": {
+    "files": 119,
+    "errors": 72,
+    "warnings": 76
+  },
+  "T01": {
+    "files": 120,
+    "errors": 71,
+    "warnings": 76
+  },
+  "newDiagnostics": []
+}
