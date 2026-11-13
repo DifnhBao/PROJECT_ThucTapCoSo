@@ -41,6 +41,9 @@ Stack chính: Next.js, Express, MySQL và Cloudinary.
 - [Nghiệm thu T20](docs/verification/T20.md)
 - [CI và release/rollback](docs/RELEASE_VI.md)
 - [Nghiệm thu T21 — CI GitHub red → green](docs/verification/T21.md)
+- [Tài liệu nghiệp vụ: use cases, quyền, rules, KPI và traceability](docs/product/README.md)
+- [Nghiệm thu T22](docs/verification/T22.md)
+- [Demo HTTPS miễn phí từ máy cá nhân — T23](docs/deployment/LOCAL_HTTPS_DEMO_VI.md)
 
 Yêu cầu Node 22.15+. Cài bằng `npm ci` trong `Server` và `UI`, điền env từ các
 file mẫu rồi chạy tests bằng `npm test`. Không import các dump cá nhân cũ.

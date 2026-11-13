@@ -9,7 +9,7 @@ import { getPlaylistDetailApi } from '../../app/features/playlist/api.ts';
 import { getSongRatingSummary } from '../../app/features/rating/rating.api.ts';
 import { getMyFavoriteSongs } from '../../app/features/like/favorite.api.ts';
 import { artistService } from '../../app/features/artist/artistService.ts';
-import { fetchDailySongs, searchSongs, fetchPendingSongsCount } from '../../app/features/song/song.api.ts';
+import { fetchDailySongs, searchSongs, fetchPendingSongsCount, approveSongApi, rejectSongApi, toggleSongVisibility, deleteSong } from '../../app/features/song/song.api.ts';
 
 test('actual Axios/fetch consumers preserve their DTOs against the new wire contract', async (t) => {
   const calls = [];
@@ -49,6 +49,12 @@ test('actual Axios/fetch consumers preserve their DTOs against the new wire cont
   assert.equal((await fetchDailySongs()).songs[0].trackId, 1);
   assert.equal((await searchSongs('Synthetic'))[0].trackId, 1);
   assert.equal(await fetchPendingSongsCount(), 3);
+  for (const [route, call] of [['/songs/1/approve', approveSongApi], ['/songs/1/reject', rejectSongApi], ['/songs/1/toggle-invisibility', toggleSongVisibility], ['/songs/1', deleteSong]]) {
+    payloads[route] = { message: 'Synthetic mutation', isVisible: true };
+    await call(1);
+    assert.equal(bodies[route], '{}', 'bodyless moderation requests must survive empty-chunk proxy framing');
+    assert.match(requestHeaders[route]['content-type'], /^application\/json/);
+  }
   await logoutAdminApi();
   assert.equal(bodies['/auth/admin/logout'], '{}');
   assert.equal(requestHeaders['/auth/admin/logout']['x-auth-type'], 'admin');
