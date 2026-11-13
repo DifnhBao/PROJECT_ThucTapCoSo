@@ -2,7 +2,7 @@
 
 ## CI trên pull request và push
 
-Workflow `.github/workflows/ci.yml` dùng Node 22.19.0, `npm ci` và cache theo lockfile. Các action được pin bằng commit SHA. Quyền mặc định chỉ `contents: read`; PR không nhận credential triển khai. Có thể chạy thủ công bằng workflow_dispatch.
+Workflow `.github/workflows/ci.yml` tự chạy khi push main hoặc mở/cập nhật PR; tránh hai lượt push/PR cùng tạo một required check trên nhánh feature. Nhánh chưa mở PR có thể chạy thủ công bằng workflow_dispatch. Workflow dùng Node 22.19.0, `npm ci` và cache theo lockfile. Các action được pin bằng commit SHA. Quyền mặc định chỉ `contents: read`; PR không nhận credential triển khai.
 
 | Job | Nội dung bắt buộc |
 |---|---|
