@@ -23,7 +23,7 @@ Secret gate kiểm tra cây nguồn hiện tại và range commit mới, không 
 
 ## Thiết lập repository cần thực hiện trên GitHub
 
-Sau khi PR thử nghiệm red rồi green đã chạy thực tế, bật ruleset/branch protection cho `main`: yêu cầu PR, status check `CI required` trên commit mới nhất, yêu cầu cập nhật branch trước merge, chặn force-push/xóa branch. Không dùng check của release làm điều kiện PR. Thiết lập environment `release` có người duyệt nếu gói repository hỗ trợ; workflow không tự tạo các quy tắc này. Chưa có bằng chứng các thiết lập đã được bật.
+Đã bật branch protection cho `main` ngày 2026-11-13: yêu cầu PR, status check `CI required` từ GitHub Actions trên commit mới nhất, cập nhật branch trước merge, chặn force-push/xóa branch; áp dụng cả admin. Repository cá nhân đặt số approval bắt buộc là 0 để chủ repo có thể tự hoàn tất PR sau CI, không yêu cầu tự duyệt chính mình. Không dùng check của release làm điều kiện PR. Environment `release` yêu cầu DifnhBao duyệt, chỉ nhận branch được bảo vệ; không có production secrets được thêm. Bằng chứng ở [repository-policy.json](verification/evidence/T21/repository-policy.json). Workflow không tự tạo các quy tắc này trên repository khác.
 
 ## Tạo image và nghiệm thu staging
 
