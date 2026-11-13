@@ -1,0 +1,43 @@
+{
+  "status": "NOT_APPLIED_USER_SELECTED_LOCAL_MYSQL8_AND_HTTPS_TUNNEL",
+  "monthlyBudget": 0,
+  "createService": {
+    "workspaceId": "tea-db75c3ei0phs738ko1tg",
+    "name": "tunetrek-demo",
+    "runtime": "docker",
+    "plan": "free",
+    "region": "frankfurt",
+    "repo": "https://github.com/DifnhBao/PROJECT_ThucTapCoSo",
+    "branch": "main",
+    "autoDeploy": "no",
+    "dockerContext": ".",
+    "dockerfilePath": "deploy/render/Dockerfile"
+  },
+  "requiredRuntimeVariables": [
+    "DB_HOST",
+    "DB_PORT",
+    "DB_NAME",
+    "DB_USER",
+    "DB_PASS",
+    "DB_TLS_MODE",
+    "DB_POOL_MAX",
+    "JWT_SECRET",
+    "JWT_REFRESH_SECRET",
+    "CLOUDINARY_CLOUD_NAME",
+    "CLOUDINARY_API_KEY",
+    "CLOUDINARY_API_SECRET"
+  ],
+  "optionalRuntimeVariables": [
+    "DB_TLS_CA",
+    "WEB_ORIGINS"
+  ],
+  "beforeCreate": [
+    "verified zero-charge workspace billing behavior and available free quota",
+    "verified MySQL TLS/version/privileges/storage limits",
+    "isolated synthetic database bootstrapped explicitly",
+    "real Cloudinary secret configuration",
+    "exact candidate SHA has passed CI and release policy",
+    "choose region using actual database location"
+  ],
+  "notes": "Plan only. Do not call create using this file without adding verified runtime secrets in memory. No paid disks, private services, database products or preview instances. WEB_ORIGINS can come from the validated Render platform URL in the launcher. main still contains the older source until the prepared change is reviewed/merged."
+}

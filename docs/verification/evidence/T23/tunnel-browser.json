@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "origin": "https://main-blocked-zum-hayes.trycloudflare.com",
+  "temporary": true,
+  "apiMocked": false,
+  "providerMocked": false,
+  "browser": "Edge headless",
+  "steps": [
+    "browser HTTPS login and Secure/HttpOnly/SameSite cookies",
+    "actual audio progress over public HTTPS",
+    "favorite and playlist through real forms",
+    "real recommendation explanation",
+    "real Cloudinary upload stays pending and non-public",
+    "admin approval publishes the uploaded song",
+    "authenticated Cloudinary gateway audio plays over HTTPS",
+    "user admin access and hostile Origin are rejected",
+    "expired-access refresh and logout on the real domain"
+  ],
+  "elapsedMs": 37728,
+  "networkHosts": [
+    "main-blocked-zum-hayes.trycloudflare.com"
+  ],
+  "pageErrors": [],
+  "uploadedSongId": 31,
+  "playlistName": "T23 HTTPS Playlist 1794585475244"
+}

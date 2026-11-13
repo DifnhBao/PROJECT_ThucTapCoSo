@@ -62,7 +62,7 @@ Phiên bản `portfolio-v1` cần đáp ứng đủ các điều sau:
 | [x] | [T19](#t19) | Hoàn thiện regression/integration/E2E suite | P1 | T01–T18 |
 | [x] | [T20](#t20) | Docker toàn stack, health, logs và shutdown | P1 | T03, T04, T06, T11, T19 |
 | [x] | [T21](#t21) | CI và quy trình release | P1 | T19, T20 |
-| [ ] | [T22](#t22) | Hoàn thiện tài liệu nghiệp vụ BA | P2 | Rule đã chốt ở các task trước |
+| [x] | [T22](#t22) | Hoàn thiện tài liệu nghiệp vụ BA | P2 | Rule đã chốt ở các task trước |
 | [ ] | [T23](#t23) | Deploy demo và kiểm tra vận hành | P1 | T20, T21, T22 |
 | [ ] | [T24](#t24) | README, showcase và nội dung CV | P1 | T15, T18, T22, T23 |
 | [ ] | [T25](#t25) | Nghiệm thu cuối và chốt portfolio-v1 | Cổng phát hành | T00–T24 |
@@ -663,6 +663,8 @@ Hoàn tất 2026-11-13 trong phạm vi CI/quy trình release: PR #2 red → gree
 
 ### T22 — Hoàn thiện bộ tài liệu nghiệp vụ để dùng cho BA
 
+Hoàn tất 2026-11-13 trong phạm vi tài liệu as-built. Có 10 stories, 12 business rules, event/KPI và traceability tới tests/evidence; không thay runtime hoặc claim phần chưa triển khai. Xem [product docs](product/README.md) và [báo cáo T22](verification/T22.md).
+
 **Vị trí tạo mới:** `docs/product/use-cases.md`, `permission-matrix.md`, `business-rules.md`, `event-dictionary.md`, `acceptance-criteria.md`, `traceability.md`.
 
 **Cách làm:**
@@ -678,15 +680,17 @@ Hoàn tất 2026-11-13 trong phạm vi CI/quy trình release: PR #2 red → gree
 
 **Nghiệm thu:**
 
-- [ ] Role matrix khớp tests T01; publication flow khớp T02; event/KPI khớp T11/T15.
-- [ ] Mọi user story trong demo có acceptance criteria và đường dẫn test/evidence.
-- [ ] Tài liệu phân biệt requirement, assumption và phần chưa triển khai.
+- [x] Role matrix khớp tests T01; publication flow khớp T02; event/KPI khớp T11/T15.
+- [x] Mọi user story trong demo có acceptance criteria và đường dẫn test/evidence.
+- [x] Tài liệu phân biệt requirement, assumption và phần chưa triển khai.
 
 **Bàn giao:** bộ product docs ngắn gọn, ưu tiên chính xác hơn độ dài. **Giá trị CV:** BA traceability và business-rule modeling.
 
 <a id="t23"></a>
 
 ### T23 — Deploy demo và kiểm tra vận hành thực tế
+
+Tiến độ 2026-11-13: người dùng chọn **MySQL 8 local + HTTPS tunnel miễn phí** thay Render/Filess. Runtime/browser/Cloudinary thật, restart/DB outage/backup/restore/rollback đã PASS; đang chốt source candidate qua CI trước nghiệm thu cuối. Chỉ có uptime khi PC/Docker/tunnel chạy, không claim hosting 24/7. Xem [báo cáo T23](verification/T23.md) và [runbook](deployment/LOCAL_HTTPS_DEMO_VI.md).
 
 **Vị trí:** env/deployment configuration, health probes, demo database và tài liệu runbook.
 

@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "scope": "HTTPS HTTP probe only",
+  "origin": "https://main-blocked-zum-hayes.trycloudflare.com",
+  "checks": [
+    {
+      "stage": "live",
+      "status": 200
+    },
+    {
+      "stage": "ready",
+      "status": 200
+    },
+    {
+      "stage": "login-page",
+      "status": 200
+    },
+    {
+      "stage": "public-catalog",
+      "status": 200
+    },
+    {
+      "stage": "login",
+      "status": 200
+    },
+    {
+      "stage": "profile",
+      "status": 200
+    },
+    {
+      "stage": "user-cannot-read-admin",
+      "status": 403
+    },
+    {
+      "stage": "refresh",
+      "status": 200
+    },
+    {
+      "stage": "logout",
+      "status": 200
+    },
+    {
+      "stage": "logged-out-profile",
+      "status": 401
+    }
+  ],
+  "sessionChecks": "PASS",
+  "t23Acceptance": "NOT_VERIFIED_BY_THIS_PROBE",
+  "remaining": [
+    "real browser cookies/audio",
+    "moderation/provider",
+    "restart/readiness/backup/rollback",
+    "release SHA provenance"
+  ]
+}

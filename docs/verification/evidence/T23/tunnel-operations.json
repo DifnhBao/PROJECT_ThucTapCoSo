@@ -1,0 +1,129 @@
+{
+  "status": "PASS",
+  "scope": "temporary HTTPS demo on local Docker",
+  "origin": "https://lou-crimes-offering-consistently.trycloudflare.com",
+  "checks": [
+    {
+      "name": "isolated read-only API/web and no published MySQL port",
+      "api": "sha256:e7b0b665921b4fb3ad29b98886bf12a11f9168fe3de5e4648a407ce5d6ada0f5",
+      "web": "sha256:d2917f2bab000eb1df8eb05ff9dba066668afc02adbf0f092f6dc604c2f4ec99",
+      "db": "sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b"
+    },
+    {
+      "name": "runtime app account cannot execute DDL"
+    },
+    {
+      "name": "real provider gateway supports media requests",
+      "status": 206,
+      "bytes": 32,
+      "contentRange": "bytes 0-31/96044"
+    },
+    {
+      "name": "cold process start and graceful restart preserve session/library",
+      "readyMs": 12082
+    },
+    {
+      "name": "DB outage returns ready503 with live200",
+      "readinessMs": 1509
+    },
+    {
+      "name": "DB restart preserves committed data"
+    },
+    {
+      "name": "quiesced backup and separate-database restore",
+      "backupSHA256": "5c1333c0cc35f637d36c8f0f1e2849142d20d2b3652694ee2c26d0dcaf2cdbf3",
+      "target": "tunetrek_restore_t23_1794585207735",
+      "restore": {
+        "restoredDatabase": "tunetrek_restore_t23_1794585207735",
+        "tableCounts": [
+          {
+            "table": "SequelizeMeta",
+            "count": 6
+          },
+          {
+            "table": "UserActivities",
+            "count": 3
+          },
+          {
+            "table": "artists",
+            "count": 4
+          },
+          {
+            "table": "favorites",
+            "count": 5
+          },
+          {
+            "table": "genres",
+            "count": 4
+          },
+          {
+            "table": "media_assets",
+            "count": 2
+          },
+          {
+            "table": "playlist_songs",
+            "count": 10
+          },
+          {
+            "table": "playlists",
+            "count": 4
+          },
+          {
+            "table": "ratings",
+            "count": 1
+          },
+          {
+            "table": "recommendation_neighbors",
+            "count": 0
+          },
+          {
+            "table": "recommendation_runs",
+            "count": 0
+          },
+          {
+            "table": "recommendation_state",
+            "count": 1
+          },
+          {
+            "table": "refresh_tokens",
+            "count": 9
+          },
+          {
+            "table": "song_artists",
+            "count": 30
+          },
+          {
+            "table": "song_genres",
+            "count": 28
+          },
+          {
+            "table": "song_similarities",
+            "count": 6
+          },
+          {
+            "table": "songs",
+            "count": 30
+          },
+          {
+            "table": "upload_receipts",
+            "count": 2
+          },
+          {
+            "table": "users",
+            "count": 5
+          }
+        ],
+        "sha256": "5c1333c0cc35f637d36c8f0f1e2849142d20d2b3652694ee2c26d0dcaf2cdbf3"
+      }
+    },
+    {
+      "name": "API code rollback to previously verified T20 image with compatible schema",
+      "previousImage": "sha256:6a64d2d618db575353ff0de50fa8730ad6c8750a816cec036b16dd6b2d872bd9"
+    },
+    {
+      "name": "restored the exact tested API image after rollback rehearsal"
+    }
+  ],
+  "personalDatabaseTouched": false,
+  "renderServiceCreated": false
+}

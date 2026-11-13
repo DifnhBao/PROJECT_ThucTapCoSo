@@ -13,3 +13,11 @@
 
 # Research models/datasets are not part of the web build context.
 experiments/
+AI_Services/
+Benchmark/
+docs/
+artifacts/
+**/.next
+**/*.log
+**/*.tsbuildinfo
+UI/tests/

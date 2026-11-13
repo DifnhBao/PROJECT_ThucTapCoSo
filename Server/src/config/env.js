@@ -35,6 +35,23 @@ function getDatabaseConfig(env = process.env) {
   if (env.NODE_ENV === "production" && username.toLowerCase() === "root") {
     throw new ConfigurationError("Production DB_USER must be an application account, not root");
   }
+  const tlsMode = env.DB_TLS_MODE || 'disabled';
+  if (!['disabled', 'verify_identity'].includes(tlsMode)) throw new ConfigurationError('Invalid configuration: DB_TLS_MODE');
+  const poolMax = env.DB_POOL_MAX || '10';
+  if (!/^\d+$/.test(poolMax) || Number(poolMax) < 1 || Number(poolMax) > 10) throw new ConfigurationError('Invalid configuration: DB_POOL_MAX');
+  let ssl;
+  if (tlsMode === 'verify_identity') {
+    ssl = { rejectUnauthorized: true, verifyIdentity: true };
+    if (env.DB_TLS_CA) {
+      const ca = env.DB_TLS_CA.replace(/\\n/g, '\n');
+      const certificates = ca.match(/-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g);
+      try {
+        if (!certificates?.length || ca.replace(/-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g, '').trim()) throw Error('Invalid CA');
+        for (const certificate of certificates) new (require('node:crypto').X509Certificate)(certificate);
+      } catch { throw new ConfigurationError('Invalid configuration: DB_TLS_CA'); }
+      ssl.ca = ca;
+    }
+  } else if (env.DB_TLS_CA) throw new ConfigurationError('DB_TLS_CA requires DB_TLS_MODE=verify_identity');
   return {
     username,
     password: required(env, "DB_PASS"),
@@ -43,7 +60,8 @@ function getDatabaseConfig(env = process.env) {
     port: portNumber(env.DB_PORT, "DB_PORT"),
     dialect: "mysql",
     logging: false,
-    pool: { max: 10, min: 0, acquire: 30000, idle: 10000 },
+    pool: { max: Number(poolMax), min: 0, acquire: 30000, idle: 10000 },
+    ...(ssl ? { dialectOptions: { ssl } } : {}),
   };
 }
 
