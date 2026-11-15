@@ -6,16 +6,27 @@
     "dev": "next dev",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --incremental false",
+    "test": "node --import ./tests/helpers/register-typescript.mjs --test tests/unit/*.test.mjs tests/components/*.test.mjs",
+    "test:unit": "node --import ./tests/helpers/register-typescript.mjs --test tests/unit/*.test.mjs",
+    "test:components": "node --import ./tests/helpers/register-typescript.mjs --test tests/components/*.test.mjs",
+    "test:player:browser": "node tests/browser/player-smoke.mjs",
+    "test:accounts:browser": "node tests/browser/account-smoke.mjs",
+    "check": "npm run typecheck && npm run lint && npm test && npm run build",
+    "test:pages:browser": "node tests/browser/page-flows.mjs",
+    "test:accessibility:browser": "node tests/browser/accessibility.mjs",
+    "test:performance:browser": "node tests/browser/performance.mjs",
+    "test:e2e": "node --test --test-concurrency=1 tests/e2e/*.test.mjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.0.1",
-    "axios": "^1.13.2",
+    "axios": "^1.20.0",
     "bcryptjs": "^3.0.2",
     "lucide-react": "^0.563.0",
-    "next": "^16.1.1",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "next": "^16.4.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "react-icons": "^5.5.0",
     "swr": "^2.3.6"
   },
@@ -24,8 +35,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.5.3",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.2",
     "typescript": "^5"
   }
 }

@@ -153,3 +153,4 @@
     transform: translateY(0);
   }
 }
+.container.inputWrapper { flex-direction:row; gap:8px; }

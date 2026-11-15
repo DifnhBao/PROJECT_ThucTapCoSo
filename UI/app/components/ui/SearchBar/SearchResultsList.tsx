@@ -1,9 +1,7 @@
 "use client";
-
-import React from "react";
+import { Track } from "@/app/types/music";
 import styles from "./search.module.css";
 import SearchResult from "./SearchResult";
-import { Track } from "@/app/types/music";
 
 interface SearchResultsListProps {
   results: Track[];

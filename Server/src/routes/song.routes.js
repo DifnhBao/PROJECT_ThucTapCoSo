@@ -1,3 +1,5 @@
+const preflight = require('../midlewares/upload-preflight');
+const { guard } = require('../midlewares/security');
 const express = require("express");
 const router = express.Router();
 const songController = require("../controllers/song.controller");
@@ -20,6 +22,8 @@ router.get("/", songController.getSongList);
 router.post(
   "/upload",
   protect,
+  guard("upload"),
+  preflight(true),
   upload.fields([
     { name: "audioFile", maxCount: 1 },
     { name: "imageFile", maxCount: 1 },
@@ -97,11 +101,17 @@ router.post(
   "/",
   protectAdmin,
   authorizeRoles("admin", "super_admin"),
+  guard("upload"),
+  preflight(),
   upload.fields([
     { name: "audioFile", maxCount: 1 },
     { name: "imageFile", maxCount: 1 },
   ]),
   songController.createSong,
 );
+
+// Explicit admin preview is separate from the public detail route.
+router.get("/admin/:id", protectAdmin, songController.getSongPreview);
+router.get("/:id", songController.getSongById);
 
 module.exports = router;

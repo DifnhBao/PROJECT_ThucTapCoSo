@@ -1,0 +1,57 @@
+TAP version 13
+# Subtest: pending-only catalog stays empty; trending never relaxes publication policy
+not ok 1 - pending-only catalog stays empty; trending never relaxes publication policy
+  ---
+  duration_ms: 10.9209
+  type: 'test'
+  location: 'D:\\code\\TTCS-PROJECT\\Server\\tests\\unit\\trending-publication-regression.test.cjs:6:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     accumulated_score: null,
+    +     endorsed_by_count: 0,
+    +     is_discovery_candidate: true,
+    +     reason: 'Bài hát đang thịnh hành.',
+    +     song: {
+    +       audio_url: 'pending-url',
+    +       is_visible: true,
+    +       song_id: 2,
+    +       status: 'pending'
+    +     }
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      song:
+        song_id: 2
+        status: 'pending'
+        is_visible: true
+        audio_url: 'pending-url'
+      accumulated_score: ~
+      reason: 'Bài hát đang thịnh hành.'
+      endorsed_by_count: 0
+      is_discovery_candidate: true
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\code\TTCS-PROJECT\Server\tests\unit\trending-publication-regression.test.cjs:9:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2996.165

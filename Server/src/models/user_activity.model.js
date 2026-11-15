@@ -2,6 +2,10 @@ module.exports = (sequelize, DataTypes) => {
   const UserActivity = sequelize.define(
     "UserActivity",
     {
+      event_id: { type: DataTypes.STRING(36), allowNull: true },
+      payload_digest: { type: DataTypes.STRING(64), allowNull: true },
+      event_version: { type: DataTypes.SMALLINT, allowNull: true },
+      qualified: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
       id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
@@ -50,6 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       created_at: {
         type: DataTypes.DATE,
+        allowNull: false,
         defaultValue: DataTypes.NOW,
       },
     },
@@ -57,6 +62,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "UserActivities",
       timestamps: false,
       indexes: [
+        { name: 'uq_activity_user_event', fields: ['user_id', 'event_id'], unique: true },
         {
           name: "idx_user_created",
           fields: ["user_id", "created_at"],
@@ -82,18 +88,17 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   UserActivity.associate = function (models) {
-    // constraints: false giúp Sequelize không sinh ra câu lệnh
-    // ADD CONSTRAINT FOREIGN KEY dưới MySQL, nhờ đó bảng này mới có thể Partition được.
+    // Unpartitioned since T04; migrations own the actual foreign keys.
     UserActivity.belongsTo(models.User, {
       foreignKey: "user_id",
       as: "user",
-      constraints: false,
+      onDelete: "CASCADE",
     });
 
     UserActivity.belongsTo(models.Song, {
       foreignKey: "song_id",
       as: "song",
-      constraints: false,
+      onDelete: "CASCADE",
     });
   };
 

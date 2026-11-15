@@ -1,0 +1,9 @@
+{
+  "data_label": "synthetic",
+  "users": [
+    { "user_id": 1, "target_genres": ["Pop"], "recommendations": [
+      { "song": { "song_id": 1, "genres": [{ "name": "Pop" }] }, "reason": "arbitrary explanation" },
+      { "song": { "song_id": 2, "genres": [{ "name": "Rock" }] }, "reason": "romantic and ca từ đồng điệu" }
+    ] }
+  ]
+}

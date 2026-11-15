@@ -1,0 +1,7 @@
+{
+  "errors": 0,
+  "warnings": 24,
+  "rules": {
+    "@next/next/no-img-element": 24
+  }
+}

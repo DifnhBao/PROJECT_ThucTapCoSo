@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { rateSong, getSongRatingSummary, getMyRating } from "./rating.api";
+import { useCallback,useState } from "react";
+import { getMyRating,getSongRatingSummary,rateSong } from "./rating.api";
 
 export const useRating = () => {
   const [loading, setLoading] = useState(false);
@@ -9,7 +9,7 @@ export const useRating = () => {
     totalRatings: 0,
   });
 
-  const fetchRatingData = async (songId: number) => {
+  const fetchRatingData = useCallback(async (songId: number) => {
     try {
       const [summaryData, userData] = await Promise.all([
         getSongRatingSummary(songId),
@@ -21,7 +21,7 @@ export const useRating = () => {
     } catch (error) {
       console.error("fetchRatingData error:", error);
     }
-  };
+  }, []);
 
   const submitRating = async (songId: number, score: number) => {
     setLoading(true);

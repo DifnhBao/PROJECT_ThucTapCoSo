@@ -1,36 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TuneTrek UI
 
-## Getting Started
+Frontend Next.js/React cho đồ án cá nhân TuneTrek. Xem [README dự án](../README.md) để chạy toàn bộ ứng dụng, DB/migrations/seed và xem demo, showcase, giới hạn đã biết.
 
-First, run the development server:
+Từ thư mục UI, cài dependency bằng `npm ci`. Tạo `.env.local` từ `.env.example` nếu chưa có; đặt `API_INTERNAL_URL` thành origin backend đang chạy (local mặc định `http://127.0.0.1:5000`). Không ghi đè cấu hình có sẵn hoặc đưa secret backend vào biến `NEXT_PUBLIC_*`.
 
-```bash
+```powershell
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở http://localhost:3000/Home. API và MySQL phải được chuẩn bị theo [hướng dẫn cấu hình](../docs/CONFIGURATION_SETUP_VI.md); chạy UI riêng không tạo database. Nếu dùng Docker toàn stack, không cần chạy thêm dev server trên cùng cổng.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+npm run check
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`check` chạy typecheck, lint, unit tests và production build. Chỉ chạy `start` sau build thành công; giữ cùng API_INTERNAL_URL lúc build/chạy. [Browser/integration tests](tests/README.md) có cấu hình và guard riêng. Bản kiểm chứng T24 ghi trong [báo cáo](../docs/verification/T24.md).
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Recommendation được phục vụ bởi Node API. Python trong experiments là nghiên cứu riêng, không phải backend bắt buộc của UI. Các kết quả và feature đã kiểm chứng nằm ở README root; không coi đường dẫn/menu hiển thị là bằng chứng chức năng hoàn chỉnh.

@@ -1,0 +1,9 @@
+{
+  "source": "local snapshot of current working source, not remote release commit",
+  "snapshotCommit": "eacb79c27fd8c4d8a7e3ab5ee9b07b81fc0e28f2",
+  "cloneCommit": "eacb79c27fd8c4d8a7e3ab5ee9b07b81fc0e28f2",
+  "clean": true,
+  "hostArtifactsAbsent": true,
+  "initScriptLF": true,
+  "mainRepositoryCommitted": false
+}

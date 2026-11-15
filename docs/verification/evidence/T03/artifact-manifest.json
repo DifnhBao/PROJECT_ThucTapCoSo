@@ -1,0 +1,98 @@
+[
+  {
+    "path": "UI/UI.zip",
+    "backup": ".local-backups\\t03\\artifacts\\UI\\UI.zip",
+    "sha256": "89bd6f556b8b336a7fa79a6e30ec7cf65faa0c4dc1a2fb03a7df0631bd899ce7",
+    "bytes": 172447
+  },
+  {
+    "path": "Server/server.zip",
+    "backup": ".local-backups\\t03\\artifacts\\Server\\server.zip",
+    "sha256": "5feb34fa1f452b1fe5e018516f40a2745b4f0176d6b1162a682529cba1d0e859",
+    "bytes": 8648603
+  },
+  {
+    "path": "init.sql",
+    "backup": ".local-backups\\t03\\artifacts\\init.sql",
+    "sha256": "27c8d662467cdb54a32ce93e26b3f14b4803c4dee8c337a3d0a3808bf6f48276",
+    "bytes": 626388
+  },
+  {
+    "path": "db/init.sql",
+    "backup": ".local-backups\\t03\\artifacts\\db\\init.sql",
+    "sha256": "f62589d68694bba9217a682335f48788efb8bf6611fd7f9567d2ee296560337a",
+    "bytes": 217758
+  },
+  {
+    "path": "db/data.sql",
+    "backup": ".local-backups\\t03\\artifacts\\db\\data.sql",
+    "sha256": "2d89cc259de6d614df2214e849aac9e04330ad94143048cd2005c1c57bfcb309",
+    "bytes": 99388
+  },
+  {
+    "path": "db/merged_data.sql",
+    "backup": ".local-backups\\t03\\artifacts\\db\\merged_data.sql",
+    "sha256": "da1b61beba64bee5a2c314e5e9fd104856eb74c79e97475f612f4b4d3c629d59",
+    "bytes": 183030
+  },
+  {
+    "path": "Server/src/testnnca.mp3",
+    "backup": ".local-backups\\t03\\artifacts\\Server\\src\\testnnca.mp3",
+    "sha256": "d9d48e1fcdebff394dd1dd218ee50ae595f04e8a68a1f69153a18c4acdf8edb9",
+    "bytes": 8613350
+  },
+  {
+    "path": "AI_Services/pyvenv.cfg",
+    "backup": ".local-backups\\t03\\artifacts\\AI_Services\\pyvenv.cfg",
+    "sha256": "8d77fb2334c6ec000141653b67ef247363b0bea0ce9fb973c4f5905b840c062e",
+    "bytes": 326
+  },
+  {
+    "path": "Server\\public\\uploads\\temp\\1762879611181-424626798.mp3",
+    "backup": ".local-backups\\t03\\artifacts\\Server\\public\\uploads\\temp\\1762879611181-424626798.mp3",
+    "sha256": "d9d48e1fcdebff394dd1dd218ee50ae595f04e8a68a1f69153a18c4acdf8edb9",
+    "bytes": 8613350
+  },
+  {
+    "path": "Server\\public\\uploads\\temp\\1762879732804-722429703.mp3",
+    "backup": ".local-backups\\t03\\artifacts\\Server\\public\\uploads\\temp\\1762879732804-722429703.mp3",
+    "sha256": "d9d48e1fcdebff394dd1dd218ee50ae595f04e8a68a1f69153a18c4acdf8edb9",
+    "bytes": 8613350
+  },
+  {
+    "path": "Server\\public\\uploads\\temp\\1762879837293-847828438.mp3",
+    "backup": ".local-backups\\t03\\artifacts\\Server\\public\\uploads\\temp\\1762879837293-847828438.mp3",
+    "sha256": "d9d48e1fcdebff394dd1dd218ee50ae595f04e8a68a1f69153a18c4acdf8edb9",
+    "bytes": 8613350
+  },
+  {
+    "path": "Server\\public\\uploads\\temp\\1762880000123-722024543.mp3",
+    "backup": ".local-backups\\t03\\artifacts\\Server\\public\\uploads\\temp\\1762880000123-722024543.mp3",
+    "sha256": "d9d48e1fcdebff394dd1dd218ee50ae595f04e8a68a1f69153a18c4acdf8edb9",
+    "bytes": 8613350
+  },
+  {
+    "path": "Server\\public\\uploads\\temp\\1762880747926-917662509.mp3",
+    "backup": ".local-backups\\t03\\artifacts\\Server\\public\\uploads\\temp\\1762880747926-917662509.mp3",
+    "sha256": "d9d48e1fcdebff394dd1dd218ee50ae595f04e8a68a1f69153a18c4acdf8edb9",
+    "bytes": 8613350
+  },
+  {
+    "path": "Server\\public\\uploads\\temp\\1762880956327-88770759.mp3",
+    "backup": ".local-backups\\t03\\artifacts\\Server\\public\\uploads\\temp\\1762880956327-88770759.mp3",
+    "sha256": "d9d48e1fcdebff394dd1dd218ee50ae595f04e8a68a1f69153a18c4acdf8edb9",
+    "bytes": 8613350
+  },
+  {
+    "path": "Server\\public\\uploads\\temp\\1766979019112-225383941.mp3",
+    "backup": ".local-backups\\t03\\artifacts\\Server\\public\\uploads\\temp\\1766979019112-225383941.mp3",
+    "sha256": "6b8981bc48c092520bada4244d170dccec2805c7c56131f1a110ac85125de076",
+    "bytes": 6282527
+  },
+  {
+    "path": "Server\\public\\uploads\\temp\\1778401981144-486322727.mp3",
+    "backup": ".local-backups\\t03\\artifacts\\Server\\public\\uploads\\temp\\1778401981144-486322727.mp3",
+    "sha256": "1356a0c71a0b4ad712b3d75afe426e7ee6f2e97c30f9df7c335378d3ca05adff",
+    "bytes": 2578851
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "errors": 71,
+  "warnings": 70,
+  "baseline": "T11/lint.json",
+  "newDiagnostics": []
+}

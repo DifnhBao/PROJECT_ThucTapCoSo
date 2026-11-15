@@ -1,0 +1,23 @@
+.git
+.local-backups
+**/node_modules
+**/.env
+**/.env.*
+**/.venv
+**/venv
+**/__pycache__
+**/*.zip
+**/public/uploads/temp
+
+**/.runtime/
+
+# Research models/datasets are not part of the web build context.
+experiments/
+AI_Services/
+Benchmark/
+docs/
+artifacts/
+**/.next
+**/*.log
+**/*.tsbuildinfo
+UI/tests/

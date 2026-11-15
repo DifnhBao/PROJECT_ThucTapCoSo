@@ -1,0 +1,297 @@
+
+> music-backend@1.0.0 test
+> node --require ./tests/helpers/unit-setup.cjs --test tests/unit/*.test.cjs tests/api/*.test.cjs
+
+TAP version 13
+# Subtest: root response remains available
+ok 1 - root response remains available
+  ---
+  duration_ms: 129.4591
+  type: 'test'
+  ...
+# Subtest: real protected route rejects an anonymous request without touching DB/cloud
+ok 2 - real protected route rejects an anonymous request without touching DB/cloud
+  ---
+  duration_ms: 15.4095
+  type: 'test'
+  ...
+# Subtest: allowed CORS origin retains credential support
+ok 3 - allowed CORS origin retains credential support
+  ---
+  duration_ms: 9.4587
+  type: 'test'
+  ...
+# Subtest: recommendations/me uses signed actor identity and old user-ID route is gone
+ok 4 - recommendations/me uses signed actor identity and old user-ID route is gone
+  ---
+  duration_ms: 161.2212
+  type: 'test'
+  ...
+# Subtest: signed malformed identity and inconsistent scope/role are rejected before service access
+ok 5 - signed malformed identity and inconsistent scope/role are rejected before service access
+  ---
+  duration_ms: 67.7869
+  type: 'test'
+  ...
+# Subtest: profile /me ignores injected identity and role; user cannot use admin profile route
+ok 6 - profile /me ignores injected identity and role; user cannot use admin profile route
+  ---
+  duration_ms: 85.5081
+  type: 'test'
+  ...
+# Subtest: HTTP admin reset deny cases do not persist credentials; allowed reset still works
+ok 7 - HTTP admin reset deny cases do not persist credentials; allowed reset still works
+  ---
+  duration_ms: 69.8469
+  type: 'test'
+  ...
+# Subtest: admin self password endpoint enforces current password and principal identity
+ok 8 - admin self password endpoint enforces current password and principal identity
+  ---
+  duration_ms: 20.9489
+  type: 'test'
+  ...
+# Subtest: only super_admin may create admin; body role is not authoritative
+ok 9 - only super_admin may create admin; body role is not authoritative
+  ---
+  duration_ms: 24.4886
+  type: 'test'
+  ...
+# Subtest: playlist mutations scope ownership and reject other users before any writes
+ok 10 - playlist mutations scope ownership and reject other users before any writes
+  ---
+  duration_ms: 27.2878
+  type: 'test'
+  ...
+# Subtest: playlist owner can still add/remove songs and delete their own playlist
+ok 11 - playlist owner can still add/remove songs and delete their own playlist
+  ---
+  duration_ms: 23.1356
+  type: 'test'
+  ...
+# Subtest: public song detail enforces approved/visible matrix and admin preview stays separate
+ok 12 - public song detail enforces approved/visible matrix and admin preview stays separate
+  ---
+  duration_ms: 215.6714
+  type: 'test'
+  ...
+# Subtest: public list/search exclude unpublished rows and do not starve top-K
+ok 13 - public list/search exclude unpublished rows and do not starve top-K
+  ---
+  duration_ms: 19.567
+  type: 'test'
+  ...
+# Subtest: private playlists are visible only to owner/admin, public playlists retain only eligible songs
+ok 14 - private playlists are visible only to owner/admin, public playlists retain only eligible songs
+  ---
+  duration_ms: 88.179
+  type: 'test'
+  ...
+# Subtest: debug is inaccessible to guests/users; admin may inspect pending pair explicitly
+ok 15 - debug is inaccessible to guests/users; admin may inspect pending pair explicitly
+  ---
+  duration_ms: 29.2595
+  type: 'test'
+  ...
+# Subtest: public recommendation explanation strips raw debug detail
+ok 16 - public recommendation explanation strips raw debug detail
+  ---
+  duration_ms: 8.6364
+  type: 'test'
+  ...
+# Subtest: favorites and rating/view boundaries do not expose or mutate pending songs
+ok 17 - favorites and rating/view boundaries do not expose or mutate pending songs
+  ---
+  duration_ms: 29.643
+  type: 'test'
+  ...
+# Subtest: real app imports and creates without listen, timers, DB, or signal handlers
+ok 18 - real app imports and creates without listen, timers, DB, or signal handlers
+  ---
+  duration_ms: 2662.2457
+  type: 'test'
+  ...
+# Subtest: admin cannot reset super_admin password; neither hashing nor save is called
+ok 19 - admin cannot reset super_admin password; neither hashing nor save is called
+  ---
+  duration_ms: 13.1333
+  type: 'test'
+  ...
+# Subtest: real Sequelize playlist SQL retains public-song joins and guest/owner/admin access predicates
+ok 20 - real Sequelize playlist SQL retains public-song joins and guest/owner/admin access predicates
+  ---
+  duration_ms: 63.3245
+  type: 'test'
+  ...
+# Subtest: real Sequelize artist detail SQL filters unpublished songs without dropping empty artists
+ok 21 - real Sequelize artist detail SQL filters unpublished songs without dropping empty artists
+  ---
+  duration_ms: 6.8016
+  type: 'test'
+  ...
+# Subtest: real Sequelize favorite count and page queries both constrain publication
+ok 22 - real Sequelize favorite count and page queries both constrain publication
+  ---
+  duration_ms: 25.4153
+  type: 'test'
+  ...
+# Subtest: public detail status matrix: only approved visible songs are readable
+ok 23 - public detail status matrix: only approved visible songs are readable
+  ---
+  duration_ms: 32.2738
+  type: 'test'
+  ...
+# Subtest: list/search/trending filter before limit; pending-only catalog stays empty
+ok 24 - list/search/trending filter before limit; pending-only catalog stays empty
+  ---
+  duration_ms: 7.1059
+  type: 'test'
+  ...
+# Subtest: favorites and all artist read paths filter unpublished songs in their joins
+ok 25 - favorites and all artist read paths filter unpublished songs in their joins
+  ---
+  duration_ms: 4.5352
+  type: 'test'
+  ...
+# Subtest: add-to-playlist rejects pending/rejected/hidden/deleted without writes
+ok 26 - add-to-playlist rejects pending/rejected/hidden/deleted without writes
+  ---
+  duration_ms: 2.9134
+  type: 'test'
+  ...
+# Subtest: existing playlist joins drop newly hidden songs while preserving an empty playlist
+ok 27 - existing playlist joins drop newly hidden songs while preserving an empty playlist
+  ---
+  duration_ms: 3.4217
+  type: 'test'
+  ...
+# Subtest: unpublished songs cannot be liked/rated or increment views
+ok 28 - unpublished songs cannot be liked/rated or increment views
+  ---
+  duration_ms: 6.6345
+  type: 'test'
+  ...
+# Subtest: personal recommendation removes ineligible candidates before top-K and excludes hidden seed titles
+ok 29 - personal recommendation removes ineligible candidates before top-K and excludes hidden seed titles
+  ---
+  duration_ms: 4.9517
+  type: 'test'
+  ...
+# Subtest: similar query applies public join before top-K and rejects hidden source songs
+ok 30 - similar query applies public join before top-K and rejects hidden source songs
+  ---
+  duration_ms: 3.075
+  type: 'test'
+  ...
+# Subtest: cold-start recommendation never returns an all-pending catalog
+ok 31 - cold-start recommendation never returns an all-pending catalog
+  ---
+  duration_ms: 2.3507
+  type: 'test'
+  ...
+# Subtest: refresh scope mismatch or invalid identity never queries token storage
+ok 32 - refresh scope mismatch or invalid identity never queries token storage
+  ---
+  duration_ms: 80.17
+  type: 'test'
+  ...
+# Subtest: refresh binds persisted token lookup to signed user ID and preserves scope
+ok 33 - refresh binds persisted token lookup to signed user ID and preserves scope
+  ---
+  duration_ms: 25.8541
+  type: 'test'
+  ...
+# API listening on port 49682
+# Subtest: startup DB failure never opens a port and closes the DB client
+ok 34 - startup DB failure never opens a port and closes the DB client
+  ---
+  duration_ms: 910.0121
+  type: 'test'
+  ...
+# Subtest: explicit startup and shutdown release port, timer, signal handlers and DB client
+ok 35 - explicit startup and shutdown release port, timer, signal handlers and DB client
+  ---
+  duration_ms: 65.9471
+  type: 'test'
+  ...
+# Subtest: uses explicit test settings including the port
+ok 36 - uses explicit test settings including the port
+  ---
+  duration_ms: 5.259
+  type: 'test'
+  ...
+# Subtest: missing test variables never fall back to development DB variables
+ok 37 - missing test variables never fall back to development DB variables
+  ---
+  duration_ms: 2.7901
+  type: 'test'
+  ...
+# Subtest: rejects non-test environments, unsafe names, hosts, and invalid connection fields
+ok 38 - rejects non-test environments, unsafe names, hosts, and invalid connection fields
+  ---
+  duration_ms: 2.002
+  type: 'test'
+  ...
+# Subtest: destructive integration work needs a separate explicit opt-in
+ok 39 - destructive integration work needs a separate explicit opt-in
+  ---
+  duration_ms: 1.2149
+  type: 'test'
+  ...
+# Subtest: runtime and migration config both reject DB_* fallback in a fresh process
+ok 40 - runtime and migration config both reject DB_* fallback in a fresh process
+  ---
+  duration_ms: 1163.5748
+  type: 'test'
+  ...
+# Subtest: pending-only catalog stays empty; trending never relaxes publication policy
+ok 41 - pending-only catalog stays empty; trending never relaxes publication policy
+  ---
+  duration_ms: 6.7294
+  type: 'test'
+  ...
+# Subtest: reset/delete permission matrix defaults to deny and forbids self actions
+ok 42 - reset/delete permission matrix defaults to deny and forbids self actions
+  ---
+  duration_ms: 8.2926
+  type: 'test'
+  ...
+# Subtest: principal whitelists claims and normalizes identity; invalid IDs and scope/role pairs fail
+ok 43 - principal whitelists claims and normalizes identity; invalid IDs and scope/role pairs fail
+  ---
+  duration_ms: 9.0465
+  type: 'test'
+  ...
+# Subtest: forbidden reset cases never hash/save, including self with string target ID
+ok 44 - forbidden reset cases never hash/save, including self with string target ID
+  ---
+  duration_ms: 8.6537
+  type: 'test'
+  ...
+# Subtest: allowed reset paths persist a hash exactly once
+ok 45 - allowed reset paths persist a hash exactly once
+  ---
+  duration_ms: 3.3843
+  type: 'test'
+  ...
+# Subtest: self-service password change requires the old password and never writes on mismatch
+ok 46 - self-service password change requires the old password and never writes on mismatch
+  ---
+  duration_ms: 4.9835
+  type: 'test'
+  ...
+# Subtest: delete and create-admin reject unauthorized principals without writes
+ok 47 - delete and create-admin reject unauthorized principals without writes
+  ---
+  duration_ms: 2.559
+  type: 'test'
+  ...
+1..47
+# tests 47
+# suites 0
+# pass 47
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5080.3739

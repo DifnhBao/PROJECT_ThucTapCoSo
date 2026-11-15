@@ -1,0 +1,1 @@
+NOT_RUN: MySQL integration suite is deferred to T04 (migrations/seed)

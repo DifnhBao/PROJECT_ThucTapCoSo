@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "date": "2026-11-15",
+  "origin": "https://release-mechanisms-charles-gather.trycloudflare.com",
+  "scope": "reactivated exact images; Home modal login, secure cookies, existing provider audio, UI logout",
+  "apiMocked": false,
+  "providerMocked": false,
+  "uploadedNewMedia": false
+}

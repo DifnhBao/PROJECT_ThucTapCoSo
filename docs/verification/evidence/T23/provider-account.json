@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "scope": "provider read-only account usage",
+  "plan": "Free",
+  "credits": {
+    "usage": 2.09,
+    "limit": 25
+  }
+}

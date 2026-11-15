@@ -1,0 +1,23 @@
+{
+  "browser": "Chromium/Edge",
+  "fixtureApi": true,
+  "actualProvidersAndTransport": true,
+  "library41SongsAcross3Pages": true,
+  "pageFailureManualRetry": true,
+  "statusOutsidePagePreserved": true,
+  "optimisticRollbackToast": true,
+  "lostToggleResponseReconciledWithoutPostReplay": true,
+  "failedToggleRequests": 1,
+  "concurrentRefreshPerScope": {
+    "user": 1,
+    "admin": 1
+  },
+  "listeningSessionSurvivesRefresh": true,
+  "staleAccountResponsesDiscarded": true,
+  "staleMutationRollbackCannotAffectB": true,
+  "privateQueueCleared": true,
+  "refreshFailureExpiresWithoutLoop": true,
+  "adminSurvivesUserSwitch": true,
+  "crossTabLogoutAndLogin": true,
+  "unexpectedPageErrors": []
+}

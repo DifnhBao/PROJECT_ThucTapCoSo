@@ -1,14 +1,14 @@
 import type { NextConfig } from "next";
+import { apiOrigin } from "./server-api-config.cjs";
 
 const nextConfig: NextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  output: "standalone",
   async rewrites() {
     return [
+      { source: '/health/:path*', destination: `${apiOrigin()}/health/:path*` },
       {
         source: '/api/:path*',
-        destination: 'http://14.225.212.97:5000/api/:path*', // Link gọi về VPS của bạn
+        destination: `${apiOrigin()}/api/:path*`,
       },
     ];
   },

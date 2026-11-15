@@ -1,5 +1,4 @@
 "use client";
-
 import styles from "@/app/features/user/components/Profile.module.css";
 import { useProfileForm } from "../../../hooks/useProfileForm";
 import { UserProfileData } from "../../../types/music";
@@ -16,7 +15,8 @@ const Profile = ({
 }) => {
   const {
     formData,
-    // note,
+    note,
+    submitting,
     existingProfile,
     handleChange,
     handleReset,
@@ -25,6 +25,7 @@ const Profile = ({
 
   return (
     <div className={styles.profileCard}>
+      <p role="status">{note}</p>
       <h1 className={styles.title}>
         {existingProfile
           ? "Chỉnh sửa thông tin cá nhân"
@@ -122,12 +123,12 @@ const Profile = ({
             Xóa
           </button>
 
-          <button type="submit" className={`${styles.btn} ${styles.primary}`}>
+          <button type="submit" disabled={submitting} className={`${styles.btn} ${styles.primary}`}>
             {existingProfile ? "Cập nhật" : "Gửi"}
           </button>
         </div>
 
-        {/* <p className={styles.note}>{note}</p> */}
+
       </form>
     </div>
   );

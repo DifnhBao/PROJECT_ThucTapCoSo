@@ -1,0 +1,6 @@
+
+> my-app@0.1.0 typecheck
+> tsc --noEmit --incremental false
+
+app/context/MusicDataContext.tsx(3,32): error TS2305: Module '"@/app/types/music"' has no exported member 'Artist'.
+app/features/mix/mixService.ts(1,25): error TS2307: Cannot find module '@/app/utils/axiosClient' or its corresponding type declarations.

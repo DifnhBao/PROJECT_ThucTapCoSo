@@ -1,5 +1,7 @@
+const { AppError } = require("../utils/app-error");
 const { Artist, Song } = require("../models");
 const sequelize = require("../config/db");
+const { publicSongWhere } = require("../policies/publication.policy");
 
 const getAllArtists = async () => {
   const artists = await Artist.findAll({
@@ -9,6 +11,7 @@ const getAllArtists = async () => {
         model: Song,
         as: "songs",
         attributes: ["image_url"],
+        where: publicSongWhere(),
         required: false,
         through: { attributes: [] },
       },
@@ -36,7 +39,7 @@ const getArtistById = async (artistId) => {
         model: Song,
         as: "songs",
         attributes: ["song_id", "title", "image_url", "audio_url", "duration"],
-        where: { is_visible: true },
+        where: publicSongWhere(),
         required: false, // artist chưa có bài vẫn trả về
       },
     ],
@@ -46,18 +49,16 @@ const getArtistById = async (artistId) => {
 // Quyền Admin: tạo nghệ sĩ mới
 
 const createArtist = async (artistData) => {
-  const { name, bio, image, country } = artistData;
+  const { name } = artistData;
 
   const existingArtist = await Artist.findOne({ where: { name } });
   if (existingArtist) {
-    throw new Error("Nghệ sĩ này đã tồn tại.");
+    throw new AppError("Nghệ sĩ này đã tồn tại.", 409, "ARTIST_EXISTS");
   }
 
   const newArtist = await Artist.create({
     name,
-    bio,
-    image,
-    country,
+    normalized_name: name.toLowerCase().replace(/\s+/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
   });
 
   return newArtist;
@@ -77,6 +78,8 @@ const getTopArtists = async (limit = 10) => {
         model: Song,
         as: "songs",
         attributes: [],
+        where: publicSongWhere(),
+        required: false,
         through: { attributes: [] },
       },
     ],

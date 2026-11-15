@@ -1,8 +1,7 @@
 import {
-  loginAdminApi,
-  logoutAdminApi,
-  getCurrentAdminApi,
-//   registerAdminApi,
+getCurrentAdminApi,
+loginAdminApi,
+logoutAdminApi,
 } from "./api";
 
 export const loginAdminService = async (username: string, password: string) => {

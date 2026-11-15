@@ -1,15 +1,19 @@
 "use client";
+import { formError } from "@/app/lib/form-error";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import styles from "@/app/styles/Auth.module.css";
-import { useModal } from "@/app/context/ModalContext";
-import { useUser } from "@/app/features/user/context/UserContext";
-import { loginService } from "@/app/features/auth/service";
 import Logo from "@/app/components/ui/Logo";
+import { useModal } from "@/app/context/ModalContext";
+import { loginService } from "@/app/features/auth/service";
+import { useUser } from "@/app/features/user/context/UserContext";
+import styles from "@/app/styles/Auth.module.css";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function SignInPage() {
   const router = useRouter();
+  const pathname = usePathname();
+  const [submitting, setSubmitting] = useState(false);
+  const [failure, setFailure] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { openModal, closeModal } = useModal();
@@ -17,16 +21,20 @@ export default function SignInPage() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setFailure("");
+    setSubmitting(true);
     try {
       const data = await loginService(username, password);
       alert(data.message);
       await refreshUser();
       closeModal();
-      router.refresh();
-    } catch (error: any) {
-      const message = error.response?.data?.message || "Đăng nhập thất bại";
-      alert(message);
-    }
+      if (pathname === '/login') router.replace('/Home');
+      else router.refresh();
+    } catch (error: unknown) {
+      const message = formError(error);
+      setFailure(message);
+    } finally { setSubmitting(false); }
   };
 
   return (
@@ -35,11 +43,7 @@ export default function SignInPage() {
         <div className={styles.logo}>
           <a>
             <Logo size={80} />
-            {/* <img
-                src="/images/Logo/logo.png"
-                alt="logo"
-                className={styles.logoImg}
-              /> */}
+
           </a>
         </div>
       </header>
@@ -47,6 +51,7 @@ export default function SignInPage() {
       <h1 className={styles.title}>Welcome Back</h1>
       <p className={styles.subtitle}>Sign in to continue to Enjoy</p>
 
+      {failure && <p role="alert">{failure}</p>}
       <form onSubmit={handleSignIn} className={styles.form}>
         <div className={styles.formField}>
           <label htmlFor="username" className={styles.formLabel}>
@@ -84,19 +89,17 @@ export default function SignInPage() {
             <span className={styles.rememberMeSpan}>Remember me</span>
           </label>
 
-          <a href="#" className={styles.forgotPasswordLink}>
-            Forgot password?
-          </a>
+
         </div>
 
-        <button type="submit" className={styles.submitButton}>
+        <button disabled={submitting} type="submit" className={styles.submitButton}>
           Sign In
         </button>
       </form>
 
       <div className={styles.switchFormFooter}>
         <p>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <span
             className={styles.switchLink}
             onClick={() => openModal("register")}

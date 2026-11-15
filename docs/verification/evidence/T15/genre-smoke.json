@@ -1,0 +1,15 @@
+{
+  "label": "synthetic genre-consistency smoke test",
+  "source": "synthetic-fixture",
+  "limitation": "Manual genre agreement only; not preference accuracy, MAP, serendipity or retention evidence. Reasons are ignored.",
+  "mean_genre_match_rate_at_5": 0.2,
+  "rows": [
+    {
+      "user_id": 1,
+      "requested_slots": 5,
+      "returned": 2,
+      "genre_matches": 1,
+      "genre_match_rate_at_k": 0.2
+    }
+  ]
+}

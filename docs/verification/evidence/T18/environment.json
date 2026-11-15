@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-06",
+  "node": "v22.19.0",
+  "os": "10.0.26300",
+  "cpu": "AMD Ryzen 7 5700U with Radeon Graphics         ",
+  "memoryGB": 7.364898681640625,
+  "profiler": {
+    "viewport": "1280x800",
+    "browser": "Edge headless",
+    "network": "local fixture, no throttling",
+    "cache": "fresh context per before/after process",
+    "runs": 3,
+    "eventsPerRun": 20
+  },
+  "productionLab": "NOT_RUN: server launch blocked"
+}

@@ -1,58 +1,23 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
-import { getCurrentAdminService } from "@/app/features/admin/service";
-import type { User } from "@/app/types/music";
-
-interface AdminUserContextType {
-  admin: User | null;
-  setAdmin: React.Dispatch<React.SetStateAction<User | null>>;
-  loading: boolean;
-  checkAdmin: () => Promise<void>;
-}
-
-const AdminUserContext = createContext<AdminUserContextType | undefined>(
-  undefined,
-);
-
-export const AdminUserProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const [admin, setAdmin] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const checkAdmin = async () => {
-    console.log("🚀 checkAdmin START");
-    setLoading(true);
-    try {
-      const data = await getCurrentAdminService();
-      console.log("✅ API SUCCESS:", data);
-      setAdmin(data.data);
-    } catch (err) {
-      console.log("❌ API ERROR:", err);
-      setAdmin(null);
-    } finally {
-      console.log("🏁 FINALLY - SET LOADING FALSE");
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    checkAdmin();
+import { createContext,useCallback,useContext,useEffect } from 'react';
+import { getAuth,setPrincipal,toUser } from '../../../lib/auth-state';
+import { initializeAuthSync } from '../../../lib/auth-sync';
+import { useAuthState } from '../../../lib/use-auth-state';
+import type { User } from '../../../types/music';
+import { getCurrentAdminService } from '../service';
+type AdminContextType = { admin: User | null; setAdmin: React.Dispatch<React.SetStateAction<User | null>>; loading: boolean; checkAdmin: () => Promise<void> };
+const AdminUserContext = createContext<AdminContextType | undefined>(undefined);
+export function AdminUserProvider({ children }: { children: React.ReactNode }) {
+  const snapshot = useAuthState('admin');
+  const checkAdmin = useCallback(async () => {
+    const epoch = getAuth('admin').epoch;
+    try { const data = await getCurrentAdminService(); setPrincipal('admin', toUser(data.data), epoch); }
+    catch { setPrincipal('admin', null, epoch); }
   }, []);
-
-  return (
-    <AdminUserContext.Provider value={{ admin, setAdmin, loading, checkAdmin }}>
-      {children}
-    </AdminUserContext.Provider>
-  );
-};
-
-export const useAdminUser = (): AdminUserContextType => {
-  const context = useContext(AdminUserContext);
-  if (!context) {
-    throw new Error("useAdminUser phải được dùng trong AdminUserProvider");
-  }
-  return context;
-};
+  const setAdmin = useCallback<React.Dispatch<React.SetStateAction<User | null>>>((next) => {
+    const current = getAuth('admin'); setPrincipal('admin', typeof next === 'function' ? next(current.principal) : next, current.epoch);
+  }, []);
+  useEffect(() => { initializeAuthSync(); let active = true; queueMicrotask(() => { if (active && snapshot.status === 'unknown') void checkAdmin(); }); return () => { active = false; }; }, [snapshot.epoch, snapshot.status, checkAdmin]);
+  return <AdminUserContext.Provider value={{ admin: snapshot.principal, setAdmin, loading: snapshot.status === 'unknown' || snapshot.status === 'changing', checkAdmin }}>{children}</AdminUserContext.Provider>;
+}
+export function useAdminUser() { const value = useContext(AdminUserContext); if (!value) throw new Error('useAdminUser phải được dùng trong AdminUserProvider'); return value; }

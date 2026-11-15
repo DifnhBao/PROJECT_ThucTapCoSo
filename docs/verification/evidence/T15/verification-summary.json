@@ -1,0 +1,43 @@
+{
+  "task": "T15",
+  "status": "complete",
+  "completedOn": "2026-11-04",
+  "branch": "feat/t15-recommendation-evaluation",
+  "tests": {
+    "backend": 100,
+    "evaluationSubset": 9,
+    "mysqlSnapshot": 8,
+    "UI": 56,
+    "failures": 0
+  },
+  "typecheck": "pass",
+  "productionBuild": "pass",
+  "lint": {
+    "errors": 0,
+    "warnings": 24,
+    "trackedIn": "docs/QUALITY_GATES_VI.md"
+  },
+  "artifactSourceAndDataHashesVerified": true,
+  "data_sha256": "98342fe6ae728554d6e3af3a3dd06a0e98d7caf66d4b4afbf4bebc287e6e09a0",
+  "source_manifest_sha256": "4e9eb3d203ea41a8b46680ac81745d0b6234bafc39e4f14372615034cae995e9",
+  "dataset": {
+    "users": 12,
+    "catalog": 21,
+    "eligible_catalog": 18,
+    "events": 78,
+    "train_events": 54,
+    "validation_events": 10,
+    "test_events": 14
+  },
+  "data_label": "synthetic",
+  "seed": 150015,
+  "k": 5,
+  "currentTreeSecretFindings": 0,
+  "testResults": "logs from pre-pause runs; current input and evaluator/engine hashes reverified on completion",
+  "commit": false,
+  "push": false,
+  "deploy": false,
+  "newDependencies": false,
+  "mysqlScope": "Targeted T14 snapshot regression, not the full schema/auth suite",
+  "limitations": "Synthetic clustered fixture; Hybrid equals Content-only. No real-user quality or retention claim."
+}

@@ -1,0 +1,70 @@
+[
+  {
+    "path": ".env.example",
+    "preserved": true
+  },
+  {
+    "path": "UI\\UI.zip",
+    "preserved": true
+  },
+  {
+    "path": "UI\\hash.js",
+    "preserved": true
+  },
+  {
+    "path": "Benchmark\\Bieu-Do-Danh-Gia-He-Khuyen-Nghi.png",
+    "preserved": true
+  },
+  {
+    "path": "Server\\server.zip",
+    "preserved": true
+  },
+  {
+    "path": "db\\recommendation_demo_expected_results.md",
+    "preserved": true
+  },
+  {
+    "path": "db\\recommendation_demo_full_seed.sql",
+    "preserved": true
+  },
+  {
+    "path": "db\\recommendation_demo_seed.sql",
+    "preserved": true
+  },
+  {
+    "path": "db\\recommendation_demo_test_cases.md",
+    "preserved": true
+  },
+  {
+    "path": "db\\recommendation_evaluation_queries.sql",
+    "preserved": true
+  },
+  {
+    "path": "docs\\MODEL_SELECTION_GUIDE_VI.md",
+    "preserved": true
+  },
+  {
+    "path": "docs\\audit\\TECHNICAL_AUDIT_VI.md",
+    "preserved": true
+  },
+  {
+    "path": "docs\\audit\\evidence\\server-npm-audit.json",
+    "preserved": true
+  },
+  {
+    "path": "docs\\audit\\evidence\\ui-eslint.json",
+    "preserved": true
+  },
+  {
+    "path": "docs\\audit\\evidence\\ui-npm-audit.json",
+    "preserved": true
+  },
+  {
+    "path": "docs\\audit\\evidence\\verification.md",
+    "preserved": true
+  },
+  {
+    "path": "init.sql",
+    "preserved": true
+  }
+]

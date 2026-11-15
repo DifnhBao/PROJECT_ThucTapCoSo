@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-13",
+  "status": "PASS",
+  "scope": "T22 documentation checks only; existing T19/T21 runtime evidence reused",
+  "documents": [
+    "README.md",
+    "use-cases.md",
+    "permission-matrix.md",
+    "business-rules.md",
+    "event-dictionary.md",
+    "acceptance-criteria.md",
+    "traceability.md"
+  ],
+  "relativeLinksChecked": 64,
+  "storiesWithSVPF": 10,
+  "businessRules": 12,
+  "testAliases": 12,
+  "sourceCrosschecks": 7,
+  "kpiExample": {
+    "receiptCount": 4,
+    "qualified": 2,
+    "skipped": 1,
+    "qualifiedRate": 0.5,
+    "skipRate": 0.25
+  },
+  "issues": [],
+  "trailingWhitespace": "PASS",
+  "documentSHA256": {
+    "docs/product/acceptance-criteria.md": "dd7963decc7a968e5b94a2bb1494de8834c98a5365f91aea8ed2a5d70d42c2a0",
+    "docs/product/business-rules.md": "a7480498b04993c9d3ce810b6e43eba2380e051539b53fae9589396602bad924",
+    "docs/product/event-dictionary.md": "38bb8767178ce724beaf38556be27d6563b3f8736534c59e5889977d4b91eaca",
+    "docs/product/permission-matrix.md": "45675a327867d6faa7c5d8e2aed92a3f5af010359ed01e33064d311f1c8a8777",
+    "docs/product/README.md": "559ad42dfcdc39fae5ec95470e377d5ab4d58f27d214bf1d41fb8c4974e96c71",
+    "docs/product/traceability.md": "e6e5dc9f0eb99739649d595cd9e72ac16fd1121cf9b9db69421e7c764b60ed3d",
+    "docs/product/use-cases.md": "ee4a32caae4a4b43f6b419cd5ae02eefb952020ee07477c00e183fc90582345f"
+  }
+}

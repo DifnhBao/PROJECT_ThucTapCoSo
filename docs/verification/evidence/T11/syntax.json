@@ -1,0 +1,50 @@
+[
+  {
+    "file": "Server/src/services/user_activity.service.js",
+    "passed": true
+  },
+  {
+    "file": "Server/src/controllers/user_activity.controller.js",
+    "passed": true
+  },
+  {
+    "file": "Server/src/models/user_activity.model.js",
+    "passed": true
+  },
+  {
+    "file": "Server/src/services/recommendation/interactionScoring.service.js",
+    "passed": true
+  },
+  {
+    "file": "Server/src/services/song.service.js",
+    "passed": true
+  },
+  {
+    "file": "Server/src/validation/contracts.js",
+    "passed": true
+  },
+  {
+    "file": "Server/src/server.js",
+    "passed": true
+  },
+  {
+    "file": "Server/scripts/generate-openapi.cjs",
+    "passed": true
+  },
+  {
+    "file": "Server/migrations/20261027000200-listening-events.js",
+    "passed": true
+  },
+  {
+    "file": "Server/tests/integration/listening-events.cjs",
+    "passed": true
+  },
+  {
+    "file": "Server/tests/helpers/activity-api-process.cjs",
+    "passed": true
+  },
+  {
+    "file": "Server/tests/unit/listening-scoring.test.cjs",
+    "passed": true
+  }
+]

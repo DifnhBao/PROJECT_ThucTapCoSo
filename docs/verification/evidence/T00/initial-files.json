@@ -1,0 +1,108 @@
+[
+  {
+    "path": ".env.example",
+    "exists": false
+  },
+  {
+    "path": "UI/UI.zip",
+    "exists": true,
+    "bytes": 172447,
+    "sha256": "89BD6F556B8B336A7FA79A6E30EC7CF65FAA0C4DC1A2FB03A7DF0631BD899CE7"
+  },
+  {
+    "path": "UI/hash.js",
+    "exists": true,
+    "bytes": 183,
+    "sha256": "2D3627D14C02D4BEF5592494A605EF992408A2883428D3B646670FA057B87F3D"
+  },
+  {
+    "path": "Benchmark/Bieu-Do-Danh-Gia-He-Khuyen-Nghi.png",
+    "exists": true,
+    "bytes": 49001,
+    "sha256": "7A4C6B6659AE4CE693BFCC20CD0D5154FB374A4BA5609910916C3BE3A63B9192"
+  },
+  {
+    "path": "Server/server.zip",
+    "exists": true,
+    "bytes": 8648603,
+    "sha256": "5FEB34FA1F452B1FE5E018516F40A2745B4F0176D6B1162A682529CBA1D0E859"
+  },
+  {
+    "path": "db/recommendation_demo_expected_results.md",
+    "exists": true,
+    "bytes": 4065,
+    "sha256": "368BDC1F0ACCABC310BFBCBA0A2F823AFC15599F80A630DCD11A4A4B6475AEA6"
+  },
+  {
+    "path": "db/recommendation_demo_full_seed.sql",
+    "exists": true,
+    "bytes": 32363,
+    "sha256": "A83B8B74822D4533E38BD8216AE94A80550591457B36BC4A07EF267976D5AF36"
+  },
+  {
+    "path": "db/recommendation_demo_seed.sql",
+    "exists": true,
+    "bytes": 20869,
+    "sha256": "A5963A3B38AF16181AE0A48E119595621FF57B1CE9B6E7DB08A69EB0EABF88E3"
+  },
+  {
+    "path": "db/recommendation_demo_test_cases.md",
+    "exists": true,
+    "bytes": 4964,
+    "sha256": "C33EAF8989E56C2127F8B6A29BF27E9D990FC2469AAA81A91ED45D276BB127A5"
+  },
+  {
+    "path": "db/recommendation_evaluation_queries.sql",
+    "exists": true,
+    "bytes": 4023,
+    "sha256": "B98B305EFC6D1233A61F2039473833216489B9D6930AC92C48A7A05B53E2212C"
+  },
+  {
+    "path": "docs/INTERN_PORTFOLIO_EXECUTION_PLAN_VI.md",
+    "exists": true,
+    "bytes": 77235,
+    "sha256": "C3B22C0F6F7CBF4EE7CA6CE73D6E238158C2F88F1FACC794E304A69F292A816C"
+  },
+  {
+    "path": "docs/MODEL_SELECTION_GUIDE_VI.md",
+    "exists": true,
+    "bytes": 14768,
+    "sha256": "63CE37FD0A411727E8801148C11D52D777D9B56C8C9123F24D01010C63B0422E"
+  },
+  {
+    "path": "docs/audit/TECHNICAL_AUDIT_VI.md",
+    "exists": true,
+    "bytes": 55378,
+    "sha256": "70D3B0077FA157995D7561D0AF2610499C4131A990D565D4411AC1D68C6BC821"
+  },
+  {
+    "path": "docs/audit/evidence/server-npm-audit.json",
+    "exists": true,
+    "bytes": 17263,
+    "sha256": "212BC903D1A9ACCF427263DA1B1053A251F16C1D1F5BF0F2A4C31AB8DBE6F601"
+  },
+  {
+    "path": "docs/audit/evidence/ui-eslint.json",
+    "exists": true,
+    "bytes": 152463,
+    "sha256": "4F7B3B680098ABB5CFC08999273BC6161DD6D4B440A3CF6E5B7272A55A19D24A"
+  },
+  {
+    "path": "docs/audit/evidence/ui-npm-audit.json",
+    "exists": true,
+    "bytes": 50708,
+    "sha256": "843AAC68112809EF3D090215830FB7CB472580F9476C62FEE4DFF5FD4FF46CE1"
+  },
+  {
+    "path": "docs/audit/evidence/verification.md",
+    "exists": true,
+    "bytes": 3658,
+    "sha256": "8BB1E53D53F767A9A73402F31222B1E369B6AEFFB168CA6B7D7DCAA4E2C04A79"
+  },
+  {
+    "path": "init.sql",
+    "exists": true,
+    "bytes": 626388,
+    "sha256": "27C8D662467CDB54A32CE93E26B3F14B4803C4DEE8C337A3D0A3808BF6F48276"
+  }
+]

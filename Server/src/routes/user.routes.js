@@ -1,3 +1,5 @@
+const preflight = require('../midlewares/upload-preflight');
+const { guard } = require('../midlewares/security');
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
@@ -19,12 +21,15 @@ router.put("/me", protect, userController.updateUserProfile);
 router.post(
   "/avatar",
   protect,
+  guard("upload"),
+  preflight(),
   upload.single("avatar"),
   userController.uploadAvatar,
 );
 
 // user đổi password
 router.post("/change-password", protect, userController.changeUserPassword);
+router.post("/admin/change-password", protectAdmin, userController.changeUserPassword);
 
 /* --- ROUTES FOR ADMIN --- */
 router.get(
@@ -73,11 +78,11 @@ router.delete(
   userController.deleteUserById,
 );
 
-// Thêm mới tài khoản admin, *** cần xem lại chức năng này, phải để super duyệt
+// Chỉ super_admin được tạo tài khoản admin.
 router.post(
   "/admin/new",
   protectAdmin,
-  authorizeRoles("admin", "super_admin"),
+  authorizeRoles("super_admin"),
   userController.addNewAdmin,
 );
 

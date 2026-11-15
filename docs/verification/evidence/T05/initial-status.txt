@@ -1,0 +1,107 @@
+ M .env.example
+ M .gitignore
+ D AI_Services/pyvenv.cfg
+ M Benchmark/benchmark.js
+ M Server/.dockerignore
+ M Server/.env.example
+ M Server/Dockerfile
+ M Server/config/config.js
+ D Server/migrations/20260426014241-init-database.js
+ D Server/migrations/20260426151349-add-genres-and-song-genres.js
+ D Server/migrations/20260507033542-update-playlists-schema.js
+ D Server/migrations/20260507034124-create-playlist-songs-table.js
+ D Server/migrations/20260510090000-add-song-status-and-uploaded-by.js
+ D Server/migrations/20260512075542-create-user-activities.js
+ D Server/migrations/20260512090057-add-content-based-fields-to-songs.js
+ D Server/migrations/20260521051200-create-song-similarities.js
+ M Server/package-lock.json
+ M Server/package.json
+ D Server/public/uploads/temp/1762879611181-424626798.mp3
+ D Server/public/uploads/temp/1762879732804-722429703.mp3
+ D Server/public/uploads/temp/1762879837293-847828438.mp3
+ D Server/public/uploads/temp/1762880000123-722024543.mp3
+ D Server/public/uploads/temp/1762880747926-917662509.mp3
+ D Server/public/uploads/temp/1762880956327-88770759.mp3
+ D Server/public/uploads/temp/1766979019112-225383941.mp3
+ D Server/public/uploads/temp/1778401981144-486322727.mp3
+ M Server/src/config/db.js
+ M Server/src/controllers/favorite.controller.js
+ M Server/src/controllers/playlist.controller.js
+ M Server/src/controllers/rating.controller.js
+ M Server/src/controllers/recommendation.controller.js
+ M Server/src/controllers/song.controller.js
+ M Server/src/controllers/user.controller.js
+ M Server/src/controllers/user_activity.controller.js
+ M Server/src/midlewares/auth.midleware.js
+ M Server/src/midlewares/error.midleware.js
+ M Server/src/midlewares/upload.midleware.js
+ M Server/src/models/playlist.model.js
+ M Server/src/models/user_activity.model.js
+ M Server/src/routes/playlist.routes.js
+ M Server/src/routes/recommendation.routes.js
+ M Server/src/routes/song.routes.js
+ M Server/src/routes/user.routes.js
+ M Server/src/server.js
+ M Server/src/services/artist.service.js
+ M Server/src/services/auth.service.js
+ M Server/src/services/favorite.service.js
+ M Server/src/services/playlist.service.js
+ M Server/src/services/rating.service.js
+ M Server/src/services/recommendation/recommendation.service.js
+ M Server/src/services/song.service.js
+ M Server/src/services/user.service.js
+ D Server/src/testnnca.mp3
+ M UI/.dockerignore
+ M UI/.gitignore
+ M UI/Dockerfile
+ D UI/UI.zip
+ M UI/app/(Pages)/administrator/ManageAdmin/page.tsx
+ M UI/app/context/MusicDataContext.tsx
+ M UI/app/features/admin/components/ResetAdminPassword.tsx
+ M UI/app/features/auth/authApi.ts
+ M UI/app/features/mix/mixApi.ts
+ M UI/app/features/mix/mixService.ts
+ M UI/app/features/player/hook/useActivityLogger.ts
+ M UI/app/features/recommendation/components/RecommendationSection.tsx
+ M UI/app/features/recommendation/recommendation.api.ts
+ M UI/app/features/song/song.api.ts
+ M UI/app/features/user/accountApi.ts
+ M UI/app/lib/http.ts
+ M UI/eslint.config.mjs
+ M UI/hash.js
+ M UI/next.config.ts
+ M UI/package-lock.json
+ M UI/package.json
+ D db/data.sql
+ D db/init.sql
+ D db/merged_data.sql
+ M docker-compose.yml
+?? .dockerignore
+?? AI_Services/.dockerignore
+?? Benchmark/Bieu-Do-Danh-Gia-He-Khuyen-Nghi.png
+?? README.md
+?? Server/.env.test.example
+?? Server/config/test-database.js
+?? Server/database/
+?? Server/migrations/20261016000100-schema-baseline.js
+?? Server/migrations/20261016000200-reconcile-legacy-schema.js
+?? Server/migrations/legacy/
+?? Server/scripts/db-migrate.cjs
+?? Server/scripts/db-seed.cjs
+?? Server/src/app.js
+?? Server/src/config/env.js
+?? Server/src/policies/
+?? Server/src/utils/authorization.js
+?? Server/tests/
+?? UI/.env.example
+?? UI/server-api-config.cjs
+?? UI/tests/
+?? db/10-app-permissions.sh
+?? db/recommendation_demo_expected_results.md
+?? db/recommendation_demo_full_seed.sql
+?? db/recommendation_demo_seed.sql
+?? db/recommendation_demo_test_cases.md
+?? db/recommendation_evaluation_queries.sql
+?? docker-compose.test.yml
+?? docs/
+?? scripts/

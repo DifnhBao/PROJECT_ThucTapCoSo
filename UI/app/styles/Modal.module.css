@@ -51,3 +51,6 @@
     opacity: 1;
   }
 }
+.content { max-width:100%; max-height:85dvh; overflow-y:auto; margin:0; }
+.content > * { max-width:100%; }
+@media(max-width:600px) { .container { max-width:94vw; } }

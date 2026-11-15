@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-08",
+  "status": "VERIFIED",
+  "backendTests": 109,
+  "uiTests": 56,
+  "mysqlIntegrationTests": 58,
+  "dockerStackSmoke": "PASS",
+  "restoreTables": 19,
+  "restoreTarget": "tunetrek_restore_t20",
+  "dbReadyDownStatus": 503,
+  "dbLiveDownStatus": 200,
+  "apiRestartRetainsData": true,
+  "mainRepositoryCommitted": false,
+  "remoteReleaseClone": false,
+  "localSnapshotClone": true,
+  "deployed": false,
+  "testServicesStopped": true,
+  "volumesAndBackupRetained": true
+}

@@ -1,20 +1,25 @@
 "use client";
-
-import { useRouter, usePathname } from "next/navigation";
-import { useState } from "react";
-import styles from "@/app/styles/Auth.module.css";
+import { formError } from '@/app/lib/form-error';
+import Logo from "@/app/components/ui/Logo";
 import { useAdminUser } from "@/app/features/admin/context/AdminUserContext";
 import { loginAdminService } from "@/app/features/admin/service";
-import Logo from "@/app/components/ui/Logo";
+import styles from "@/app/styles/Auth.module.css";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function SignInAdminPage() {
   const router = useRouter();
   const { checkAdmin } = useAdminUser();
+  const [submitting, setSubmitting] = useState(false);
+  const [failure, setFailure] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setFailure("");
+    setSubmitting(true);
     try {
       const data = await loginAdminService(username, password);
       alert(data.message);
@@ -22,8 +27,8 @@ export default function SignInAdminPage() {
       router.replace("/administrator/ManageUser");
     } catch (error) {
       console.error("Lỗi đăng nhập:", error);
-      alert("Đăng nhập thất bại, vui lòng thử lại!");
-    }
+      setFailure(formError(error));
+    } finally { setSubmitting(false); }
   };
 
   return (
@@ -32,9 +37,7 @@ export default function SignInAdminPage() {
         <header className={styles.header}>
           <div className={styles.logo}>
             <Logo size={80} />
-            {/* <a>
-              <img src="/images/Logo/logo.png" alt="logo" />
-            </a> */}
+
           </div>
         </header>
 
@@ -77,12 +80,11 @@ export default function SignInAdminPage() {
               <span className={styles.rememberMeSpan}>Remember me</span>
             </label>
 
-            <a href="#" className={styles.forgotPasswordLink}>
-              Forgot password?
-            </a>
+
           </div>
 
-          <button type="submit" className={styles.submitButton}>
+          {failure && <p role="alert">{failure}</p>}
+          <button disabled={submitting} type="submit" className={styles.submitButton}>
             Sign In
           </button>
         </form>

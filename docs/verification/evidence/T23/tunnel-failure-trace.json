@@ -1,0 +1,1694 @@
+{
+  "stage": "moderation",
+  "errorType": "AssertionError",
+  "frames": [
+    "verify-tunnel.cjs:30:800"
+  ],
+  "traces": {
+    "user": [
+      {
+        "atMs": 1494,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2159,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2164,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2164,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2168,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2169,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2177,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2250,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2252,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2257,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2258,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2258,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2258,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2268,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2283,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2285,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2286,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2319,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2351,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2364,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2429,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2432,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2432,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2486,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2490,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2491,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2497,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2566,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2718,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 3244,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 3741,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 4370,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/media/:value",
+        "status": 200
+      },
+      {
+        "atMs": 4427,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 4535,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/users/me",
+        "status": 401,
+        "requestId": "4c9d4bd1-6a75-4b72-b05a-46c2ac073d67"
+      },
+      {
+        "atMs": 4579,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs",
+        "status": 200,
+        "requestId": "efdbb658-deda-44e2-8b76-ddfca06aca28"
+      },
+      {
+        "atMs": 4670,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/artists/:value",
+        "status": 200,
+        "requestId": "778cf40c-c423-450c-ac24-68793e4caaff"
+      },
+      {
+        "atMs": 4678,
+        "event": "response",
+        "method": "POST",
+        "route": "/api/auth/refresh-token",
+        "status": 401,
+        "requestId": "f8b106fd-ae3e-4a97-b60d-b2737b8cc7cb"
+      },
+      {
+        "atMs": 4958,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/artists/:value",
+        "status": 200,
+        "requestId": "c26b0547-4a9f-4d73-bce8-f4bab15ac8ac"
+      },
+      {
+        "atMs": 5003,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs",
+        "status": 200,
+        "requestId": "495b4600-6a52-4aa4-8aa2-9f7eb24c9281"
+      },
+      {
+        "atMs": 5241,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 5315,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 5319,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 5358,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 5669,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 5780,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 5792,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 5794,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 5918,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs",
+        "status": 200,
+        "requestId": "7cb8f4bf-86c6-4af7-9914-06f4b05691ef"
+      },
+      {
+        "atMs": 5932,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/artists/:value",
+        "status": 200,
+        "requestId": "4960da8c-a818-4fef-9ba1-7c3809d3f2e3"
+      },
+      {
+        "atMs": 6057,
+        "event": "response",
+        "method": "POST",
+        "route": "/api/auth/login",
+        "status": 200,
+        "requestId": "7e5ca6a6-0a9d-45a1-9a56-4452b02c1d55"
+      },
+      {
+        "atMs": 6168,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 6311,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/artists/:value",
+        "status": 200,
+        "requestId": "d3098647-3c07-4e3a-b86e-50ab62739334"
+      },
+      {
+        "atMs": 6393,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs",
+        "status": 200,
+        "requestId": "4e0ccc40-9369-4a12-8fbe-198519b99bc4"
+      },
+      {
+        "atMs": 6445,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/users/me",
+        "status": 200,
+        "requestId": "af4ecfd5-8567-4e3b-a89a-1416762acfa9"
+      },
+      {
+        "atMs": 6548,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 6582,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/favorites/me",
+        "status": 200,
+        "requestId": "66309f22-5459-4afe-9ab8-6ecd3283feec"
+      },
+      {
+        "atMs": 6626,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 6663,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 6832,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 6834,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 6925,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/recommendations/me",
+        "status": 200,
+        "requestId": "e1333f19-cdb6-4edc-a3a1-6dddb8717a12"
+      },
+      {
+        "atMs": 6975,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 6994,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 6995,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 7032,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 7165,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 7423,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs/search",
+        "status": 200,
+        "requestId": "dc91cea2-9a36-4877-813c-3069ecd402e3"
+      },
+      {
+        "atMs": 7651,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 7849,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 7925,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 8004,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 8107,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 8233,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 8358,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 8504,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 9007,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs/:value",
+        "status": 200,
+        "requestId": "6a846020-4f97-44d5-9141-3a1ec3a6043c"
+      },
+      {
+        "atMs": 9431,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/favorites/:value/like-status",
+        "status": 200,
+        "requestId": "7e777681-a18d-46f1-96f2-c51d4798a101"
+      },
+      {
+        "atMs": 9440,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/ratings/:value/:value/summary",
+        "status": 200,
+        "requestId": "acf2cc76-1272-40ed-9ad9-1cb20040353d"
+      },
+      {
+        "atMs": 9456,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/media/:value",
+        "status": 200
+      },
+      {
+        "atMs": 9889,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 9949,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/ratings/:value/:value/:value",
+        "status": 200,
+        "requestId": "d0dc155f-95c3-4642-9809-7928433459f7"
+      },
+      {
+        "atMs": 10316,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 206
+      },
+      {
+        "atMs": 12507,
+        "event": "response",
+        "method": "POST",
+        "route": "/api/favorites/:value/:value",
+        "status": 200,
+        "requestId": "859cf529-059d-48a2-8836-2f0c3239699a"
+      },
+      {
+        "atMs": 12655,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/favorites/me",
+        "status": 200,
+        "requestId": "e3c2600b-131d-4db3-abf2-9290377b7676"
+      },
+      {
+        "atMs": 13127,
+        "event": "response",
+        "method": "POST",
+        "route": "/api/playlists",
+        "status": 201,
+        "requestId": "6a511977-bfd7-4085-8482-84404da7f9b5"
+      },
+      {
+        "atMs": 13193,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/playlists/me",
+        "status": 200,
+        "requestId": "98cce35f-6027-4c16-9300-1dee9815e663"
+      },
+      {
+        "atMs": 13270,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/playlists/me",
+        "status": 200,
+        "requestId": "bbfa98ac-a7ea-4296-9183-ed8ca767c39d"
+      },
+      {
+        "atMs": 13521,
+        "event": "response",
+        "method": "POST",
+        "route": "/api/playlists/:value/songs",
+        "status": 200,
+        "requestId": "f45b2f97-6ebb-4817-ad79-8ca124314bce"
+      },
+      {
+        "atMs": 13682,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13743,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13743,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13744,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13744,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13744,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13744,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13745,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13745,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13745,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13756,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13756,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13756,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13756,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13756,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13757,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13757,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13757,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13757,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13757,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13757,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13757,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13758,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13758,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13758,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13758,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13758,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13759,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13759,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13769,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/media/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13771,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/media/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13861,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value",
+        "status": 304
+      },
+      {
+        "atMs": 13883,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value",
+        "status": 304
+      },
+      {
+        "atMs": 13950,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 304
+      },
+      {
+        "atMs": 13950,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/artists/:value",
+        "status": 200,
+        "requestId": "4be1acbe-90f1-4dd0-9a9d-0aceafd16958"
+      },
+      {
+        "atMs": 13960,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13971,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13971,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs",
+        "status": 200,
+        "requestId": "b0207a36-15a1-41db-ac7d-07f31217db2a"
+      },
+      {
+        "atMs": 13986,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 13991,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14005,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/users/me",
+        "status": 200,
+        "requestId": "39d6778e-de1c-416c-ba66-6c902f8637de"
+      },
+      {
+        "atMs": 14005,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14093,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14114,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14118,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14120,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14164,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value",
+        "status": 304
+      },
+      {
+        "atMs": 14176,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/artists/:value",
+        "status": 200,
+        "requestId": "7c2e94c8-387f-4aa5-865f-13050c2cb5a9"
+      },
+      {
+        "atMs": 14204,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 206
+      },
+      {
+        "atMs": 14238,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs",
+        "status": 200,
+        "requestId": "4523026b-e5bb-4db4-8c77-bf59fec913e8"
+      },
+      {
+        "atMs": 14250,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/favorites/me",
+        "status": 200,
+        "requestId": "6b59b81c-ef48-4471-9377-ef6c7f7e98ce"
+      },
+      {
+        "atMs": 14270,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/favorites/:value/like-status",
+        "status": 200,
+        "requestId": "30bbbce5-2a1e-4996-a4e0-d33fa2a0be96"
+      },
+      {
+        "atMs": 14274,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14275,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14300,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/recommendations/me",
+        "status": 200,
+        "requestId": "76420ca2-716b-4777-a856-2071d4a23e75"
+      },
+      {
+        "atMs": 14392,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14392,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14515,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14640,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14641,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/recommendations/songs/:value/similar",
+        "status": 200,
+        "requestId": "c1852136-9cf8-4c59-8220-9a8b5cf84b31"
+      },
+      {
+        "atMs": 14787,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14801,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14802,
+        "event": "response",
+        "method": "GET",
+        "route": ":value//:value/:value",
+        "status": 206
+      },
+      {
+        "atMs": 14804,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14927,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14940,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 14951,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value",
+        "status": 200
+      },
+      {
+        "atMs": 15030,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 15065,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 15089,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 15319,
+        "event": "response",
+        "method": "GET",
+        "route": "/songs/:value",
+        "status": 200
+      },
+      {
+        "atMs": 18950,
+        "event": "response",
+        "method": "POST",
+        "route": "/api/songs/upload",
+        "status": 201,
+        "requestId": "fb00f51a-a442-432a-b7b4-9a950db05d21"
+      }
+    ],
+    "admin": [
+      {
+        "atMs": 20063,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/login",
+        "status": 200
+      },
+      {
+        "atMs": 20210,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20259,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20262,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20265,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20266,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20266,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20277,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20313,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20314,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20324,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20331,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20348,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20349,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20362,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20366,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20382,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20384,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20521,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20647,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20681,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 20840,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/users/me",
+        "status": 401,
+        "requestId": "b9f98864-8556-4e7f-ae6b-d1f3c16c72bc"
+      },
+      {
+        "atMs": 20858,
+        "event": "requestfailed",
+        "method": "GET",
+        "route": "/api/users/admin/me"
+      },
+      {
+        "atMs": 20965,
+        "event": "response",
+        "method": "POST",
+        "route": "/api/auth/refresh-token",
+        "status": 401,
+        "requestId": "e74774b5-073a-4521-9771-b41884391137"
+      },
+      {
+        "atMs": 21086,
+        "event": "response",
+        "method": "POST",
+        "route": "/api/auth/admin/login",
+        "status": 200,
+        "requestId": "397200ef-9dd7-469c-8b89-40d523f9f58a"
+      },
+      {
+        "atMs": 21294,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/users/admin/me",
+        "status": 200,
+        "requestId": "1f141038-8c7d-43f6-ac2a-c57a0406761e"
+      },
+      {
+        "atMs": 21744,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22133,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22223,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22342,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/media/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22484,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/users",
+        "status": 200,
+        "requestId": "c76ec0f6-57d0-44f9-8c9e-3bf1671bd9ef"
+      },
+      {
+        "atMs": 22571,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22646,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22659,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22678,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22700,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22734,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22734,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22734,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22734,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22735,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22735,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22738,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22738,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22738,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22738,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22738,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22738,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22738,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22738,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22738,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22739,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22739,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22739,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 22739,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 23200,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 23943,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 23947,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/media/:value",
+        "status": 200
+      },
+      {
+        "atMs": 24104,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/users/me",
+        "status": 403,
+        "requestId": "6af09d81-fe56-4beb-bd7f-8bb8b948dd44"
+      },
+      {
+        "atMs": 24122,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs/pending/:value",
+        "status": 200,
+        "requestId": "680fbae8-8565-4871-8623-97803630fc5c"
+      },
+      {
+        "atMs": 24122,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/users/admin/me",
+        "status": 200,
+        "requestId": "692ff5b9-fe6a-4389-832a-81b7cc665b0f"
+      },
+      {
+        "atMs": 24137,
+        "event": "requestfailed",
+        "method": "GET",
+        "route": "/api/songs/pending/:value"
+      },
+      {
+        "atMs": 24137,
+        "event": "requestfailed",
+        "method": "GET",
+        "route": "/api/users/admin/me"
+      },
+      {
+        "atMs": 24255,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value",
+        "status": 304
+      },
+      {
+        "atMs": 24278,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs/pending/:value",
+        "status": 200,
+        "requestId": "51299c1d-69bb-42d3-96a4-250e05cc5d27"
+      },
+      {
+        "atMs": 24513,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 24547,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 24559,
+        "event": "response",
+        "method": "GET",
+        "route": "/api/songs/pending",
+        "status": 200,
+        "requestId": "2a0d4129-4e8c-454f-9ce7-1099173a32ea"
+      },
+      {
+        "atMs": 24627,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 24628,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 24757,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 24941,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 25007,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 25036,
+        "event": "response",
+        "method": "PATCH",
+        "route": "/api/songs/:value/approve",
+        "status": 415,
+        "requestId": "aae2f85d-6c6b-4b21-9330-4d8481f8bb5a"
+      }
+    ]
+  }
+}

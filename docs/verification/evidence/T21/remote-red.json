@@ -1,0 +1,39 @@
+{
+  "conclusion": "failure",
+  "headSha": "c5a44e96e0b1b8190ea05dd55512915575b0dea2",
+  "jobs": [
+    {
+      "name": "API quality",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "Dependency and secret gates",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "UI quality",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "MySQL and browser E2E",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "CI required",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "Container builds",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/DifnhBao/PROJECT_ThucTapCoSo/actions/runs/43439497735",
+  "deliberateRegressionFile": "Server/tests/unit/ci-red-proof.test.cjs"
+}

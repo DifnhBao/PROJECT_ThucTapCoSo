@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "scope": "read-only provider connectivity",
+  "mysqlVersion": "5.7.44",
+  "tlsCipher": "DHE-RSA-AES128-GCM-SHA256",
+  "existingTableCount": 0,
+  "grants": {
+    "hasDDL": true,
+    "canCreateUser": false,
+    "hasGrantOption": false
+  }
+}

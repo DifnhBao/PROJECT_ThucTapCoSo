@@ -87,3 +87,14 @@
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.15); }
 }
+/* T17: responsive admin shell; menu itself may scroll horizontally. */
+.sidebar { width:var(--sidebar-width); }
+.main_content { margin-left:var(--sidebar-width); min-width:0; padding-top:90px; }
+@media(max-width:900px) {
+ .sidebar { top:80px; bottom:auto; height:66px; width:100%; padding:0; }
+ .sidebar nav { flex-direction:row; overflow-x:auto; gap:0; }
+ .sidebar a { flex:0 0 auto; white-space:nowrap; min-height:44px; }
+ .main_content { margin-left:0; padding:162px 12px 24px; }
+ .main_content > * { min-width:0; max-width:100%; }
+ .main_content table { display:block; max-width:100%; overflow-x:auto; }
+}

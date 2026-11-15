@@ -1,0 +1,183 @@
+
+> music-backend@1.0.0 test
+> node --require ./tests/helpers/unit-setup.cjs --test tests/unit/*.test.cjs tests/api/*.test.cjs
+
+TAP version 13
+# Subtest: root response remains available
+ok 1 - root response remains available
+  ---
+  duration_ms: 84.3168
+  type: 'test'
+  ...
+# Subtest: real protected route rejects an anonymous request without touching DB/cloud
+ok 2 - real protected route rejects an anonymous request without touching DB/cloud
+  ---
+  duration_ms: 8.7249
+  type: 'test'
+  ...
+# Subtest: allowed CORS origin retains credential support
+ok 3 - allowed CORS origin retains credential support
+  ---
+  duration_ms: 4.6655
+  type: 'test'
+  ...
+# Subtest: recommendations/me uses signed actor identity and old user-ID route is gone
+ok 4 - recommendations/me uses signed actor identity and old user-ID route is gone
+  ---
+  duration_ms: 100.4576
+  type: 'test'
+  ...
+# Subtest: signed malformed identity and inconsistent scope/role are rejected before service access
+ok 5 - signed malformed identity and inconsistent scope/role are rejected before service access
+  ---
+  duration_ms: 33.0193
+  type: 'test'
+  ...
+# Subtest: profile /me ignores injected identity and role; user cannot use admin profile route
+ok 6 - profile /me ignores injected identity and role; user cannot use admin profile route
+  ---
+  duration_ms: 258.468
+  type: 'test'
+  ...
+# Subtest: HTTP admin reset deny cases do not persist credentials; allowed reset still works
+ok 7 - HTTP admin reset deny cases do not persist credentials; allowed reset still works
+  ---
+  duration_ms: 27.2571
+  type: 'test'
+  ...
+# Subtest: admin self password endpoint enforces current password and principal identity
+ok 8 - admin self password endpoint enforces current password and principal identity
+  ---
+  duration_ms: 11.1724
+  type: 'test'
+  ...
+# Subtest: only super_admin may create admin; body role is not authoritative
+ok 9 - only super_admin may create admin; body role is not authoritative
+  ---
+  duration_ms: 9.2659
+  type: 'test'
+  ...
+# Subtest: playlist mutations scope ownership and reject other users before any writes
+ok 10 - playlist mutations scope ownership and reject other users before any writes
+  ---
+  duration_ms: 10.8416
+  type: 'test'
+  ...
+# Subtest: playlist owner can still add/remove songs and delete their own playlist
+ok 11 - playlist owner can still add/remove songs and delete their own playlist
+  ---
+  duration_ms: 11.9386
+  type: 'test'
+  ...
+# Subtest: real app imports and creates without listen, timers, DB, or signal handlers
+ok 12 - real app imports and creates without listen, timers, DB, or signal handlers
+  ---
+  duration_ms: 5421.8241
+  type: 'test'
+  ...
+# Subtest: admin cannot reset super_admin password; neither hashing nor save is called
+ok 13 - admin cannot reset super_admin password; neither hashing nor save is called
+  ---
+  duration_ms: 3.1037
+  type: 'test'
+  ...
+# Subtest: refresh scope mismatch or invalid identity never queries token storage
+ok 14 - refresh scope mismatch or invalid identity never queries token storage
+  ---
+  duration_ms: 34.8719
+  type: 'test'
+  ...
+# Subtest: refresh binds persisted token lookup to signed user ID and preserves scope
+ok 15 - refresh binds persisted token lookup to signed user ID and preserves scope
+  ---
+  duration_ms: 15.0519
+  type: 'test'
+  ...
+# API listening on port 57267
+# Subtest: startup DB failure never opens a port and closes the DB client
+ok 16 - startup DB failure never opens a port and closes the DB client
+  ---
+  duration_ms: 3591.7449
+  type: 'test'
+  ...
+# Subtest: explicit startup and shutdown release port, timer, signal handlers and DB client
+ok 17 - explicit startup and shutdown release port, timer, signal handlers and DB client
+  ---
+  duration_ms: 37.9635
+  type: 'test'
+  ...
+# Subtest: uses explicit test settings including the port
+ok 18 - uses explicit test settings including the port
+  ---
+  duration_ms: 1.5393
+  type: 'test'
+  ...
+# Subtest: missing test variables never fall back to development DB variables
+ok 19 - missing test variables never fall back to development DB variables
+  ---
+  duration_ms: 3.1079
+  type: 'test'
+  ...
+# Subtest: rejects non-test environments, unsafe names, hosts, and invalid connection fields
+ok 20 - rejects non-test environments, unsafe names, hosts, and invalid connection fields
+  ---
+  duration_ms: 0.9736
+  type: 'test'
+  ...
+# Subtest: destructive integration work needs a separate explicit opt-in
+ok 21 - destructive integration work needs a separate explicit opt-in
+  ---
+  duration_ms: 0.499
+  type: 'test'
+  ...
+# Subtest: runtime and migration config both reject DB_* fallback in a fresh process
+ok 22 - runtime and migration config both reject DB_* fallback in a fresh process
+  ---
+  duration_ms: 552.0582
+  type: 'test'
+  ...
+# Subtest: reset/delete permission matrix defaults to deny and forbids self actions
+ok 23 - reset/delete permission matrix defaults to deny and forbids self actions
+  ---
+  duration_ms: 1.7311
+  type: 'test'
+  ...
+# Subtest: principal whitelists claims and normalizes identity; invalid IDs and scope/role pairs fail
+ok 24 - principal whitelists claims and normalizes identity; invalid IDs and scope/role pairs fail
+  ---
+  duration_ms: 1.7721
+  type: 'test'
+  ...
+# Subtest: forbidden reset cases never hash/save, including self with string target ID
+ok 25 - forbidden reset cases never hash/save, including self with string target ID
+  ---
+  duration_ms: 4.2761
+  type: 'test'
+  ...
+# Subtest: allowed reset paths persist a hash exactly once
+ok 26 - allowed reset paths persist a hash exactly once
+  ---
+  duration_ms: 1.6621
+  type: 'test'
+  ...
+# Subtest: self-service password change requires the old password and never writes on mismatch
+ok 27 - self-service password change requires the old password and never writes on mismatch
+  ---
+  duration_ms: 0.8757
+  type: 'test'
+  ...
+# Subtest: delete and create-admin reject unauthorized principals without writes
+ok 28 - delete and create-admin reject unauthorized principals without writes
+  ---
+  duration_ms: 1.397
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7248.2328

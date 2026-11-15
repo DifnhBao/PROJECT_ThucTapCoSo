@@ -1,0 +1,87 @@
+{
+  "date": "2026-11-13",
+  "scope": "local clean source export; not a remote CI run",
+  "stages": {
+    "account-regression.json": {
+      "stage": "account-regression",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "api-lint.json": {
+      "stage": "api-lint",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "api-tests.json": {
+      "stage": "api-tests",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "e2e-result.json": {
+      "actualNextUI": true,
+      "actualExpress": true,
+      "actualMySQL": true,
+      "externalStorageMocked": true,
+      "apiResponsesMocked": false,
+      "steps": [
+        "register/login through real forms",
+        "search/play/favorite persisted in MySQL",
+        "create playlist and add song through nested dialog",
+        "recommendation explanation is returned by real backend",
+        "upload pending song using real multipart and mocked external storage",
+        "admin UI approves and guest can then read song",
+        "logout/login B does not expose A private library"
+      ],
+      "unexpectedPageErrors": []
+    },
+    "full-stack-e2e.json": {
+      "stage": "full-stack-e2e",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "mysql-integration.json": {
+      "stage": "mysql-integration",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "player-regression.json": {
+      "stage": "player-regression",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "responsive-keyboard.json": {
+      "stage": "responsive-keyboard",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "ui-build.json": {
+      "stage": "ui-build",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "ui-lint.json": {
+      "stage": "ui-lint",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "ui-tests.json": {
+      "stage": "ui-tests",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "ui-typecheck.json": {
+      "stage": "ui-typecheck",
+      "status": "PASS",
+      "exitCode": 0
+    }
+  },
+  "unitCounts": {
+    "api": 113,
+    "ui": 58,
+    "mysql": 58
+  },
+  "artifactKnownCredentialCheck": "PASS",
+  "containers": "PASS api/migrate/web after Docker Desktop restart",
+  "remoteCI": "NOT_RUN",
+  "publicationApproval": "User approved branch and draft PR; no merge/deploy"
+}

@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: real Sequelize playlist SQL retains public-song joins and guest/owner/admin access predicates
+ok 1 - real Sequelize playlist SQL retains public-song joins and guest/owner/admin access predicates
+  ---
+  duration_ms: 49.2755
+  type: 'test'
+  ...
+# Subtest: real Sequelize artist detail SQL filters unpublished songs without dropping empty artists
+ok 2 - real Sequelize artist detail SQL filters unpublished songs without dropping empty artists
+  ---
+  duration_ms: 4.3155
+  type: 'test'
+  ...
+# Subtest: real Sequelize favorite count and page queries both constrain publication
+ok 3 - real Sequelize favorite count and page queries both constrain publication
+  ---
+  duration_ms: 13.231
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1930.4676

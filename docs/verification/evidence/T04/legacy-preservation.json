@@ -1,0 +1,50 @@
+[
+  {
+    "original": "Server/migrations/20260426014241-init-database.js",
+    "archived": "Server/migrations/legacy/20260426014241-init-database.js",
+    "contentUnchanged": true,
+    "sha256": "2b36444746404fcbb711bf859320a60aba922688891c684f4436d89c3cce55b8"
+  },
+  {
+    "original": "Server/migrations/20260426151349-add-genres-and-song-genres.js",
+    "archived": "Server/migrations/legacy/20260426151349-add-genres-and-song-genres.js",
+    "contentUnchanged": true,
+    "sha256": "3b31873661953e69e38fafee77ac966e97aaeda9671bd407a002f75a0d52e92d"
+  },
+  {
+    "original": "Server/migrations/20260507033542-update-playlists-schema.js",
+    "archived": "Server/migrations/legacy/20260507033542-update-playlists-schema.js",
+    "contentUnchanged": true,
+    "sha256": "8d1dcf3ad9e991d38199d2b3ea77a763255b3c6b97f30ceb074f7f5b8d69b629"
+  },
+  {
+    "original": "Server/migrations/20260507034124-create-playlist-songs-table.js",
+    "archived": "Server/migrations/legacy/20260507034124-create-playlist-songs-table.js",
+    "contentUnchanged": true,
+    "sha256": "fcd28e70257a5ead88ba2cbe9658d95adc2a946fe1149d9a2591e24c8f7dca2e"
+  },
+  {
+    "original": "Server/migrations/20260510090000-add-song-status-and-uploaded-by.js",
+    "archived": "Server/migrations/legacy/20260510090000-add-song-status-and-uploaded-by.js",
+    "contentUnchanged": true,
+    "sha256": "05e05cf4ecf9d56a11027ed205fec26eb75ec8bc8d22e6cebd41f109cd53fb51"
+  },
+  {
+    "original": "Server/migrations/20260512075542-create-user-activities.js",
+    "archived": "Server/migrations/legacy/20260512075542-create-user-activities.js",
+    "contentUnchanged": true,
+    "sha256": "02449905b42efa8d924164b68d8b85515a5eeaff2f7cb567178145c701a03bdf"
+  },
+  {
+    "original": "Server/migrations/20260512090057-add-content-based-fields-to-songs.js",
+    "archived": "Server/migrations/legacy/20260512090057-add-content-based-fields-to-songs.js",
+    "contentUnchanged": true,
+    "sha256": "f15e0d2d8c657f3b85e8117984da9a28a840c343bac39c4aed9bd62a70ad42cd"
+  },
+  {
+    "original": "Server/migrations/20260521051200-create-song-similarities.js",
+    "archived": "Server/migrations/legacy/20260521051200-create-song-similarities.js",
+    "contentUnchanged": true,
+    "sha256": "7acd864325f845a6db0fe2e7f56536c3b2934c90fbceb02c2e06a1d004709c3d"
+  }
+]

@@ -1,0 +1,67 @@
+[
+  {
+    "path": "UI\\app\\components\\FeaturedPlaylists\\PlaylistSection.tsx",
+    "sha256": "0f41aa326d87d96d9c272a3d2292451c1b279c49af207c7bd123c9335cca9ef7",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\components\\FeaturedPlaylists\\SongListSection.tsx",
+    "sha256": "56afe9bb2dc8ff114dbffe9833e3563c9bff3956fc356e88c67f86b289419a33",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\components\\ui\\HorizontalScroll.tsx",
+    "sha256": "bef67a484cc0128b034d37f5acb42085e824759e67b617bef0b6f93f3b84bc47",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\context\\MusicDataContext.tsx",
+    "sha256": "f0d7bf6dd8fd2b043e8728d98c968dfebf4c28ca62773f45cab4249e18cc118f",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\features\\admin\\useLogoutAdmin.ts",
+    "sha256": "1e4fdf9ad56ec7fe5ccdb10ed3453a65d9add3e8fd1e1ff241c7a1803c3fb0ef",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\features\\mix\\mix.api.ts",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\features\\mix\\mixApi.ts",
+    "sha256": "c3b6314b0117ba410ace10978ba5022700f2d67b1c887b636bda2a2a4fd10d18",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\features\\mix\\mixService.ts",
+    "sha256": "bee1b5163ef939c6fbb0ba378bf1c624f0fb43066864c82ec03b94d22da5354d",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\features\\playlist\\components\\MyPlaylistGrid\\MyPlaylistGrid.tsx",
+    "sha256": "a966002e55078973b61f84f865c2a74002b1ac275b05589a4186870fcda13550",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\features\\recommendation\\components\\RecommendationReason.tsx",
+    "sha256": "697bebdc5ccc82404c52b23bea2efcb4accaaaf38a105389f71c94a4d8ce03eb",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\features\\song\\songsService.ts",
+    "sha256": "4bb0a054ea90638b19a9158008ce4ecd37e8f2ace2d21af425c3084ea2447598",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI\\app\\features\\song\\types\\song.types.ts",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reason": "Unreachable from actual app routes and test import graph, including dynamic imports"
+  },
+  {
+    "path": "UI/app/components/ui/Banner.tsx",
+    "sha256": "4bf289b3ad374118b06bd523811720179afb71f04b007914a12b95c6b6c8cf00",
+    "reason": "No live imports after unused Home import removed; only commented JSX reference"
+  }
+]

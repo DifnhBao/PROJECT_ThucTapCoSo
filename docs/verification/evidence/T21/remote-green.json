@@ -1,0 +1,40 @@
+{
+  "conclusion": "success",
+  "headSha": "a9cbd8b245712d9ea0f2642b35ba7ef5ec4a9ba1",
+  "jobs": [
+    {
+      "name": "MySQL and browser E2E",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "UI quality",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "API quality",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Dependency and secret gates",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Container builds",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "CI required",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/DifnhBao/PROJECT_ThucTapCoSo/actions/runs/43440318536",
+  "artifactGitleaksFindings": 0,
+  "scope": "Pull request candidate; no main merge, registry release or deployment"
+}

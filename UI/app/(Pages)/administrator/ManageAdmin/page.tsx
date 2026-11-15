@@ -1,14 +1,14 @@
 "use client";
-
-import stylesUser from "@/app/styles/AdminPage/ManageUser.module.css";
-import styles from "@/app/styles/AdminPage/ManageAdmin.module.css";
 import { useModal } from "@/app/context/ModalContext";
+import { useAdminUser } from "@/app/features/admin/context/AdminUserContext";
 import { useAdmins } from "@/app/features/admin/useAdmins";
-import type { User } from "@/app/types/music";
+import styles from "@/app/styles/AdminPage/ManageAdmin.module.css";
+import stylesUser from "@/app/styles/AdminPage/ManageUser.module.css";
 
 export default function ManageAdmin() {
   const { openModal } = useModal();
-  const { admins, isLoading, error, updateAdminStatus, deleteAdmin } =
+  const { admin: actor } = useAdminUser();
+  const { admins, isLoading, error, deleteAdmin, refreshAdmins } =
     useAdmins();
 
   if (isLoading) return <p>Đang tải...</p>;
@@ -18,13 +18,13 @@ export default function ManageAdmin() {
   return (
     <div id="admins" className={stylesUser.section}>
       <div>
-        <button
+        {actor?.role === "super_admin" && <button
           style={{ width: "fit-content" }}
           className={stylesUser.add}
-          onClick={() => openModal("add-new-admin")}
+          onClick={() => openModal("add-new-admin", { onCreated: refreshAdmins })}
         >
           <i className="fa-solid fa-plus"></i> Add Admin
-        </button>
+        </button>}
       </div>
 
       <div className={stylesUser.table}>
@@ -45,47 +45,19 @@ export default function ManageAdmin() {
               <div>{admin.role}</div>
               <div className={`${styles.status} ${styles.active}`}>actived</div>
               <div className={stylesUser.rowOption}>
-                <button
+                {(actor?.userId === admin.userId || (actor?.role === "super_admin" && admin.role === "admin")) && <button
                   className={stylesUser.edit}
                   onClick={() => openModal("reset-admin-password", admin)}
                 >
                   Edit
-                </button>
-                <button
+                </button>}
+                {actor?.role === "super_admin" && admin.role === "admin" && <button
                   className={stylesUser.delete}
                   onClick={() => deleteAdmin(admin.userId)}
                 >
                   Delete
-                </button>
-                {/* {admin.account_status === "pending" ? (
-                  <>
-                    <button
-                      className={stylesUser.edit}
-                      onClick={() => updateAdminStatus(admin.userId, "accept")}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      className={stylesUser.delete}
-                      onClick={() => updateAdminStatus(admin.userId, "reject")}
-                    >
-                      Reject
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className={stylesUser.edit}
-                      onClick={() => openModal("reset-admin-password", admin)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className={stylesUser.delete}
-                      onClick={() => deleteAdmin(admin.userId)}
-                    >
-                      Delete
-                    </button> */}
+                </button>}
+
                 {/* </> */}
                 {/* )} */}
               </div>

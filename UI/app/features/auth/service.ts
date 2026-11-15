@@ -1,15 +1,10 @@
-import { User } from "@/app/types/music";
-import { loginApi, registerApi, logoutApi } from "./api";
-
-interface AuthResponse {
-  message: string;
-  user?: User;
-}
+import type { LoginDto } from "../../types/api";
+import { loginApi,logoutApi,registerApi } from "./api";
 
 export const loginService = async (
   username: string,
   password: string,
-): Promise<AuthResponse> => {
+): Promise<LoginDto> => {
   const res = await loginApi(username, password);
   return res.data;
 };

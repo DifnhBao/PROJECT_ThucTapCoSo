@@ -1,8 +1,7 @@
 "use client";
-
-import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import styles from "@/app/styles/Pagination.module.css";
+import { useRouter,useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 type Props = {
   currentPage: number;

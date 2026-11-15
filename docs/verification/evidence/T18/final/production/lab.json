@@ -1,0 +1,1159 @@
+{
+  "browser": "157.0.4341.42",
+  "node": "v22.19.0",
+  "platform": "win32",
+  "cpu": "AMD Ryzen 7 5700U with Radeon Graphics         ",
+  "memoryGB": 7.364898681640625,
+  "viewport": "375x812",
+  "cache": "disabled via CDP; server warm",
+  "network": "40ms latency, 1.6Mbps down/750Kbps up",
+  "cpuThrottle": 4,
+  "route": "/songs/41",
+  "api": "synthetic intercepted API/media; network throttle applies primarily to application assets",
+  "unexpectedPageErrors": [],
+  "samples": [
+    {
+      "cls": 0,
+      "lcp": 2928,
+      "fontsReady": "loaded",
+      "fontFamilies": [
+        "Font Awesome 7 Free",
+        "Font Awesome 7 Free"
+      ],
+      "navigation": {
+        "name": "http://127.0.0.1:3016/songs/41",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 2243.899999999907,
+        "navigationId": 6418,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 4.199999999953434,
+        "domainLookupStart": 4.199999999953434,
+        "domainLookupEnd": 4.199999999953434,
+        "connectStart": 4.199999999953434,
+        "secureConnectionStart": 0,
+        "connectEnd": 4.199999999953434,
+        "requestStart": 13.600000000093132,
+        "responseStart": 54,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 54,
+        "responseEnd": 85.19999999995343,
+        "transferSize": 5002,
+        "encodedBodySize": 4702,
+        "decodedBodySize": 18494,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 1069.5,
+        "domContentLoadedEventStart": 1069.8999999999069,
+        "domContentLoadedEventEnd": 1070.1000000000931,
+        "domComplete": 2243.8000000000466,
+        "loadEventStart": 2243.899999999907,
+        "loadEventEnd": 2243.899999999907,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "low"
+        }
+      },
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3016/images/badges/DownloadOnTheAppStore.svg",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/images/badges/GetItOnGooglePlay.png",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/images/default-song.jpg",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1__xfhuppgz0f.css",
+          "transferSize": 2372,
+          "encodedBodySize": 2072
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0rz8cdam979de.css",
+          "transferSize": 20618,
+          "encodedBodySize": 20318
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/10w_g_1abjiu-.css",
+          "transferSize": 6971,
+          "encodedBodySize": 6671
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/113gt1t06sflc.css",
+          "transferSize": 2497,
+          "encodedBodySize": 2197
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0jfr8unz09jmd.css",
+          "transferSize": 1161,
+          "encodedBodySize": 861
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/002n6emjy93ob.css",
+          "transferSize": 1583,
+          "encodedBodySize": 1283
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1pnql3c_ws2zg.css",
+          "transferSize": 1641,
+          "encodedBodySize": 1341
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1x6obpmlu1_c2.js",
+          "transferSize": 2275,
+          "encodedBodySize": 1975
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1-nqmp1rl8kqt.js",
+          "transferSize": 8951,
+          "encodedBodySize": 8651
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2khxl0v1q4i6n.js",
+          "transferSize": 72269,
+          "encodedBodySize": 71969
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1qbtfdxk31ylv.js",
+          "transferSize": 45458,
+          "encodedBodySize": 45158
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/turbopack-3-ry682tkyiqk.js",
+          "transferSize": 4240,
+          "encodedBodySize": 3940
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0umf92h1sb77c.js",
+          "transferSize": 3814,
+          "encodedBodySize": 3514
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1xzi2t5g3gaqd.js",
+          "transferSize": 782,
+          "encodedBodySize": 482
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1ck538q4bqcsg.js",
+          "transferSize": 3607,
+          "encodedBodySize": 3307
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2l84g5s8m8-rv.js",
+          "transferSize": 867,
+          "encodedBodySize": 567
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2nlpxgw0cemzf.js",
+          "transferSize": 16203,
+          "encodedBodySize": 15903
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/31d1t1fjpqztc.js",
+          "transferSize": 9216,
+          "encodedBodySize": 8916
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/02zsga22lads2.js",
+          "transferSize": 5979,
+          "encodedBodySize": 5679
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2lfvg_uyz2dml.js",
+          "transferSize": 19327,
+          "encodedBodySize": 19027
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3k9u0d8w8u3y8.js",
+          "transferSize": 1230,
+          "encodedBodySize": 930
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3anb-szwx7nby.js",
+          "transferSize": 2233,
+          "encodedBodySize": 1933
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3bmjffti1gnfn.js",
+          "transferSize": 1027,
+          "encodedBodySize": 727
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/06umrw9s_xdui.js",
+          "transferSize": 1271,
+          "encodedBodySize": 971
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1zloie5chu1ds.js",
+          "transferSize": 6365,
+          "encodedBodySize": 6065
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/20gczd3eg6-i9.js",
+          "transferSize": 714,
+          "encodedBodySize": 414
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/01m6qta22eckx.js",
+          "transferSize": 2746,
+          "encodedBodySize": 2446
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1g7shuuxg_6zo.js",
+          "transferSize": 2345,
+          "encodedBodySize": 2045
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/media/fa-solid-900.0y1b1prei6tng.woff2",
+          "transferSize": 113560,
+          "encodedBodySize": 113260
+        },
+        {
+          "name": "http://127.0.0.1:3016/favicon.ico",
+          "transferSize": 0,
+          "encodedBodySize": 0
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/songs/41",
+          "transferSize": 490,
+          "encodedBodySize": 190
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/users/me",
+          "transferSize": 428,
+          "encodedBodySize": 128
+        },
+        {
+          "name": "http://127.0.0.1:3016/Home?_rsc=PzoQPCD9Mkofbu_x",
+          "transferSize": 588,
+          "encodedBodySize": 288
+        },
+        {
+          "name": "http://127.0.0.1:3016/Library?_rsc=PzoQPCD9Mkofbu_x",
+          "transferSize": 577,
+          "encodedBodySize": 277
+        },
+        {
+          "name": "http://127.0.0.1:3016/Playlist?_rsc=PzoQPCD9Mkofbu_x",
+          "transferSize": 579,
+          "encodedBodySize": 279
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/summary",
+          "transferSize": 376,
+          "encodedBodySize": 76
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/my-rating",
+          "transferSize": 379,
+          "encodedBodySize": 79
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/media/fa-regular-400.1elqj7_l69qwn.woff2",
+          "transferSize": 19300,
+          "encodedBodySize": 19000
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/songs/41",
+          "transferSize": 490,
+          "encodedBodySize": 190
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/favorites/me?page=1&limit=20",
+          "transferSize": 411,
+          "encodedBodySize": 111
+        },
+        {
+          "name": "http://127.0.0.1:3016/images/Avatar/avt01.png",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1g7x5svje2nsy.css",
+          "transferSize": 3787,
+          "encodedBodySize": 3487
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0584l8cks36t7.css",
+          "transferSize": 866,
+          "encodedBodySize": 566
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0ocb_5wi7gvij.css",
+          "transferSize": 1128,
+          "encodedBodySize": 828
+        },
+        {
+          "name": "http://127.0.0.1:3016/Home?_rsc=ma6RKIUShOHZb_Zj",
+          "transferSize": 1972,
+          "encodedBodySize": 1672
+        },
+        {
+          "name": "http://127.0.0.1:3016/Library?_rsc=ceTDNJgI9kJj1J3W",
+          "transferSize": 1944,
+          "encodedBodySize": 1644
+        },
+        {
+          "name": "http://127.0.0.1:3016/Playlist?_rsc=v2xhh3geqe7XeBLO",
+          "transferSize": 1944,
+          "encodedBodySize": 1644
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/summary",
+          "transferSize": 376,
+          "encodedBodySize": 76
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/my-rating",
+          "transferSize": 379,
+          "encodedBodySize": 79
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/favorites/41/like-status",
+          "transferSize": 379,
+          "encodedBodySize": 79
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3952b2q_x42oo.js",
+          "transferSize": 5931,
+          "encodedBodySize": 5631
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0eyc_6-ga9xzo.js",
+          "transferSize": 1290,
+          "encodedBodySize": 990
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3iwfez_mcebig.js",
+          "transferSize": 1479,
+          "encodedBodySize": 1179
+        }
+      ],
+      "images": [
+        {
+          "src": "/images/badges/DownloadOnTheAppStore.svg",
+          "width": 1,
+          "height": 1,
+          "attributeWidth": null,
+          "attributeHeight": null
+        },
+        {
+          "src": "/images/badges/GetItOnGooglePlay.png",
+          "width": 1,
+          "height": 1,
+          "attributeWidth": null,
+          "attributeHeight": null
+        },
+        {
+          "src": "/images/Avatar/avt01.png",
+          "width": 40,
+          "height": 40,
+          "attributeWidth": null,
+          "attributeHeight": null
+        },
+        {
+          "src": "/images/default-song.jpg",
+          "width": 327,
+          "height": 327,
+          "attributeWidth": "300",
+          "attributeHeight": "300"
+        },
+        {
+          "src": "/images/default-song.jpg",
+          "width": 36,
+          "height": 36,
+          "attributeWidth": "56",
+          "attributeHeight": "56"
+        }
+      ]
+    },
+    {
+      "cls": 0,
+      "lcp": 3160,
+      "fontsReady": "loaded",
+      "fontFamilies": [
+        "Font Awesome 7 Free",
+        "Font Awesome 7 Free"
+      ],
+      "navigation": {
+        "name": "http://127.0.0.1:3016/songs/41",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 2148.4000000001397,
+        "navigationId": 8901,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 3.5,
+        "domainLookupStart": 3.5,
+        "domainLookupEnd": 3.5,
+        "connectStart": 3.5,
+        "secureConnectionStart": 0,
+        "connectEnd": 3.5,
+        "requestStart": 9.700000000186265,
+        "responseStart": 49.9000000001397,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 49.9000000001397,
+        "responseEnd": 90.70000000018626,
+        "transferSize": 5002,
+        "encodedBodySize": 4702,
+        "decodedBodySize": 18494,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 955.3000000000466,
+        "domContentLoadedEventStart": 955.5,
+        "domContentLoadedEventEnd": 955.8000000000466,
+        "domComplete": 2147.8000000000466,
+        "loadEventStart": 2148.100000000093,
+        "loadEventEnd": 2148.4000000001397,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "low"
+        }
+      },
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3016/images/badges/DownloadOnTheAppStore.svg",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/images/badges/GetItOnGooglePlay.png",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/images/default-song.jpg",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1__xfhuppgz0f.css",
+          "transferSize": 2372,
+          "encodedBodySize": 2072
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0rz8cdam979de.css",
+          "transferSize": 20618,
+          "encodedBodySize": 20318
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/10w_g_1abjiu-.css",
+          "transferSize": 6971,
+          "encodedBodySize": 6671
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/113gt1t06sflc.css",
+          "transferSize": 2497,
+          "encodedBodySize": 2197
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0jfr8unz09jmd.css",
+          "transferSize": 1161,
+          "encodedBodySize": 861
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/002n6emjy93ob.css",
+          "transferSize": 1583,
+          "encodedBodySize": 1283
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1pnql3c_ws2zg.css",
+          "transferSize": 1641,
+          "encodedBodySize": 1341
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1x6obpmlu1_c2.js",
+          "transferSize": 2275,
+          "encodedBodySize": 1975
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1-nqmp1rl8kqt.js",
+          "transferSize": 8951,
+          "encodedBodySize": 8651
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2khxl0v1q4i6n.js",
+          "transferSize": 72269,
+          "encodedBodySize": 71969
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1qbtfdxk31ylv.js",
+          "transferSize": 45458,
+          "encodedBodySize": 45158
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/turbopack-3-ry682tkyiqk.js",
+          "transferSize": 4240,
+          "encodedBodySize": 3940
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0umf92h1sb77c.js",
+          "transferSize": 3814,
+          "encodedBodySize": 3514
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1xzi2t5g3gaqd.js",
+          "transferSize": 782,
+          "encodedBodySize": 482
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1ck538q4bqcsg.js",
+          "transferSize": 3607,
+          "encodedBodySize": 3307
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2l84g5s8m8-rv.js",
+          "transferSize": 867,
+          "encodedBodySize": 567
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2nlpxgw0cemzf.js",
+          "transferSize": 16203,
+          "encodedBodySize": 15903
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/31d1t1fjpqztc.js",
+          "transferSize": 9216,
+          "encodedBodySize": 8916
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/02zsga22lads2.js",
+          "transferSize": 5979,
+          "encodedBodySize": 5679
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2lfvg_uyz2dml.js",
+          "transferSize": 19327,
+          "encodedBodySize": 19027
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3k9u0d8w8u3y8.js",
+          "transferSize": 1230,
+          "encodedBodySize": 930
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3anb-szwx7nby.js",
+          "transferSize": 2233,
+          "encodedBodySize": 1933
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3bmjffti1gnfn.js",
+          "transferSize": 1027,
+          "encodedBodySize": 727
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/06umrw9s_xdui.js",
+          "transferSize": 1271,
+          "encodedBodySize": 971
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1zloie5chu1ds.js",
+          "transferSize": 6365,
+          "encodedBodySize": 6065
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/20gczd3eg6-i9.js",
+          "transferSize": 714,
+          "encodedBodySize": 414
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/01m6qta22eckx.js",
+          "transferSize": 2746,
+          "encodedBodySize": 2446
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1g7shuuxg_6zo.js",
+          "transferSize": 2345,
+          "encodedBodySize": 2045
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/media/fa-solid-900.0y1b1prei6tng.woff2",
+          "transferSize": 113560,
+          "encodedBodySize": 113260
+        },
+        {
+          "name": "http://127.0.0.1:3016/favicon.ico",
+          "transferSize": 0,
+          "encodedBodySize": 0
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/songs/41",
+          "transferSize": 490,
+          "encodedBodySize": 190
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/users/me",
+          "transferSize": 428,
+          "encodedBodySize": 128
+        },
+        {
+          "name": "http://127.0.0.1:3016/Home?_rsc=PzoQPCD9Mkofbu_x",
+          "transferSize": 588,
+          "encodedBodySize": 288
+        },
+        {
+          "name": "http://127.0.0.1:3016/Library?_rsc=PzoQPCD9Mkofbu_x",
+          "transferSize": 577,
+          "encodedBodySize": 277
+        },
+        {
+          "name": "http://127.0.0.1:3016/Playlist?_rsc=PzoQPCD9Mkofbu_x",
+          "transferSize": 579,
+          "encodedBodySize": 279
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/summary",
+          "transferSize": 376,
+          "encodedBodySize": 76
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/my-rating",
+          "transferSize": 379,
+          "encodedBodySize": 79
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/media/fa-regular-400.1elqj7_l69qwn.woff2",
+          "transferSize": 19300,
+          "encodedBodySize": 19000
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/songs/41",
+          "transferSize": 490,
+          "encodedBodySize": 190
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/favorites/me?page=1&limit=20",
+          "transferSize": 411,
+          "encodedBodySize": 111
+        },
+        {
+          "name": "http://127.0.0.1:3016/images/Avatar/avt01.png",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1g7x5svje2nsy.css",
+          "transferSize": 3787,
+          "encodedBodySize": 3487
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0584l8cks36t7.css",
+          "transferSize": 866,
+          "encodedBodySize": 566
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0ocb_5wi7gvij.css",
+          "transferSize": 1128,
+          "encodedBodySize": 828
+        },
+        {
+          "name": "http://127.0.0.1:3016/Home?_rsc=ma6RKIUShOHZb_Zj",
+          "transferSize": 1972,
+          "encodedBodySize": 1672
+        },
+        {
+          "name": "http://127.0.0.1:3016/Library?_rsc=ceTDNJgI9kJj1J3W",
+          "transferSize": 1944,
+          "encodedBodySize": 1644
+        },
+        {
+          "name": "http://127.0.0.1:3016/Playlist?_rsc=v2xhh3geqe7XeBLO",
+          "transferSize": 1944,
+          "encodedBodySize": 1644
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/summary",
+          "transferSize": 376,
+          "encodedBodySize": 76
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/my-rating",
+          "transferSize": 379,
+          "encodedBodySize": 79
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/favorites/41/like-status",
+          "transferSize": 379,
+          "encodedBodySize": 79
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3952b2q_x42oo.js",
+          "transferSize": 5931,
+          "encodedBodySize": 5631
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0eyc_6-ga9xzo.js",
+          "transferSize": 1290,
+          "encodedBodySize": 990
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3iwfez_mcebig.js",
+          "transferSize": 1479,
+          "encodedBodySize": 1179
+        }
+      ],
+      "images": [
+        {
+          "src": "/images/badges/DownloadOnTheAppStore.svg",
+          "width": 1,
+          "height": 1,
+          "attributeWidth": null,
+          "attributeHeight": null
+        },
+        {
+          "src": "/images/badges/GetItOnGooglePlay.png",
+          "width": 1,
+          "height": 1,
+          "attributeWidth": null,
+          "attributeHeight": null
+        },
+        {
+          "src": "/images/Avatar/avt01.png",
+          "width": 40,
+          "height": 40,
+          "attributeWidth": null,
+          "attributeHeight": null
+        },
+        {
+          "src": "/images/default-song.jpg",
+          "width": 327,
+          "height": 327,
+          "attributeWidth": "300",
+          "attributeHeight": "300"
+        },
+        {
+          "src": "/images/default-song.jpg",
+          "width": 36,
+          "height": 36,
+          "attributeWidth": "56",
+          "attributeHeight": "56"
+        }
+      ]
+    },
+    {
+      "cls": 0,
+      "lcp": 3208,
+      "fontsReady": "loaded",
+      "fontFamilies": [
+        "Font Awesome 7 Free",
+        "Font Awesome 7 Free"
+      ],
+      "navigation": {
+        "name": "http://127.0.0.1:3016/songs/41",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 2248.2999999998137,
+        "navigationId": 5339,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 4.2999999998137355,
+        "domainLookupStart": 4.2999999998137355,
+        "domainLookupEnd": 4.2999999998137355,
+        "connectStart": 4.2999999998137355,
+        "secureConnectionStart": 0,
+        "connectEnd": 4.2999999998137355,
+        "requestStart": 11,
+        "responseStart": 51.299999999813735,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 51.299999999813735,
+        "responseEnd": 88.89999999990687,
+        "transferSize": 5002,
+        "encodedBodySize": 4702,
+        "decodedBodySize": 18494,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 923.2999999998137,
+        "domContentLoadedEventStart": 923.7999999998137,
+        "domContentLoadedEventEnd": 924.3999999999069,
+        "domComplete": 2248,
+        "loadEventStart": 2248.1999999999534,
+        "loadEventEnd": 2248.2999999998137,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "low"
+        }
+      },
+      "resources": [
+        {
+          "name": "http://127.0.0.1:3016/images/badges/DownloadOnTheAppStore.svg",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/images/badges/GetItOnGooglePlay.png",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/images/default-song.jpg",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1__xfhuppgz0f.css",
+          "transferSize": 2372,
+          "encodedBodySize": 2072
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0rz8cdam979de.css",
+          "transferSize": 20618,
+          "encodedBodySize": 20318
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/10w_g_1abjiu-.css",
+          "transferSize": 6971,
+          "encodedBodySize": 6671
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/113gt1t06sflc.css",
+          "transferSize": 2497,
+          "encodedBodySize": 2197
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0jfr8unz09jmd.css",
+          "transferSize": 1161,
+          "encodedBodySize": 861
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/002n6emjy93ob.css",
+          "transferSize": 1583,
+          "encodedBodySize": 1283
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1pnql3c_ws2zg.css",
+          "transferSize": 1641,
+          "encodedBodySize": 1341
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1x6obpmlu1_c2.js",
+          "transferSize": 2275,
+          "encodedBodySize": 1975
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1-nqmp1rl8kqt.js",
+          "transferSize": 8951,
+          "encodedBodySize": 8651
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2khxl0v1q4i6n.js",
+          "transferSize": 72269,
+          "encodedBodySize": 71969
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1qbtfdxk31ylv.js",
+          "transferSize": 45458,
+          "encodedBodySize": 45158
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/turbopack-3-ry682tkyiqk.js",
+          "transferSize": 4240,
+          "encodedBodySize": 3940
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0umf92h1sb77c.js",
+          "transferSize": 3814,
+          "encodedBodySize": 3514
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1xzi2t5g3gaqd.js",
+          "transferSize": 782,
+          "encodedBodySize": 482
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1ck538q4bqcsg.js",
+          "transferSize": 3607,
+          "encodedBodySize": 3307
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2l84g5s8m8-rv.js",
+          "transferSize": 867,
+          "encodedBodySize": 567
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2nlpxgw0cemzf.js",
+          "transferSize": 16203,
+          "encodedBodySize": 15903
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/31d1t1fjpqztc.js",
+          "transferSize": 9216,
+          "encodedBodySize": 8916
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/02zsga22lads2.js",
+          "transferSize": 5979,
+          "encodedBodySize": 5679
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/2lfvg_uyz2dml.js",
+          "transferSize": 19327,
+          "encodedBodySize": 19027
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3k9u0d8w8u3y8.js",
+          "transferSize": 1230,
+          "encodedBodySize": 930
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3anb-szwx7nby.js",
+          "transferSize": 2233,
+          "encodedBodySize": 1933
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3bmjffti1gnfn.js",
+          "transferSize": 1027,
+          "encodedBodySize": 727
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/06umrw9s_xdui.js",
+          "transferSize": 1271,
+          "encodedBodySize": 971
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1zloie5chu1ds.js",
+          "transferSize": 6365,
+          "encodedBodySize": 6065
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/20gczd3eg6-i9.js",
+          "transferSize": 714,
+          "encodedBodySize": 414
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/01m6qta22eckx.js",
+          "transferSize": 2746,
+          "encodedBodySize": 2446
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1g7shuuxg_6zo.js",
+          "transferSize": 2345,
+          "encodedBodySize": 2045
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/media/fa-solid-900.0y1b1prei6tng.woff2",
+          "transferSize": 113560,
+          "encodedBodySize": 113260
+        },
+        {
+          "name": "http://127.0.0.1:3016/favicon.ico",
+          "transferSize": 0,
+          "encodedBodySize": 0
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/songs/41",
+          "transferSize": 490,
+          "encodedBodySize": 190
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/users/me",
+          "transferSize": 428,
+          "encodedBodySize": 128
+        },
+        {
+          "name": "http://127.0.0.1:3016/Home?_rsc=PzoQPCD9Mkofbu_x",
+          "transferSize": 588,
+          "encodedBodySize": 288
+        },
+        {
+          "name": "http://127.0.0.1:3016/Library?_rsc=PzoQPCD9Mkofbu_x",
+          "transferSize": 577,
+          "encodedBodySize": 277
+        },
+        {
+          "name": "http://127.0.0.1:3016/Playlist?_rsc=PzoQPCD9Mkofbu_x",
+          "transferSize": 579,
+          "encodedBodySize": 279
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/summary",
+          "transferSize": 376,
+          "encodedBodySize": 76
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/my-rating",
+          "transferSize": 379,
+          "encodedBodySize": 79
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/songs/41",
+          "transferSize": 490,
+          "encodedBodySize": 190
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/favorites/me?page=1&limit=20",
+          "transferSize": 411,
+          "encodedBodySize": 111
+        },
+        {
+          "name": "http://127.0.0.1:3016/images/Avatar/avt01.png",
+          "transferSize": 368,
+          "encodedBodySize": 68
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/1g7x5svje2nsy.css",
+          "transferSize": 3787,
+          "encodedBodySize": 3487
+        },
+        {
+          "name": "http://127.0.0.1:3016/Home?_rsc=ma6RKIUShOHZb_Zj",
+          "transferSize": 1972,
+          "encodedBodySize": 1672
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0584l8cks36t7.css",
+          "transferSize": 866,
+          "encodedBodySize": 566
+        },
+        {
+          "name": "http://127.0.0.1:3016/Library?_rsc=ceTDNJgI9kJj1J3W",
+          "transferSize": 1944,
+          "encodedBodySize": 1644
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0ocb_5wi7gvij.css",
+          "transferSize": 1128,
+          "encodedBodySize": 828
+        },
+        {
+          "name": "http://127.0.0.1:3016/Playlist?_rsc=v2xhh3geqe7XeBLO",
+          "transferSize": 1944,
+          "encodedBodySize": 1644
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/summary",
+          "transferSize": 376,
+          "encodedBodySize": 76
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/ratings/song/41/my-rating",
+          "transferSize": 379,
+          "encodedBodySize": 79
+        },
+        {
+          "name": "http://127.0.0.1:3016/api/favorites/41/like-status",
+          "transferSize": 379,
+          "encodedBodySize": 79
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/media/fa-regular-400.1elqj7_l69qwn.woff2",
+          "transferSize": 19300,
+          "encodedBodySize": 19000
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3952b2q_x42oo.js",
+          "transferSize": 5931,
+          "encodedBodySize": 5631
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/0eyc_6-ga9xzo.js",
+          "transferSize": 1290,
+          "encodedBodySize": 990
+        },
+        {
+          "name": "http://127.0.0.1:3016/_next/static/chunks/3iwfez_mcebig.js",
+          "transferSize": 1479,
+          "encodedBodySize": 1179
+        }
+      ],
+      "images": [
+        {
+          "src": "/images/badges/DownloadOnTheAppStore.svg",
+          "width": 1,
+          "height": 1,
+          "attributeWidth": null,
+          "attributeHeight": null
+        },
+        {
+          "src": "/images/badges/GetItOnGooglePlay.png",
+          "width": 1,
+          "height": 1,
+          "attributeWidth": null,
+          "attributeHeight": null
+        },
+        {
+          "src": "/images/Avatar/avt01.png",
+          "width": 40,
+          "height": 40,
+          "attributeWidth": null,
+          "attributeHeight": null
+        },
+        {
+          "src": "/images/default-song.jpg",
+          "width": 327,
+          "height": 327,
+          "attributeWidth": "300",
+          "attributeHeight": "300"
+        },
+        {
+          "src": "/images/default-song.jpg",
+          "width": 36,
+          "height": 36,
+          "attributeWidth": "56",
+          "attributeHeight": "56"
+        }
+      ]
+    }
+  ]
+}

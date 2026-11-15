@@ -1,0 +1,30 @@
+{
+  "before": {
+    "files": 116,
+    "errors": 72,
+    "warnings": 76
+  },
+  "after": {
+    "files": 119,
+    "errors": 72,
+    "warnings": 76
+  },
+  "changedExistingDiagnostics": [],
+  "newFiles": [
+    {
+      "path": "D:\\code\\TTCS-PROJECT\\UI\\tests\\components\\playlist-cover.test.mjs",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "D:\\code\\TTCS-PROJECT\\UI\\tests\\helpers\\register-typescript.mjs",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "D:\\code\\TTCS-PROJECT\\UI\\tests\\unit\\player.test.mjs",
+      "errors": 0,
+      "warnings": 0
+    }
+  ]
+}

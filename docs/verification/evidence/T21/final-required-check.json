@@ -1,0 +1,42 @@
+{
+  "status": "VERIFIED",
+  "finalSHA": "59999f057236e458819d30403e0200a88b4a1963",
+  "finalCI": "https://github.com/DifnhBao/PROJECT_ThucTapCoSo/actions/runs/43442485298",
+  "requiredCheck": "CI required\tpass\t11s\thttps://github.com/DifnhBao/PROJECT_ThucTapCoSo/actions/runs/43442485298/job/131945814499",
+  "jobs": [
+    {
+      "name": "MySQL and browser E2E",
+      "conclusion": "success"
+    },
+    {
+      "name": "UI quality",
+      "conclusion": "success"
+    },
+    {
+      "name": "Dependency and secret gates",
+      "conclusion": "success"
+    },
+    {
+      "name": "API quality",
+      "conclusion": "success"
+    },
+    {
+      "name": "Container builds",
+      "conclusion": "success"
+    },
+    {
+      "name": "CI required",
+      "conclusion": "success"
+    }
+  ],
+  "pr": {
+    "baseRefName": "main",
+    "headRefOid": "59999f057236e458819d30403e0200a88b4a1963",
+    "isDraft": true,
+    "mergedAt": null,
+    "state": "OPEN",
+    "url": "https://github.com/DifnhBao/PROJECT_ThucTapCoSo/pull/2"
+  },
+  "merged": false,
+  "deployed": false
+}

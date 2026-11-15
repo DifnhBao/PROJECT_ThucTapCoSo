@@ -1,6 +1,6 @@
 import type {
-  RawRecommendationSong,
-  RecommendationSong,
+RawRecommendationSong,
+RecommendationSong,
 } from "./recommendation.types";
 
 function normalizeNameList(value: unknown): string[] {

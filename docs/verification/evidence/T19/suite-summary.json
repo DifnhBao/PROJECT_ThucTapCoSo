@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-08T08:47:05.882Z",
+  "status": "PASS",
+  "stages": [
+    {
+      "name": "backend-unit-api",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 38467
+    },
+    {
+      "name": "frontend-unit-component",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 3937
+    },
+    {
+      "name": "mysql-integration",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 61983
+    },
+    {
+      "name": "full-stack-e2e",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 38251
+    },
+    {
+      "name": "player-regression",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 18250
+    },
+    {
+      "name": "account-regression",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 14406
+    },
+    {
+      "name": "responsive-keyboard",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 43899
+    }
+  ]
+}

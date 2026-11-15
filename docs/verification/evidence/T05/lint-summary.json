@@ -1,0 +1,7 @@
+{
+  "errors": 84,
+  "warnings": 76,
+  "baseline": "T03/lint.json",
+  "normalization": "Only location/frame line numbers; source text and diagnostic messages retained",
+  "newDiagnostics": []
+}

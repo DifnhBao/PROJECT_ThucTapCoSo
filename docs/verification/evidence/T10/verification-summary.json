@@ -1,0 +1,59 @@
+{
+  "task": "T10",
+  "date": "2026-10-27",
+  "status": "VERIFIED_LOCAL",
+  "branch": "feat/t10-player-recovery",
+  "uiTests": {
+    "passed": 35,
+    "failed": 0,
+    "skipped": 0
+  },
+  "typecheck": "PASS",
+  "productionBuild": "PASS",
+  "browser": {
+    "browser": "Chromium/Edge",
+    "component": "actual Player + PlayerProvider + AudioController; Next navigation shim; fixture API",
+    "emptyStartupRequests": 0,
+    "shufflePreservesTrack": true,
+    "stalePageDiscarded": true,
+    "catalogNextPage": 2,
+    "emptyPageStops": true,
+    "errorRetrySkip": true,
+    "autoplayRejectionRecoverable": true,
+    "repeatOneAndAllNativeEnded": true,
+    "offlinePageAttempts": 2,
+    "offlineNoLoop": true,
+    "catalogListStrictModePages": [
+      1,
+      2
+    ],
+    "catalogListManualRetry": true,
+    "restorePausedAtSavedTime": true,
+    "failedAudioViewCount": 0,
+    "mobileWidth": 390,
+    "unexpectedPageErrors": []
+  },
+  "lint": {
+    "errors": 78,
+    "warnings": 72,
+    "baseline": "T08/lint.json",
+    "comparison": "path/rule/severity/first message line, ignoring shifted source positions",
+    "newDiagnostics": []
+  },
+  "secretScan": {
+    "currentTreeFindings": 0,
+    "historyScanned": false
+  },
+  "trackedT10DiffCheck": "PASS",
+  "backendAndMysqlRerun": false,
+  "liveProviderCalls": false,
+  "committed": false,
+  "pushed": false,
+  "deployed": false,
+  "limits": [
+    "Fixture API and Next routing shim; no deployed app E2E",
+    "Existing lint debt",
+    "Durable and deduplicated listening events reserved for T11",
+    "T08 legacy media migration remains outstanding"
+  ]
+}

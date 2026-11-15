@@ -1,0 +1,17 @@
+{
+  "candidateSHA": "7011841f0aebec52b61253eda32b6a013612f539",
+  "apiSourceFilesMatched": 121,
+  "comparison": "Git blob SHA1 after CRLF normalization",
+  "images": {
+    "api": "sha256:e7b0b665921b4fb3ad29b98886bf12a11f9168fe3de5e4648a407ce5d6ada0f5",
+    "web": "sha256:d2917f2bab000eb1df8eb05ff9dba066668afc02adbf0f092f6dc604c2f4ec99"
+  },
+  "registryRelease": false,
+  "originalComparedSHA": "00f00f4f7836c03a014a2109200dc5e21a14f44d",
+  "changesFromOriginalComparison": [
+    "README.md",
+    "docs/INTERN_PORTFOLIO_EXECUTION_PLAN_VI.md",
+    "docs/deployment/T23_READINESS_VI.md"
+  ],
+  "codeEquivalent": true
+}

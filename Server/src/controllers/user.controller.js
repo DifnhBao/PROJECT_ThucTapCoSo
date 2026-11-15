@@ -1,19 +1,13 @@
+const { AppError } = require('../utils/app-error');
 const { User } = require("../models");
 const userService = require("../services/user.service");
-const cloudinary = require("cloudinary").v2;
-const fs = require("fs-extra");
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+const uploads = require('../services/upload.service');
 
 /* --- Controller for User */
 
 const getUserProfile = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.auth.userId;
     const user = await userService.getUserProfile(userId);
 
     res.status(200).json({
@@ -27,7 +21,7 @@ const getUserProfile = async (req, res, next) => {
 
 const updateUserProfile = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.auth.userId;
     const updateData = req.body;
     const updatedUser = await userService.updateUserProfile(userId, updateData);
 
@@ -42,61 +36,19 @@ const updateUserProfile = async (req, res, next) => {
 
 const uploadAvatar = async (req, res, next) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: "Vui lòng chọn ảnh!" });
-    }
-
-    const userId = req.user.userId;
-    const user = await userService.getUserProfile(userId);
-
-    // Nếu đã có avatar trên cloudinary thì xóa cái cũ đi để tránh rác
-    if (user.avatar && user.avatar.includes("cloudinary.com")) {
-      try {
-        // Extract public_id: avatars/randomid
-        const publicId = user.avatar
-          .split("/")
-          .slice(-2)
-          .join("/")
-          .split(".")[0];
-        await cloudinary.uploader.destroy(publicId);
-      } catch (error) {
-        console.error("Lỗi xóa ảnh cũ trên Cloudinary:", error);
-      }
-    }
-
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: "avatars",
-      resource_type: "image",
-    });
-
-    if (fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
-    }
-
-    const avatarUrl = result.secure_url;
-
-    await userService.updateUserAvatar(userId, avatarUrl);
-
-    res.status(200).json({
-      message: "Cập nhật Avatar thành công!",
-      avatar: avatarUrl,
-    });
-  } catch (error) {
-    if (req.file && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
-    }
-    console.error("Lỗi upload avatar:", error);
-    res.status(500).json({ message: "Lỗi Server" });
-  }
+    const result = await uploads.execute(req, 'avatar');
+    res.set('Idempotency-Replayed', String(result.replayed));
+    res.json({ message: 'Cập nhật Avatar thành công!', ...result.data });
+  } catch (error) { next(error); }
 };
 
 const changeUserPassword = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.auth.userId;
     const { oldPassword, newPassword } = req.body;
 
     if (!oldPassword || !newPassword) {
-      throw new Error("Vui lòng cung cấp mật khẩu cũ và mật khẩu mới.");
+      throw new AppError("Vui lòng cung cấp mật khẩu cũ và mật khẩu mới.", 400, 'PASSWORD_REQUIRED');
     }
 
     const result = await userService.changeUserPassword(
@@ -112,28 +64,28 @@ const changeUserPassword = async (req, res, next) => {
 
 /* Controller for Admin */
 
-const promoteUser = async (req, res) => {
+const promoteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const requesterId = req.user.userId;
+    const requester = req.auth;
 
-    const updateUser = await userService.promoteUserToAdmin(id, requesterId);
+    const updateUser = await userService.promoteUserToAdmin(id, requester);
 
     res.status(200).json({
       message: `Đã nâng quyền Admin cho user ${updateUser.username}!!!`,
       data: updateUser,
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
 const demoteAdminToUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const requesterId = req.user.userId;
+    const requester = req.auth;
 
-    const result = await userService.demoteAdminToUser(id, requesterId);
+    const result = await userService.demoteAdminToUser(id, requester);
     res.status(200).json({
       message: `Đã hạ quyền tài khoản ${result.username} thành user.`,
       data: result,
@@ -172,7 +124,7 @@ const getAllAdmins = async (req, res, next) => {
 const getUserProfileByAdmin = async (req, res, next) => {
   try {
     const userId = req.params.id;
-    const user = await userService.adminGetUserById(userId);
+    const user = await userService.adminGetUserById(userId, req.auth);
 
     res.status(200).json({
       message: "Lấy thông tin user thành công",
@@ -188,27 +140,25 @@ const updateUserById = async (req, res, next) => {
   try {
     const { id } = req.params; // Lay ID tu URL
     const updateData = req.body;
-    // const requesterId = req.user.user_id;
 
     const updatedUser = await userService.updateUserById(
       id,
       updateData,
-      //   requesterId
+      req.auth,
     );
     res.status(200).json({
       message: "Admin cập nhật thông tin user thành công.",
       data: updatedUser,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Lỗi hệ thống." });
+    next(error);
   }
 };
 
 const deleteUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const requester = req.user;
+    const requester = req.auth;
 
     const result = await userService.deleteUserById(id, requester);
     res.status(200).json(result);
@@ -221,10 +171,10 @@ const resetUserPassword = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { newPassword } = req.body;
-    const requester = req.user;
+    const requester = req.auth;
 
     if (!newPassword) {
-      throw new Error("Vui lòng nhập mật khẩu mới.");
+      throw new AppError("Vui lòng nhập mật khẩu mới.", 400, 'PASSWORD_REQUIRED');
     }
 
     const result = await userService.resetUserPassword(
@@ -238,31 +188,26 @@ const resetUserPassword = async (req, res, next) => {
   }
 };
 
-const addNewAdmin = async (req, res) => {
+const addNewAdmin = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
-      return res.status(400).json({
-        message: "Username, email và password là bắt buộc",
-      });
+      throw new AppError("Username, email và password là bắt buộc", 400, 'VALIDATION_ERROR');
     }
 
     const admin = await userService.createAdminAccount({
       username,
       email,
       password,
-    });
+    }, req.auth);
 
     return res.status(201).json({
       message: "Thêm mới tài khoản quản trị viên thành công",
       data: admin,
     });
   } catch (err) {
-    console.error("Create admin error:", err.message);
-    return res.status(400).json({
-      message: err.message || "Không thể tạo tài khoản admin",
-    });
+    next(err);
   }
 };
 
@@ -281,3 +226,5 @@ module.exports = {
   getAllAdmins,
   addNewAdmin,
 };
+
+module.exports = require('../validation/validate-controller').withContracts(module.exports, require('../validation/contracts').contracts.users);

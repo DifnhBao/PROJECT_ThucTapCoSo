@@ -1,30 +1,14 @@
+const { AppError } = require('../utils/app-error');
 const recommendationService = require("../services/recommendation/recommendation.service");
-const hybridSimilarityService = require("../services/recommendation/hybridSimilarity.service");
+const { publicRecommendationItem } = require("../policies/publication.policy");
+const { requireId } = require("../utils/authorization");
 
 /**
  * Trigger rebuild toàn bộ ma trận tương đồng song_similarities
  * POST /api/recommendations/rebuild-similarity
  */
 const rebuildSimilarity = async (req, res, next) => {
-  try {
-    const rawLimit = req.body?.limit ?? req.query.limit;
-    const parsedLimit = rawLimit !== undefined ? parseInt(rawLimit, 10) : undefined;
-    const options = Number.isInteger(parsedLimit) && parsedLimit > 0
-      ? { limit: parsedLimit }
-      : {};
-    
-    // Gọi service chạy nền/đồng bộ, phản hồi khi hoàn thành
-    const result = await hybridSimilarityService.rebuildAllSongSimilarities(options);
-    
-    res.status(200).json({
-      success: true,
-      message: "Tính toán và cập nhật ma trận tương đồng thành công!",
-      data: result
-    });
-  } catch (error) {
-    console.error("Rebuild Similarity Error:", error);
-    next(error);
-  }
+  next(new AppError('Online rebuild is disabled. Run npm run recommendations:rebuild in maintenance.', 409, 'OFFLINE_REBUILD_REQUIRED'));
 };
 
 /**
@@ -33,14 +17,14 @@ const rebuildSimilarity = async (req, res, next) => {
  */
 const getSimilarSongs = async (req, res, next) => {
   try {
-    const songId = parseInt(req.params.songId);
+    const songId = requireId(req.params.songId);
     const limit = parseInt(req.query.limit) || 10;
 
     if (isNaN(songId)) {
-      return res.status(400).json({ success: false, message: "ID bài hát không hợp lệ." });
+      throw new AppError("ID bài hát không hợp lệ.", 400, 'VALIDATION_ERROR');
     }
 
-    const data = await recommendationService.getSimilarSongs(songId, limit);
+    const data = (await recommendationService.getSimilarSongs(songId, limit)).map(publicRecommendationItem);
     
     res.status(200).json({
       success: true,
@@ -55,18 +39,18 @@ const getSimilarSongs = async (req, res, next) => {
 
 /**
  * Lấy danh sách bài hát gợi ý cá nhân hóa cho User
- * GET /api/recommendations/users/:userId?limit=10
+ * GET /api/recommendations/me?limit=10
  */
 const getRecommendationsForUser = async (req, res, next) => {
   try {
-    const userId = parseInt(req.params.userId);
+    const userId = req.auth.userId;
     const limit = parseInt(req.query.limit) || 10;
 
     if (isNaN(userId)) {
-      return res.status(400).json({ success: false, message: "ID người dùng không hợp lệ." });
+      throw new AppError("ID người dùng không hợp lệ.", 400, 'VALIDATION_ERROR');
     }
 
-    const data = await recommendationService.getRecommendationsForUser(userId, limit);
+    const data = (await recommendationService.getRecommendationsForUser(userId, limit)).map(publicRecommendationItem);
 
     res.status(200).json({
       success: true,
@@ -85,17 +69,14 @@ const getRecommendationsForUser = async (req, res, next) => {
  */
 const getSongPairDebug = async (req, res, next) => {
   try {
-    const songA = parseInt(req.query.songA);
-    const songB = parseInt(req.query.songB);
+    const songA = requireId(req.query.songA);
+    const songB = requireId(req.query.songB);
 
     if (isNaN(songA) || isNaN(songB)) {
-      return res.status(400).json({
-        success: false,
-        message: "Cần cung cấp đầy đủ ID hai bài hát (songA và songB) dạng số."
-      });
+      throw new AppError("Cần cung cấp đầy đủ ID hai bài hát (songA và songB) dạng số.", 400, 'VALIDATION_ERROR');
     }
 
-    const data = await recommendationService.getSongPairDebug(songA, songB);
+    const data = await recommendationService.getSongPairDebug(songA, songB, req.auth);
 
     res.status(200).json({
       success: true,
@@ -113,3 +94,5 @@ module.exports = {
   getRecommendationsForUser,
   getSongPairDebug
 };
+
+module.exports = require('../validation/validate-controller').withContracts(module.exports, require('../validation/contracts').contracts.recommendations);

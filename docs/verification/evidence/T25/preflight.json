@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-15",
+  "status": "PASS_PREFLIGHT_NOT_EXACT_COMMIT_CI",
+  "backend": {
+    "pass": 125,
+    "fail": 0
+  },
+  "ui": {
+    "pass": 58,
+    "fail": 0,
+    "typecheck": "PASS",
+    "lintErrors": 0,
+    "lintWarnings": 21,
+    "build": "PASS"
+  },
+  "openapiRegeneratedUnchanged": true,
+  "syntheticEvaluationReproduced": true,
+  "archiveFiles": 130,
+  "archiveHashVerification": "PASS",
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 800
+      }
+    ],
+    "format": {
+      "duration": "186.666667",
+      "size": "1211023"
+    }
+  },
+  "ownership": "MIT for author source; no relicensing of dependencies or archived media/datasets",
+  "runtimeImages": {
+    "api": "sha256:b4731966076efc1665e4141324742fa4250478484b2052ca27bd8d9070088379",
+    "web": "sha256:ece8fad95ab89d2425b11293691ea01306cdd86b741038626c20c9e10d4c8392"
+  },
+  "historicalGitSecrets": "expired JWTs remain; no history-clean certification",
+  "publicVideo": "actual screen recording, preauthenticated synthetic sessions, no audio track or API mocks"
+}

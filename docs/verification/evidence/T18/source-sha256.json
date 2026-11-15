@@ -1,0 +1,22 @@
+[
+  {
+    "path": "UI/app/features/player/context/PlayerContext.tsx",
+    "sha256": "b79a073df61f864d0571f1ab2d9aca3d3bb261d119884f89e7b5d8cc45a01de0"
+  },
+  {
+    "path": "UI/app/layout.tsx",
+    "sha256": "72453d51138dbc1b8209ec272ab6686e23a747fbb3c382c2658dfe57f91f700d"
+  },
+  {
+    "path": "UI/tests/browser/player-fixture.tsx",
+    "sha256": "65d74f8ac101e1a31e5d4a975496cdcfe48e91d95882c1238367e15cd36103e8"
+  },
+  {
+    "path": "UI/tests/browser/player-smoke.mjs",
+    "sha256": "8b5be233df1e3b72436720c0c2c5e5e5a7306214f7be7437f06f81ddfb323dc7"
+  },
+  {
+    "path": "UI/tests/browser/performance.mjs",
+    "sha256": "c4c35fd57c33e64e753219e1f06727ca0ef69890193262fdff0c5417486d05cb"
+  }
+]

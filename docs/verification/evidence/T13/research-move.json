@@ -1,0 +1,584 @@
+[
+  {
+    "from": "AI_Services\\.dockerignore",
+    "to": "experiments\\python-recommendation\\.dockerignore",
+    "bytes": 67,
+    "sha256": "d19eef1d8b64191ba3ecfe1be0ad0705112e1882e73ea93012fc49022c0ecd1a"
+  },
+  {
+    "from": "AI_Services\\.gitignore",
+    "to": "experiments\\python-recommendation\\.gitignore",
+    "bytes": 368,
+    "sha256": "c43d3d1963cb425ff4e1261ab2c58c46edc22c31ff478ccbeba50eb28195d7f3"
+  },
+  {
+    "from": "AI_Services\\Bảo\\Checking\\check_results.py",
+    "to": "experiments\\python-recommendation\\Bảo\\Checking\\check_results.py",
+    "bytes": 820,
+    "sha256": "76ec756aab32cb564e4cc6f6a22e7e7f678de39fd1708a6186dfc967fe3c576b"
+  },
+  {
+    "from": "AI_Services\\Bảo\\Checking\\check_user_vibe.py",
+    "to": "experiments\\python-recommendation\\Bảo\\Checking\\check_user_vibe.py",
+    "bytes": 546,
+    "sha256": "a4c872145e9fa2d32ed712752369b4525ef1ec08daba23bfed4b750dbb538b87"
+  },
+  {
+    "from": "AI_Services\\Bảo\\__pycache__\\main.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\Bảo\\__pycache__\\main.cpython-313.pyc",
+    "bytes": 3148,
+    "sha256": "580de131a91a63dbcaa28f4d8df47e99f603e9f4a87cc2a6531068baaa45d8cb"
+  },
+  {
+    "from": "AI_Services\\Bảo\\main.py",
+    "to": "experiments\\python-recommendation\\Bảo\\main.py",
+    "bytes": 3800,
+    "sha256": "12eccf5eb1a30013c091db04df93945512efbe929bbe3b4d31c14f1ecac36a56"
+  },
+  {
+    "from": "AI_Services\\Bảo\\models\\item_to_index.pkl",
+    "to": "experiments\\python-recommendation\\Bảo\\models\\item_to_index.pkl",
+    "bytes": 105345,
+    "sha256": "1c791c5257d50c8dda8a99b40f81b20f5b9169c4dc87034e4bccd8ae8c9e99a7"
+  },
+  {
+    "from": "AI_Services\\Bảo\\models\\lastfm_clean.csv",
+    "to": "experiments\\python-recommendation\\Bảo\\models\\lastfm_clean.csv",
+    "bytes": 1022188,
+    "sha256": "9796ddebd879165310b674ac9d53a9f8ba2d085fbd58f47e138e3e8d90a4c6cc"
+  },
+  {
+    "from": "AI_Services\\Bảo\\models\\ncf_model.keras",
+    "to": "experiments\\python-recommendation\\Bảo\\models\\ncf_model.keras",
+    "bytes": 7635003,
+    "sha256": "9c596ba63e224d7151006e19a0230d5a4fdd57a4f58ec6260335b29e17201b12"
+  },
+  {
+    "from": "AI_Services\\Bảo\\models\\test_set.csv",
+    "to": "experiments\\python-recommendation\\Bảo\\models\\test_set.csv",
+    "bytes": 204573,
+    "sha256": "aa6a669f0b3b54b5af8e44a2fd968e3c32311ece739416d315f3eb5a27f7e95f"
+  },
+  {
+    "from": "AI_Services\\Bảo\\models\\train_set.csv",
+    "to": "experiments\\python-recommendation\\Bảo\\models\\train_set.csv",
+    "bytes": 817644,
+    "sha256": "95a679e37bbc130b8ffa6e9e6f7dccf0006b221b6937ae952040cbe37c4e63e8"
+  },
+  {
+    "from": "AI_Services\\Bảo\\models\\user_to_index.pkl",
+    "to": "experiments\\python-recommendation\\Bảo\\models\\user_to_index.pkl",
+    "bytes": 10875,
+    "sha256": "a15839c88d89deb338960e02637d89b06127589979b6140a59176ad83514c861"
+  },
+  {
+    "from": "AI_Services\\Bảo\\ncfcore (1).ipynb",
+    "to": "experiments\\python-recommendation\\Bảo\\ncfcore (1).ipynb",
+    "bytes": 212280,
+    "sha256": "79cbde9e3b80bcfc47915a63f0fb5d4c033afc9fc9fbac5168111ba573e3f2b9"
+  },
+  {
+    "from": "AI_Services\\Bảo\\test.ipynb",
+    "to": "experiments\\python-recommendation\\Bảo\\test.ipynb",
+    "bytes": 4483,
+    "sha256": "d8ccaa26b737f327793f22b2165835415559c16a073a8d093978630f1bf64c23"
+  },
+  {
+    "from": "AI_Services\\Bảo\\test.py",
+    "to": "experiments\\python-recommendation\\Bảo\\test.py",
+    "bytes": 697,
+    "sha256": "69bcde3fbb72da9742cd04c4fd55c81a3a430b2fdaf95f912a989ab7dbcd2ee1"
+  },
+  {
+    "from": "AI_Services\\Dockerfile",
+    "to": "experiments\\python-recommendation\\Dockerfile",
+    "bytes": 258,
+    "sha256": "69b5b646df4acd64b9f5244f6dfe3ce3bbc89da7ca9da5d1080641844e824c88"
+  },
+  {
+    "from": "AI_Services\\MockData\\artists.dat",
+    "to": "experiments\\python-recommendation\\MockData\\artists.dat",
+    "bytes": 1925879,
+    "sha256": "c173881362c6b28551368fecb3c0be5a6a30a6cd859e1f5775413dfe46d48648"
+  },
+  {
+    "from": "AI_Services\\MockData\\lastfm_clean.csv",
+    "to": "experiments\\python-recommendation\\MockData\\lastfm_clean.csv",
+    "bytes": 1121016,
+    "sha256": "c690551d6780f2de5b7cad27ff075977c21ecae737ad10cfb7f5d4a25d3f2834"
+  },
+  {
+    "from": "AI_Services\\MockData\\readme.txt",
+    "to": "experiments\\python-recommendation\\MockData\\readme.txt",
+    "bytes": 4627,
+    "sha256": "6fe5d1e6f67b025fc50cd70883dd1a1ff16c5ff37b5b7abfb33644b83468b209"
+  },
+  {
+    "from": "AI_Services\\MockData\\tags.dat",
+    "to": "experiments\\python-recommendation\\MockData\\tags.dat",
+    "bytes": 234468,
+    "sha256": "e95175f259be4c0c47644ae23d66131cd6d5767142a1405000e79f5584691d70"
+  },
+  {
+    "from": "AI_Services\\MockData\\user_artists.dat",
+    "to": "experiments\\python-recommendation\\MockData\\user_artists.dat",
+    "bytes": 1296455,
+    "sha256": "001400dc3c7d2667fca6e4ea6dc6acc31a9dd28ad5cd0f74cea988c019934d3b"
+  },
+  {
+    "from": "AI_Services\\MockData\\user_friends.dat",
+    "to": "experiments\\python-recommendation\\MockData\\user_friends.dat",
+    "bytes": 251565,
+    "sha256": "9a3a8f7fa5f5ec832335e5b58ed69a4cf27c6f6f6afcde62134810eea46445a7"
+  },
+  {
+    "from": "AI_Services\\MockData\\user_taggedartists-timestamps.dat",
+    "to": "experiments\\python-recommendation\\MockData\\user_taggedartists-timestamps.dat",
+    "bytes": 5249917,
+    "sha256": "ec753318e453b15356853674b687da44d9f8c7e1215e1e0ff27aaa5f52e322bd"
+  },
+  {
+    "from": "AI_Services\\MockData\\user_taggedartists.dat",
+    "to": "experiments\\python-recommendation\\MockData\\user_taggedartists.dat",
+    "bytes": 4366696,
+    "sha256": "d31fe938fcfeed6f0059f37a36b156f63674d073fc2553e5cc9dc1595e365bc7"
+  },
+  {
+    "from": "AI_Services\\README.md",
+    "to": "experiments\\python-recommendation\\README.md",
+    "bytes": 529,
+    "sha256": "f0b1b2dd8b2e3db8d715a8b7e53f1d906401d5990fd460ed79ebf5da103d8f5c"
+  },
+  {
+    "from": "AI_Services\\Thạch\\BànGiao\\lastfm_clean.csv",
+    "to": "experiments\\python-recommendation\\Thạch\\BànGiao\\lastfm_clean.csv",
+    "bytes": 1121016,
+    "sha256": "c690551d6780f2de5b7cad27ff075977c21ecae737ad10cfb7f5d4a25d3f2834"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\baseline_mf.ipynb",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\baseline_mf.ipynb",
+    "bytes": 22394,
+    "sha256": "c32af40fe100c38785b4e357ba81dc63ff6c14ea1b9d2158c55331a9bc71e372"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\baseline_mf.pkl",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\baseline_mf.pkl",
+    "bytes": 4208428,
+    "sha256": "ec54fd3dc03db623be06ed35c4f6fb49174120870fbf917a54349040422b85d8"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\data\\baseline_mf.keras",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\data\\baseline_mf.keras",
+    "bytes": 7527452,
+    "sha256": "23e4996032e6451012d4fa196ccd86725611a9bbb6f66dee99e162da65117b48"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\data\\best_mf_model.keras",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\data\\best_mf_model.keras",
+    "bytes": 7527452,
+    "sha256": "23e4996032e6451012d4fa196ccd86725611a9bbb6f66dee99e162da65117b48"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\data\\item_to_index.pkl",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\data\\item_to_index.pkl",
+    "bytes": 105345,
+    "sha256": "1c791c5257d50c8dda8a99b40f81b20f5b9169c4dc87034e4bccd8ae8c9e99a7"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\data\\lastfm_clean.csv",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\data\\lastfm_clean.csv",
+    "bytes": 1115023,
+    "sha256": "1a872d5d656a04348d4b42c493238906781a61c12b3e4728fc489172d26e9955"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\data\\test_set.csv",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\data\\test_set.csv",
+    "bytes": 223141,
+    "sha256": "c800dd582605eb069647d0114f7f52fd4b6544e52f182bf245deb56d4bc2d0f3"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\evaluate.py",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\evaluate.py",
+    "bytes": 2516,
+    "sha256": "512b66cae6436efa3e5a5d32fc499c309817c97af5135bd788576c082d429c90"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\explore_data.py",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\explore_data.py",
+    "bytes": 1906,
+    "sha256": "a5fc8da0323eac8e6408f718e337baa690de64d4054c9945479f61f822c20cd2"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\keras_mf.ipynb",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\keras_mf.ipynb",
+    "bytes": 100758,
+    "sha256": "57c4bf238b7edbfb824f65018036a84270b3c6d7a6ea0a85cd639e2d2d49a9bc"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\main.py",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\main.py",
+    "bytes": 2964,
+    "sha256": "45ee5c09b83b6da893b974716a072d971dc1dbf77bf6865b62f35832ff7cc0d4"
+  },
+  {
+    "from": "AI_Services\\Thạch\\DataProcessor\\process_rating.py",
+    "to": "experiments\\python-recommendation\\Thạch\\DataProcessor\\process_rating.py",
+    "bytes": 1445,
+    "sha256": "bc55cfd97955473d240a30a9aa3bf8012b420fbb2762a7a88d569c81221ced43"
+  },
+  {
+    "from": "AI_Services\\Thạch\\requirements.txt",
+    "to": "experiments\\python-recommendation\\Thạch\\requirements.txt",
+    "bytes": 133,
+    "sha256": "a8e153278eb21b929ce73ce8df1f1028e1fa7c5d300b199669111bd382414988"
+  },
+  {
+    "from": "AI_Services\\data\\MockData\\artists.dat",
+    "to": "experiments\\python-recommendation\\data\\MockData\\artists.dat",
+    "bytes": 1925879,
+    "sha256": "c173881362c6b28551368fecb3c0be5a6a30a6cd859e1f5775413dfe46d48648"
+  },
+  {
+    "from": "AI_Services\\data\\MockData\\lastfm_clean.csv",
+    "to": "experiments\\python-recommendation\\data\\MockData\\lastfm_clean.csv",
+    "bytes": 1121016,
+    "sha256": "c690551d6780f2de5b7cad27ff075977c21ecae737ad10cfb7f5d4a25d3f2834"
+  },
+  {
+    "from": "AI_Services\\data\\MockData\\readme.txt",
+    "to": "experiments\\python-recommendation\\data\\MockData\\readme.txt",
+    "bytes": 4627,
+    "sha256": "6fe5d1e6f67b025fc50cd70883dd1a1ff16c5ff37b5b7abfb33644b83468b209"
+  },
+  {
+    "from": "AI_Services\\data\\MockData\\tags.dat",
+    "to": "experiments\\python-recommendation\\data\\MockData\\tags.dat",
+    "bytes": 234468,
+    "sha256": "e95175f259be4c0c47644ae23d66131cd6d5767142a1405000e79f5584691d70"
+  },
+  {
+    "from": "AI_Services\\data\\MockData\\user_artists.dat",
+    "to": "experiments\\python-recommendation\\data\\MockData\\user_artists.dat",
+    "bytes": 1296455,
+    "sha256": "001400dc3c7d2667fca6e4ea6dc6acc31a9dd28ad5cd0f74cea988c019934d3b"
+  },
+  {
+    "from": "AI_Services\\data\\MockData\\user_friends.dat",
+    "to": "experiments\\python-recommendation\\data\\MockData\\user_friends.dat",
+    "bytes": 251565,
+    "sha256": "9a3a8f7fa5f5ec832335e5b58ed69a4cf27c6f6f6afcde62134810eea46445a7"
+  },
+  {
+    "from": "AI_Services\\data\\MockData\\user_taggedartists-timestamps.dat",
+    "to": "experiments\\python-recommendation\\data\\MockData\\user_taggedartists-timestamps.dat",
+    "bytes": 5249917,
+    "sha256": "ec753318e453b15356853674b687da44d9f8c7e1215e1e0ff27aaa5f52e322bd"
+  },
+  {
+    "from": "AI_Services\\data\\MockData\\user_taggedartists.dat",
+    "to": "experiments\\python-recommendation\\data\\MockData\\user_taggedartists.dat",
+    "bytes": 4366696,
+    "sha256": "d31fe938fcfeed6f0059f37a36b156f63674d073fc2553e5cc9dc1595e365bc7"
+  },
+  {
+    "from": "AI_Services\\data\\final_training_data.csv",
+    "to": "experiments\\python-recommendation\\data\\final_training_data.csv",
+    "bytes": 3519,
+    "sha256": "2cb5db1d93d97b21df8a7242de7aba485a23d390212f4cf93c0164607e5dcc04"
+  },
+  {
+    "from": "AI_Services\\data\\mongo_activities.json",
+    "to": "experiments\\python-recommendation\\data\\mongo_activities.json",
+    "bytes": 14113,
+    "sha256": "c018d4ab7a03c850f33ad9c4d0dff7ed405cf49b4e17e7e73b5d3e5971c862c2"
+  },
+  {
+    "from": "AI_Services\\data\\mysql_favorites.csv",
+    "to": "experiments\\python-recommendation\\data\\mysql_favorites.csv",
+    "bytes": 843,
+    "sha256": "1b4a0ce3c651fed629c64ddca0f31e2e372e7084e0a925638b485f57cddfd544"
+  },
+  {
+    "from": "AI_Services\\data\\mysql_ratings.csv",
+    "to": "experiments\\python-recommendation\\data\\mysql_ratings.csv",
+    "bytes": 3519,
+    "sha256": "f032726217f8e70f0cb2364d276e759bd118fb401f8f79f1e2dc2359a0411101"
+  },
+  {
+    "from": "AI_Services\\data\\song_metadata.csv",
+    "to": "experiments\\python-recommendation\\data\\song_metadata.csv",
+    "bytes": 3964,
+    "sha256": "34aed722be1c189e346babca1663fea43a6477ea28bc42dad66944c83bf3ac07"
+  },
+  {
+    "from": "AI_Services\\models\\popularity.json",
+    "to": "experiments\\python-recommendation\\models\\popularity.json",
+    "bytes": 892,
+    "sha256": "1afb1f7f6e6552d8242b17c2c3465337d3fed01eae823dc4240c4a21fd1ae98b"
+  },
+  {
+    "from": "AI_Services\\models\\song_id_map.json",
+    "to": "experiments\\python-recommendation\\models\\song_id_map.json",
+    "bytes": 982,
+    "sha256": "67b30c08218f6641031048be8dcbe3741ff13119cd9a3391f08a5b161889d0e4"
+  },
+  {
+    "from": "AI_Services\\models\\song_vectors.npy",
+    "to": "experiments\\python-recommendation\\models\\song_vectors.npy",
+    "bytes": 12928,
+    "sha256": "94e15bff7eb62a460a150c39facef161a5e5b31d532563a9caabb69701a063b1"
+  },
+  {
+    "from": "AI_Services\\models\\user_similarity.pkl",
+    "to": "experiments\\python-recommendation\\models\\user_similarity.pkl",
+    "bytes": 61950,
+    "sha256": "ca3a2bc2d5430dc0eeead09c0a526391f6f7324983add66d6eda72098391df85"
+  },
+  {
+    "from": "AI_Services\\requirements.txt",
+    "to": "experiments\\python-recommendation\\requirements.txt",
+    "bytes": 204,
+    "sha256": "392d338feac22cb09da689755e8d6eb1dda4f1787fa206cbfdf4125190989617"
+  },
+  {
+    "from": "AI_Services\\scripts\\__pycache__\\evaluate.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\scripts\\__pycache__\\evaluate.cpython-313.pyc",
+    "bytes": 2569,
+    "sha256": "9b4dd9ae655c1572865faaecfd543dc2947187130142d1cdf93b30900fc97810"
+  },
+  {
+    "from": "AI_Services\\scripts\\__pycache__\\generate_mock_data.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\scripts\\__pycache__\\generate_mock_data.cpython-313.pyc",
+    "bytes": 3271,
+    "sha256": "29c30cfbebdbf7d7d43e6836e6f4219a9c139af5b4a99262ea30ec52f942d670"
+  },
+  {
+    "from": "AI_Services\\scripts\\__pycache__\\retrain_pipeline.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\scripts\\__pycache__\\retrain_pipeline.cpython-313.pyc",
+    "bytes": 3722,
+    "sha256": "355a0088df3b8d3b70306ea5718ad5bdf82a9a498693cb8dc30680734f8cd6af"
+  },
+  {
+    "from": "AI_Services\\scripts\\evaluate.py",
+    "to": "experiments\\python-recommendation\\scripts\\evaluate.py",
+    "bytes": 2331,
+    "sha256": "b47d1fc07fb194e9ead44b0b567429d1a4a953be97e520eb3ce014e987f20e64"
+  },
+  {
+    "from": "AI_Services\\scripts\\generate_mock_data.py",
+    "to": "experiments\\python-recommendation\\scripts\\generate_mock_data.py",
+    "bytes": 2227,
+    "sha256": "571fd7ba35e884f6ec1f3008012e6027cfb1ff343ce6df42c2ff14910a02f9c0"
+  },
+  {
+    "from": "AI_Services\\scripts\\retrain_pipeline.py",
+    "to": "experiments\\python-recommendation\\scripts\\retrain_pipeline.py",
+    "bytes": 2895,
+    "sha256": "c3ff7bb354df457d1706e49c4bfc48b2fb759fe0f4758364d9c3978ff9439508"
+  },
+  {
+    "from": "AI_Services\\share\\jupyter\\kernels\\python3\\kernel.json",
+    "to": "experiments\\python-recommendation\\share\\jupyter\\kernels\\python3\\kernel.json",
+    "bytes": 193,
+    "sha256": "ebdcb9aaca71bac28a49b29fa58c3ce82e3f505574d4053a36d46e522f6dfa42"
+  },
+  {
+    "from": "AI_Services\\share\\jupyter\\kernels\\python3\\logo-32x32.png",
+    "to": "experiments\\python-recommendation\\share\\jupyter\\kernels\\python3\\logo-32x32.png",
+    "bytes": 1084,
+    "sha256": "e32b5c282072d717887b60da73178fdd35a65dc3caeacba7a026e5a4255cc997"
+  },
+  {
+    "from": "AI_Services\\share\\jupyter\\kernels\\python3\\logo-64x64.png",
+    "to": "experiments\\python-recommendation\\share\\jupyter\\kernels\\python3\\logo-64x64.png",
+    "bytes": 2180,
+    "sha256": "5c9063b436cedf0567480fe487ece0d1479ea9545f310cba93fa184ccbab290d"
+  },
+  {
+    "from": "AI_Services\\share\\jupyter\\kernels\\python3\\logo-svg.svg",
+    "to": "experiments\\python-recommendation\\share\\jupyter\\kernels\\python3\\logo-svg.svg",
+    "bytes": 9605,
+    "sha256": "baec8662a1461c2cacc326b54d2727cb2f1ce07ba02d00f5b826d035104f649f"
+  },
+  {
+    "from": "AI_Services\\share\\man\\man1\\ipython.1",
+    "to": "experiments\\python-recommendation\\share\\man\\man1\\ipython.1",
+    "bytes": 2058,
+    "sha256": "3d57503f6847987c94130ccb38f7206af9c27bd8d30d5accd63299b7872717f4"
+  },
+  {
+    "from": "AI_Services\\src\\__pycache__\\recommender.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\__pycache__\\recommender.cpython-313.pyc",
+    "bytes": 2912,
+    "sha256": "9321ac740afd3b291f649b154efdae46f17ae4adeda2bdb1ba0ae51c06a267fe"
+  },
+  {
+    "from": "AI_Services\\src\\api\\__pycache__\\server.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\api\\__pycache__\\server.cpython-313.pyc",
+    "bytes": 4343,
+    "sha256": "761aba29a091b1bb217e8f432dde8149ab650fd02e03fc09a18a7b34f24b43bf"
+  },
+  {
+    "from": "AI_Services\\src\\api\\server.py",
+    "to": "experiments\\python-recommendation\\src\\api\\server.py",
+    "bytes": 2830,
+    "sha256": "640ec916785a89b183d1d16eb0b1aa4e0dfcad9d785eb7c865ce436e3d457b3f"
+  },
+  {
+    "from": "AI_Services\\src\\candidate_generation\\__pycache__\\collaborative_filter.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\candidate_generation\\__pycache__\\collaborative_filter.cpython-313.pyc",
+    "bytes": 3288,
+    "sha256": "e9701a36594efe4801749255ab0ef87d730cd073d7628d856c48f74073f64cb4"
+  },
+  {
+    "from": "AI_Services\\src\\candidate_generation\\__pycache__\\popularity_candidate.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\candidate_generation\\__pycache__\\popularity_candidate.cpython-313.pyc",
+    "bytes": 1412,
+    "sha256": "e86d6f060ed8d2e06eb0d211ac2f5ecc88988b548be67162268baf90040c9c68"
+  },
+  {
+    "from": "AI_Services\\src\\candidate_generation\\__pycache__\\vector_candidate.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\candidate_generation\\__pycache__\\vector_candidate.cpython-313.pyc",
+    "bytes": 1985,
+    "sha256": "a9a06867d992b2cabbca2e815736132caead6b999ca20887d33f1730a1de9e53"
+  },
+  {
+    "from": "AI_Services\\src\\candidate_generation\\collaborative_filter.py",
+    "to": "experiments\\python-recommendation\\src\\candidate_generation\\collaborative_filter.py",
+    "bytes": 2029,
+    "sha256": "57ee7b713c9ed88985ce8797d576565fc9712a3f9233a8a73275e17e0c8829e0"
+  },
+  {
+    "from": "AI_Services\\src\\candidate_generation\\popularity_candidate.py",
+    "to": "experiments\\python-recommendation\\src\\candidate_generation\\popularity_candidate.py",
+    "bytes": 783,
+    "sha256": "8c75198c61223b2ce0a722e1535faf723346c1a40c0d4a73466fe1e79136cd47"
+  },
+  {
+    "from": "AI_Services\\src\\candidate_generation\\vector_candidate.py",
+    "to": "experiments\\python-recommendation\\src\\candidate_generation\\vector_candidate.py",
+    "bytes": 1711,
+    "sha256": "3aed65d33bbfbc9c9192845a9ad5a531e378e80596e78441141a9ea9972fa284"
+  },
+  {
+    "from": "AI_Services\\src\\config\\__pycache__\\settings.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\config\\__pycache__\\settings.cpython-313.pyc",
+    "bytes": 1186,
+    "sha256": "9a52b796dbd6c16ae7d3d52ffbff3ae3480b9b99211825fd27bf6ee1469888b2"
+  },
+  {
+    "from": "AI_Services\\src\\config\\settings.py",
+    "to": "experiments\\python-recommendation\\src\\config\\settings.py",
+    "bytes": 928,
+    "sha256": "2069b5950f28744c8f5ae1dc7e13e52774fab22d1d8c121ec8fe7bf2fc8f83b2"
+  },
+  {
+    "from": "AI_Services\\src\\data_pipeline\\__pycache__\\data_processor.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\data_pipeline\\__pycache__\\data_processor.cpython-313.pyc",
+    "bytes": 2623,
+    "sha256": "81a594c9d33119b616a619835962e33b6fedef31bd42f4c4beb7190852bc329e"
+  },
+  {
+    "from": "AI_Services\\src\\data_pipeline\\__pycache__\\mongo_loader.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\data_pipeline\\__pycache__\\mongo_loader.cpython-313.pyc",
+    "bytes": 670,
+    "sha256": "b27e8e713ccd4f48a2609bec45871373b3bc5fb5c5e3e2950e458946f124a4c1"
+  },
+  {
+    "from": "AI_Services\\src\\data_pipeline\\__pycache__\\mysql_loader.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\data_pipeline\\__pycache__\\mysql_loader.cpython-313.pyc",
+    "bytes": 897,
+    "sha256": "10913d6eb4eaf47bcc01be06a6e62647a18045bfc53e6a7128e047fbf68a59a6"
+  },
+  {
+    "from": "AI_Services\\src\\data_pipeline\\data_processor.py",
+    "to": "experiments\\python-recommendation\\src\\data_pipeline\\data_processor.py",
+    "bytes": 4632,
+    "sha256": "aabf7db2fe949a1968e499d6e831d2f407c05ab4cad85b8c846cb69f16608da0"
+  },
+  {
+    "from": "AI_Services\\src\\data_pipeline\\mongo_loader.py",
+    "to": "experiments\\python-recommendation\\src\\data_pipeline\\mongo_loader.py",
+    "bytes": 651,
+    "sha256": "ac80a11948a3dfba82602c2a1e876e3ab06a74faf27e9e4affb471875c523c05"
+  },
+  {
+    "from": "AI_Services\\src\\data_pipeline\\mysql_loader.py",
+    "to": "experiments\\python-recommendation\\src\\data_pipeline\\mysql_loader.py",
+    "bytes": 1008,
+    "sha256": "e1acf7446246ad89205cdf5b49eb96f3670ba4314aa01231b964e0b050c6dea5"
+  },
+  {
+    "from": "AI_Services\\src\\database\\mongodb_handler.py",
+    "to": "experiments\\python-recommendation\\src\\database\\mongodb_handler.py",
+    "bytes": 443,
+    "sha256": "cb6a8a27905a00e4d001ed8eea0282f69e55a6069cec5e74120d91cfcc870ade"
+  },
+  {
+    "from": "AI_Services\\src\\database\\mysql_handler.py",
+    "to": "experiments\\python-recommendation\\src\\database\\mysql_handler.py",
+    "bytes": 804,
+    "sha256": "d24c4a15f6f9099e1e87ebbc3cb87f83325bb0eec9d431e88d73f9afaae3f7fb"
+  },
+  {
+    "from": "AI_Services\\src\\embeddings\\__pycache__\\metadata_vectorizer.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\embeddings\\__pycache__\\metadata_vectorizer.cpython-313.pyc",
+    "bytes": 3472,
+    "sha256": "caea606ab96f005b2a88aa2c37c0949a80b77e11c2a30c23dd44a5d341986df6"
+  },
+  {
+    "from": "AI_Services\\src\\embeddings\\metadata_vectorizer.py",
+    "to": "experiments\\python-recommendation\\src\\embeddings\\metadata_vectorizer.py",
+    "bytes": 1613,
+    "sha256": "1415536ca572e48fe0f70a65b1abfc52ad59ccb53dc7c0a6d3435a944339f68a"
+  },
+  {
+    "from": "AI_Services\\src\\main.py",
+    "to": "experiments\\python-recommendation\\src\\main.py",
+    "bytes": 873,
+    "sha256": "1cf89b39fef3b1bc673bb14d51d3cc99ef80ed6348cdd805bb56bf0464b1f870"
+  },
+  {
+    "from": "AI_Services\\src\\processors\\merger.py",
+    "to": "experiments\\python-recommendation\\src\\processors\\merger.py",
+    "bytes": 2178,
+    "sha256": "a540dd6da1a8cf690881c5088b48f3882f76482a5d7ef93649b2cfd91ef3ca38"
+  },
+  {
+    "from": "AI_Services\\src\\processors\\mongodb_processor.py",
+    "to": "experiments\\python-recommendation\\src\\processors\\mongodb_processor.py",
+    "bytes": 2010,
+    "sha256": "01223ee6fef26418660de02280ab3c84d5cd35992e5a603762f36d4bcb195b7f"
+  },
+  {
+    "from": "AI_Services\\src\\processors\\mysql_processor.py",
+    "to": "experiments\\python-recommendation\\src\\processors\\mysql_processor.py",
+    "bytes": 431,
+    "sha256": "3639c3c87d80bbaefdb02edfb606e1c797e11e1da191d4e40a23f6d8c4643345"
+  },
+  {
+    "from": "AI_Services\\src\\ranking\\__pycache__\\heuristic_ranker.cpython-313.pyc",
+    "to": "experiments\\python-recommendation\\src\\ranking\\__pycache__\\heuristic_ranker.cpython-313.pyc",
+    "bytes": 1312,
+    "sha256": "1bc135428976a379feb5d9884f96bbbeebc0a1cecae81ae82e0f2493b6e240ff"
+  },
+  {
+    "from": "AI_Services\\src\\ranking\\heuristic_ranker.py",
+    "to": "experiments\\python-recommendation\\src\\ranking\\heuristic_ranker.py",
+    "bytes": 521,
+    "sha256": "b2b68d7ea9499930487ad91720a46b8779f6070c0d7bd913b814a67132ea990e"
+  },
+  {
+    "from": "AI_Services\\src\\recommender.py",
+    "to": "experiments\\python-recommendation\\src\\recommender.py",
+    "bytes": 2891,
+    "sha256": "257216ea806b97cd1e6a27aefd8d8826a35e2ab5429ca229a9d36e974059945a"
+  },
+  {
+    "from": "AI_Services\\src\\recommender_v1.py",
+    "to": "experiments\\python-recommendation\\src\\recommender_v1.py",
+    "bytes": 5032,
+    "sha256": "d2018b2b245a9a6913d71060163ab574d972663d1c4d31ccdb78ab2dd71bb294"
+  }
+]

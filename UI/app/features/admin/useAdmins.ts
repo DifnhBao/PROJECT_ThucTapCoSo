@@ -1,8 +1,10 @@
 "use client";
-
-import useSWR, { mutate } from "swr";
-import { getAdmins, AcceptOrReject } from "@/app/features/auth/authApi";
+import { getAdmins } from "@/app/features/auth/authApi";
 import { deleteAccount } from "@/app/features/user/accountApi";
+import useSWR from "swr";
+import { readApiResponse } from "../../lib/api-contract";
+import { useAuthState } from "../../lib/use-auth-state";
+import type { UserDto } from '../../types/api';
 import { User } from "../../types/music";
 
 // Fetcher dùng chung
@@ -10,49 +12,24 @@ const fetcher = async (): Promise<User[]> => {
   const res = await getAdmins();
   if (!res.ok) throw new Error("Không thể tải danh sách admin");
 
-  const result = await res.json();
+  const result = await readApiResponse<{ data: UserDto[] }>(res);
 
-  return result.data.map((item: any) => ({
+  return result.data.map((item) => ({
     userId: item.user_id,
     username: item.username,
     email: item.email,
     role: item.role,
-    activity_status: item.activity_status,
-    account_status: item.is_active,
+    actStatus: item.activity_status ?? "offline",
+    isActive: item.is_active ?? false,
+    avatar: item.avatar ?? "",
   }));
 };
 
 // Hook dùng chung
 export function useAdmins() {
-  const { data, error, isLoading } = useSWR<User[]>("admins", fetcher);
-
-  // Cập nhật trạng thái admin
-  const updateAdminStatus = async (id: number, status: string) => {
-    try {
-      const res = await AcceptOrReject(id, status);
-      const dataRes = await res.json();
-
-      alert(dataRes.message);
-
-      if (res.ok) {
-        // Optimistic update
-        mutate<User[]>(
-          "admins",
-          (admins) =>
-            admins?.map((u) =>
-              u.userId === id ? { ...u, activity_status: status } : u,
-            ),
-          false,
-        );
-
-        // Revalidate
-        mutate("admins");
-      }
-    } catch (error) {
-      console.error("Lỗi khi cập nhật trạng thái:", error);
-      alert("Lỗi hệ thống khi cập nhật trạng thái.");
-    }
-  };
+  const auth = useAuthState("admin");
+  const key = auth.principal ? ["admin", auth.principal.userId, auth.epoch, "admins"] : null;
+  const { data, error, isLoading, mutate } = useSWR<User[]>(key, fetcher);
 
   // Xóa admin
   const deleteAdmin = async (userId: number) => {
@@ -61,7 +38,7 @@ export function useAdmins() {
 
       let dataRes;
       try {
-        dataRes = await res.json();
+        dataRes = await readApiResponse<{ message?: string }>(res);
       } catch {
         dataRes = { message: "Không thể đọc phản hồi từ máy chủ." };
       }
@@ -69,12 +46,11 @@ export function useAdmins() {
       alert(dataRes.message || "Không có phản hồi từ server.");
 
       if (res.ok) {
-        mutate<User[]>(
-          "admins",
+        mutate(
           (admins) => admins?.filter((u) => u.userId !== userId),
           false,
         );
-        mutate("admins");
+        mutate();
       }
     } catch (error) {
       console.error("Lỗi khi xóa:", error);
@@ -86,8 +62,7 @@ export function useAdmins() {
     admins: data ?? [],
     isLoading,
     error,
-    updateAdminStatus,
     deleteAdmin,
-    refreshAdmins: () => mutate("admins"),
+    refreshAdmins: () => mutate(),
   };
 }

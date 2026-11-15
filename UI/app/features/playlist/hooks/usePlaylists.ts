@@ -1,43 +1,16 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { Playlist } from "../types";
-import { getMyPlaylistsService } from "../service";
-import { mapToPlaylist } from "../playlist.mapper";
-
+import useSWR from 'swr';
+import { useAuthState } from '../../../lib/use-auth-state';
+import { mapToPlaylist } from '../playlist.mapper';
+import { getMyPlaylistsService } from '../service';
+import type { Playlist } from '../types';
 export function usePlaylists() {
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchPlaylists = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await getMyPlaylistsService();
-      
-      const rawData = Array.isArray(response)
-        ? response
-        : Array.isArray(response?.data)
-        ? response.data
-        : [];
-
-      const playlistData: Playlist[] = rawData.map(mapToPlaylist);
-
-      setPlaylists(playlistData);
-    } catch (error: any) {
-      const errorMsg = error?.message || "Lỗi khi tải playlists";
-      setError(errorMsg);
-      setPlaylists([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPlaylists();
-  }, []);
-
-  return { playlists, loading, error, fetchPlaylists };
+  const auth = useAuthState('user');
+  const key = auth.principal ? ['user', auth.principal.userId, auth.epoch, 'playlists'] : null;
+  const { data, error, isLoading, mutate } = useSWR<Playlist[]>(key, async () => {
+    const response = await getMyPlaylistsService();
+    const rows = Array.isArray(response) ? response : Array.isArray(response?.data) ? response.data : [];
+    return rows.map(mapToPlaylist);
+  });
+  return { playlists: data ?? [], loading: isLoading, error: error instanceof Error ? error.message : null, fetchPlaylists: async () => { await mutate(); } };
 }

@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-08",
+  "route": "/songs/41",
+  "runs": 3,
+  "cls": {
+    "median": 0,
+    "min": 0,
+    "max": 0,
+    "samples": [
+      0,
+      0,
+      0
+    ]
+  },
+  "lcpMs": {
+    "median": 3160,
+    "min": 2928,
+    "max": 3208,
+    "samples": [
+      2928,
+      3160,
+      3208
+    ]
+  },
+  "loadEventEndMs": {
+    "median": 2243.899999999907,
+    "min": 2148.4000000001397,
+    "max": 2248.2999999998137,
+    "samples": [
+      2148.4000000001397,
+      2243.899999999907,
+      2248.2999999998137
+    ]
+  },
+  "jsCssEncodedBytes": {
+    "median": 252043,
+    "min": 252043,
+    "max": 252043,
+    "samples": [
+      252043,
+      252043,
+      252043
+    ]
+  },
+  "note": "Production current baseline only; measured render optimization has separate before/after React Profiler evidence"
+}

@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-08",
+  "node": "v22.19.0",
+  "platform": "win32",
+  "os": "10.0.26300",
+  "cpu": "AMD Ryzen 7 5700U with Radeon Graphics         ",
+  "testDatabase": {
+    "host": "127.0.0.1",
+    "port": 3307,
+    "database": "tunetrek_test_t04"
+  },
+  "mysql": "8.0.46 (integration log)",
+  "browser": "Edge headless",
+  "nextURL": "http://127.0.0.1:3016",
+  "productionBuildTimeUtc": "2026-11-08T08:45:26.101Z",
+  "build": "User ran npm run build successfully; tested matching production server. No rebuild while tests active."
+}

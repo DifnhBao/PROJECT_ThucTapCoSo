@@ -1,0 +1,23 @@
+{
+  "browser": "Chromium/Edge",
+  "component": "actual Player + PlayerProvider + AudioController; Next navigation shim; fixture API",
+  "emptyStartupRequests": 0,
+  "shufflePreservesTrack": true,
+  "stalePageDiscarded": true,
+  "catalogNextPage": 2,
+  "emptyPageStops": true,
+  "errorRetrySkip": true,
+  "autoplayRejectionRecoverable": true,
+  "repeatOneAndAllNativeEnded": true,
+  "offlinePageAttempts": 2,
+  "offlineNoLoop": true,
+  "catalogListStrictModePages": [
+    1,
+    2
+  ],
+  "catalogListManualRetry": true,
+  "restorePausedAtSavedTime": true,
+  "failedAudioViewCount": 0,
+  "mobileWidth": 390,
+  "unexpectedPageErrors": []
+}

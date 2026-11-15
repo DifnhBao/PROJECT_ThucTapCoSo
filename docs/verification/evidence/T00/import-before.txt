@@ -1,0 +1,17 @@
+[eval]:1
+global.setInterval = () => { throw new Error("REGRESSION: controller import starts a timer"); }; require("./src/controllers/user_activity.controller");
+                             ^
+
+Error: REGRESSION: controller import starts a timer
+    at global.setInterval ([eval]:1:36)
+    at Object.<anonymous> (D:\code\TTCS-PROJECT\Server\src\controllers\user_activity.controller.js:34:1)
+    at Module._compile (node:internal/modules/cjs/loader:1706:14)
+    at Object..js (node:internal/modules/cjs/loader:1839:10)
+    at Module.load (node:internal/modules/cjs/loader:1441:32)
+    at Function._load (node:internal/modules/cjs/loader:1263:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16)
+
+Node.js v22.19.0

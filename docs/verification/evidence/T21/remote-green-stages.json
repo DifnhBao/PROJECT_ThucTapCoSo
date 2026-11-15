@@ -1,0 +1,188 @@
+{
+  "api-diagnostics/api-lint.json": {
+    "stage": "api-lint",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "api-diagnostics/api-tests.json": {
+    "stage": "api-tests",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "browser-diagnostics/account-regression.json": {
+    "stage": "account-regression",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "browser-diagnostics/e2e-result.json": {
+    "actualNextUI": true,
+    "actualExpress": true,
+    "actualMySQL": true,
+    "externalStorageMocked": true,
+    "apiResponsesMocked": false,
+    "steps": [
+      "register/login through real forms",
+      "search/play/favorite persisted in MySQL",
+      "create playlist and add song through nested dialog",
+      "recommendation explanation is returned by real backend",
+      "upload pending song using real multipart and mocked external storage",
+      "admin UI approves and guest can then read song",
+      "logout/login B does not expose A private library"
+    ],
+    "unexpectedPageErrors": []
+  },
+  "browser-diagnostics/e2e-ui-build.json": {
+    "stage": "e2e-ui-build",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "browser-diagnostics/full-stack-e2e.json": {
+    "stage": "full-stack-e2e",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "browser-diagnostics/mysql-integration.json": {
+    "stage": "mysql-integration",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "browser-diagnostics/player-regression.json": {
+    "stage": "player-regression",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "browser-diagnostics/responsive-keyboard.json": {
+    "stage": "responsive-keyboard",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "security-diagnostics/dependency-audit.json": {
+    "status": "PASS",
+    "gateThreshold": "high",
+    "findings": [
+      {
+        "package": "editorconfig",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      },
+      {
+        "package": "glob",
+        "severity": "moderate",
+        "advisories": [
+          "1244013"
+        ],
+        "state": "below-threshold"
+      },
+      {
+        "package": "js-beautify",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      },
+      {
+        "package": "minimatch",
+        "severity": "moderate",
+        "advisories": [
+          "1244623"
+        ],
+        "state": "below-threshold"
+      },
+      {
+        "package": "sequelize",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      },
+      {
+        "package": "sequelize-cli",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      },
+      {
+        "package": "uuid",
+        "severity": "moderate",
+        "advisories": [
+          "1119441"
+        ],
+        "state": "below-threshold"
+      },
+      {
+        "package": "@typescript-eslint/eslint-plugin",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      },
+      {
+        "package": "@typescript-eslint/parser",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      },
+      {
+        "package": "@typescript-eslint/type-utils",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      },
+      {
+        "package": "@typescript-eslint/typescript-estree",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      },
+      {
+        "package": "@typescript-eslint/utils",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      },
+      {
+        "package": "eslint-config-next",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      },
+      {
+        "package": "minimatch",
+        "severity": "moderate",
+        "advisories": [
+          "1244623"
+        ],
+        "state": "below-threshold"
+      },
+      {
+        "package": "typescript-eslint",
+        "severity": "moderate",
+        "advisories": [],
+        "state": "below-threshold"
+      }
+    ]
+  },
+  "security-diagnostics/secrets.json": {
+    "status": "PASS",
+    "mode": "tree-and-introduced-commits",
+    "findings": []
+  },
+  "ui-diagnostics/ui-build.json": {
+    "stage": "ui-build",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "ui-diagnostics/ui-lint.json": {
+    "stage": "ui-lint",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "ui-diagnostics/ui-tests.json": {
+    "stage": "ui-tests",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "ui-diagnostics/ui-typecheck.json": {
+    "stage": "ui-typecheck",
+    "status": "PASS",
+    "exitCode": 0
+  }
+}

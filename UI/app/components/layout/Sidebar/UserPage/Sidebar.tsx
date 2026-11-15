@@ -1,15 +1,13 @@
 "use client";
-
+import styles from "@/app/components/layout/Sidebar/UserPage/Sidebar.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import styles from "@/app/components/layout/Sidebar/UserPage/Sidebar.module.css";
 
 import Footer from "../../Footer/UserPage/Footer";
 
-import { RiHome5Fill } from "react-icons/ri";
 import { BsHeart } from "react-icons/bs";
 import { PiPlaylist } from "react-icons/pi";
-import { HiOutlineUser } from "react-icons/hi2";
+import { RiHome5Fill } from "react-icons/ri";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -44,14 +42,7 @@ export default function Sidebar() {
           <PiPlaylist className={styles.icon} /> Playlist
         </Link>
 
-        <Link
-          href="/Following"
-          className={`${styles.link} ${
-            pathname.startsWith("/Following") ? styles.active : ""
-          }`}
-        >
-          <HiOutlineUser className={styles.icon} /> Following
-        </Link>
+
       </nav>
 
       <Footer />

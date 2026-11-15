@@ -116,7 +116,7 @@
 /* USER */
 .userArea {
   position: relative;
-  
+
 }
 
 .userGreeting {
@@ -225,4 +225,15 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+@media(max-width:900px) {
+ .header { left:0; width:100%; height:112px; padding:8px 12px; flex-wrap:wrap; gap:8px; }
+ .left { order:2; flex:1 1 100%; min-width:0; }
+ .left > :last-child { flex:1; min-width:0; }
+ .logo { display:none; }
+ .right { order:1; width:100%; gap:8px; justify-content:flex-end; }
+ .uploadBtn { padding:6px 10px; font-size:13px; }
+ .signIn,.register { width:auto; padding:6px 10px; }
+ .userGreeting { padding:4px 8px; }
+ .userPopup { right:0; max-width:90vw; }
 }

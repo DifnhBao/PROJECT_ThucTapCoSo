@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "scope": "real Cloudinary anonymous authenticated-delivery URL",
+  "deliveryType": "authenticated",
+  "httpStatus": 401,
+  "providerMocked": false
+}
