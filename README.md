@@ -125,4 +125,3 @@ Source do tác giả sở hữu: [MIT](LICENSE), theo lựa chọn của chủ d
 - [Tài liệu nghiệp vụ: use cases, quyền, rules, KPI và traceability](docs/product/README.md)
 - [Nghiệm thu T22](docs/verification/T22.md)
 - [Demo HTTPS miễn phí từ máy cá nhân — T23](docs/deployment/LOCAL_HTTPS_DEMO_VI.md)
-
