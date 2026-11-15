@@ -10,7 +10,7 @@ export const artistService = {
     return json.data.map((a) => ({
       artistId: a.artist_id,
       name: a.name,
-      imageUrl: a.image_url ?? "/images/default-artist.png",
+      imageUrl: a.image_url ?? "/images/default-artist.svg",
     }));
   },
 
@@ -20,7 +20,7 @@ export const artistService = {
     return json.data.map((a) => ({
       artistId: a.artist_id,
       name: a.name,
-      imageUrl: a.image_url ?? "/images/default-artist.png",
+      imageUrl: a.image_url ?? "/images/default-artist.svg",
       totalListens: a.total_listens, // dùng sau này
     }));
   },
@@ -32,7 +32,7 @@ export const artistService = {
     const songs = artist.songs ?? [];
 
     const artistImage =
-      artist.image_url ?? songs[0]?.image_url ?? "/images/default-artist.png";
+      artist.image_url ?? songs[0]?.image_url ?? "/images/default-artist.svg";
 
     return {
       type: "artist",

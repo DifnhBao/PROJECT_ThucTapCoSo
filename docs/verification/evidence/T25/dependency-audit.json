@@ -1,0 +1,104 @@
+{
+  "status": "PASS",
+  "gateThreshold": "high",
+  "findings": [
+    {
+      "package": "editorconfig",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    },
+    {
+      "package": "glob",
+      "severity": "moderate",
+      "advisories": [
+        "1244013"
+      ],
+      "state": "below-threshold"
+    },
+    {
+      "package": "js-beautify",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    },
+    {
+      "package": "minimatch",
+      "severity": "moderate",
+      "advisories": [
+        "1244623"
+      ],
+      "state": "below-threshold"
+    },
+    {
+      "package": "sequelize",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    },
+    {
+      "package": "sequelize-cli",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    },
+    {
+      "package": "uuid",
+      "severity": "moderate",
+      "advisories": [
+        "1119441"
+      ],
+      "state": "below-threshold"
+    },
+    {
+      "package": "@typescript-eslint/eslint-plugin",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    },
+    {
+      "package": "@typescript-eslint/parser",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    },
+    {
+      "package": "@typescript-eslint/type-utils",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    },
+    {
+      "package": "@typescript-eslint/typescript-estree",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    },
+    {
+      "package": "@typescript-eslint/utils",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    },
+    {
+      "package": "eslint-config-next",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    },
+    {
+      "package": "minimatch",
+      "severity": "moderate",
+      "advisories": [
+        "1244623"
+      ],
+      "state": "below-threshold"
+    },
+    {
+      "package": "typescript-eslint",
+      "severity": "moderate",
+      "advisories": [],
+      "state": "below-threshold"
+    }
+  ]
+}

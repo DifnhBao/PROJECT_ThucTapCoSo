@@ -52,7 +52,7 @@ export default function ProfilePage() {
   // Logic hiển thị Avatar: Ưu tiên ảnh Preview -> Ảnh User từ DB -> Ảnh mặc định
   // Lưu ý: Sửa lại user?.avatar theo đúng key trong database của bạn nhé
   const displayAvatar =
-    previewUrl || user?.avatar || "/images/Avatar/avt01.png";
+    previewUrl || user?.avatar || "/images/default-avatar.svg";
 
   return (
     <div className={styles.pageContainer}>

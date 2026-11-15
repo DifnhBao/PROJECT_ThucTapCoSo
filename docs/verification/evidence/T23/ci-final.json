@@ -1,0 +1,34 @@
+{
+  "conclusion": "success",
+  "headSha": "7011841f0aebec52b61253eda32b6a013612f539",
+  "jobs": [
+    {
+      "name": "UI quality",
+      "conclusion": "success"
+    },
+    {
+      "name": "MySQL and browser E2E",
+      "conclusion": "success"
+    },
+    {
+      "name": "Dependency and secret gates",
+      "conclusion": "success"
+    },
+    {
+      "name": "API quality",
+      "conclusion": "success"
+    },
+    {
+      "name": "Container builds",
+      "conclusion": "success"
+    },
+    {
+      "name": "CI required",
+      "conclusion": "success"
+    }
+  ],
+  "status": "completed",
+  "updatedAt": "2026-11-13T16:09:36Z",
+  "url": "https://github.com/DifnhBao/PROJECT_ThucTapCoSo/actions/runs/43458972978",
+  "scope": "T23 candidate on stacked draft PR #3; no main merge or registry release"
+}

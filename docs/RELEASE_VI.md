@@ -37,4 +37,8 @@ Secret gate kiểm tra cây nguồn hiện tại và range commit mới, không 
 
 ## Rollback
 
+### Phương án tương đương cho demo cá nhân miễn phí (T25)
+
+Theo lựa chọn MySQL 8 local + HTTPS tunnel của chủ dự án, portfolio-v1 có thể dùng image build local từ đúng source đã kiểm chứng, pin bằng image ID SHA-256 và lưu manifest/evidence trong release notes. Không cần tạo thêm dịch vụ cloud hoặc push GHCR cho topology này. Vẫn bắt buộc CI xanh trên đúng commit/main, build sạch, smoke HTTPS/provider thật, backup và rollback. Không gọi local image ID là registry RepoDigest hoặc claim đã triển khai image GHCR. Quy trình GHCR phía trên áp dụng khi chọn registry distribution sau này; không hạ ngưỡng CI/branch protection.
+
 Giữ SHA/digest bản đã smoke trước đó và backup có kiểm tra khôi phục. Khi bản mới lỗi, dừng rollout, thu thập log an toàn và chuyển API/web về digest trước. Kiểm tra schema hiện tại tương thích bản cũ trước khi khởi động; không tự chạy migration down. Nếu schema không tương thích, dùng bản sửa tiến hoặc khôi phục backup vào DB riêng, kiểm tra nghiệp vụ rồi mới chuyển kết nối theo quyết định của người vận hành. Khôi phục backup có thể mất ghi mới; phải xác định mốc phục hồi và bảo toàn DB lỗi để đối chiếu. Smoke lại readiness, phiên và library sau rollback.

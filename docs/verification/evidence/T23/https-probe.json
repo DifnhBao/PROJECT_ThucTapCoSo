@@ -1,7 +1,7 @@
 {
   "status": "PASS",
   "scope": "HTTPS HTTP probe only",
-  "origin": "https://main-blocked-zum-hayes.trycloudflare.com",
+  "origin": "https://release-mechanisms-charles-gather.trycloudflare.com",
   "checks": [
     {
       "stage": "live",

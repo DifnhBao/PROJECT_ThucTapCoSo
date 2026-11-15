@@ -1,0 +1,159 @@
+{
+  "stage": "login",
+  "errorType": "AssertionError",
+  "frames": [
+    "verify-live.cjs:24:346"
+  ],
+  "traces": {
+    "user": [
+      {
+        "atMs": 1100,
+        "event": "response",
+        "method": "GET",
+        "route": "/login",
+        "status": 200
+      },
+      {
+        "atMs": 1564,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1609,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1646,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1648,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1657,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1691,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1694,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1706,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1709,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1709,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1709,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1710,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1759,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1764,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1764,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1765,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1766,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 1767,
+        "event": "response",
+        "method": "GET",
+        "route": "/:value/:value/:value/:value",
+        "status": 200
+      },
+      {
+        "atMs": 2079,
+        "event": "requestfailed",
+        "method": "GET",
+        "route": "/api/users/me"
+      },
+      {
+        "atMs": 2388,
+        "event": "response",
+        "method": "POST",
+        "route": "/api/auth/login",
+        "status": 401,
+        "requestId": "6217c924-f1f9-49f7-aa51-ff8efeccb77e"
+      }
+    ],
+    "admin": []
+  }
+}

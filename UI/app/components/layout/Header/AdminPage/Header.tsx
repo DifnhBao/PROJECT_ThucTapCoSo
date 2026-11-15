@@ -30,7 +30,7 @@ export default function Header() {
           router.push("/administrator");
         }}
       >
-        <img src="../images/Logo/admin-logo.png" alt="logo web page" />
+        <span aria-label="TuneTrek">TuneTrek</span>
         <h2 id="page-title">Dashboard</h2>
       </div>
 

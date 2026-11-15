@@ -3,7 +3,14 @@
 Python evaluation status: **INCOMPLETE**; see [EVALUATION_STATUS.md](EVALUATION_STATUS.md).
 Use the Node v1 evaluator for current website evidence.
 
-`python-recommendation/` contains the former versioned `AI_Services/` sources,
+T25: the former `python-recommendation/` archive was retained privately under
+`.local-backups/t25/archived/experiments/python-recommendation/` and removed from
+the release tree because dataset/model/media redistribution rights were not
+verified. Source, attribution and checksums remain in the private archive;
+the historical T13 report describes the earlier move, not release contents.
+Do not restore this archive to a public release without a separate rights review.
+
+The private archive contains the former versioned `AI_Services/` sources,
 notebooks, datasets and model artifacts. Node recommendation in `Server` remains
 the web application's serving engine. No Next.js/Express/Compose path calls this
 Python code. Moving files does not validate the models, metrics or data provenance.

@@ -63,8 +63,8 @@ Phiên bản `portfolio-v1` cần đáp ứng đủ các điều sau:
 | [x] | [T20](#t20) | Docker toàn stack, health, logs và shutdown | P1 | T03, T04, T06, T11, T19 |
 | [x] | [T21](#t21) | CI và quy trình release | P1 | T19, T20 |
 | [x] | [T22](#t22) | Hoàn thiện tài liệu nghiệp vụ BA | P2 | Rule đã chốt ở các task trước |
-| [ ] | [T23](#t23) | Deploy demo và kiểm tra vận hành | P1 | T20, T21, T22 |
-| [ ] | [T24](#t24) | README, showcase và nội dung CV | P1 | T15, T18, T22, T23 |
+| [x] | [T23](#t23) | Deploy demo và kiểm tra vận hành | P1 | T20, T21, T22 |
+| [x] | [T24](#t24) | README, showcase và nội dung CV | P1 | T15, T18, T22, T23 |
 | [ ] | [T25](#t25) | Nghiệm thu cuối và chốt portfolio-v1 | Cổng phát hành | T00–T24 |
 
 P0: chặn public demo. P1: bắt buộc trước mốc CV. P2: hoàn thiện trải nghiệm và khả năng trình bày; vẫn thuộc scope v1 ở bảng này. P1 ở cuối danh sách là công việc tích hợp, không có nghĩa được bỏ qua. Không đợi T19 mới viết tests: mỗi task logic phải thêm regression tests ngay khi sửa; T19 hoàn thiện và kết nối chúng.
@@ -690,7 +690,7 @@ Hoàn tất 2026-11-13 trong phạm vi tài liệu as-built. Có 10 stories, 12 
 
 ### T23 — Deploy demo và kiểm tra vận hành thực tế
 
-Tiến độ 2026-11-13: người dùng chọn **MySQL 8 local + HTTPS tunnel miễn phí** thay Render/Filess. Runtime/browser/Cloudinary thật, restart/DB outage/backup/restore/rollback đã PASS; đang chốt source candidate qua CI trước nghiệm thu cuối. Chỉ có uptime khi PC/Docker/tunnel chạy, không claim hosting 24/7. Xem [báo cáo T23](verification/T23.md) và [runbook](deployment/LOCAL_HTTPS_DEMO_VI.md).
+Hoàn tất 2026-11-15 trong phạm vi người dùng chọn: **MySQL 8 local + HTTPS tunnel miễn phí**, thay Render/Filess. Runtime/browser/Cloudinary thật, restart/DB outage/backup/restore/rollback PASS; candidate 7011841 qua CI đủ sáu job. Chỉ có uptime khi PC/Docker/tunnel chạy, không claim hosting 24/7 hoặc release cloud. Xem [báo cáo T23](verification/T23.md) và [runbook](deployment/LOCAL_HTTPS_DEMO_VI.md).
 
 **Vị trí:** env/deployment configuration, health probes, demo database và tài liệu runbook.
 
@@ -707,9 +707,9 @@ Tiến độ 2026-11-13: người dùng chọn **MySQL 8 local + HTTPS tunnel mi
 
 **Nghiệm thu:**
 
-- [ ] HTTPS, login/refresh/logout và audio hoạt động trên domain thực, không gọi localhost.
-- [ ] User không truy cập admin API; dữ liệu demo không chứa PII/secret thật.
-- [ ] Link demo, release SHA, smoke results và runbook được lưu.
+- [x] HTTPS, login/refresh/logout và audio hoạt động trên domain thực, browser không gọi localhost (tunnel tạm theo lựa chọn người dùng).
+- [x] User không truy cập admin API; dữ liệu demo synthetic, secrets ngoài Git và đã kiểm tra evidence.
+- [x] Link demo, source candidate SHA 7011841, smoke results và runbook được lưu; chưa publish release tag/GHCR.
 
 **Bàn giao:** live demo đã kiểm chứng; nếu chưa deploy thành công, không đánh dấu portfolio-v1 hoàn thành theo tiêu chí này.
 
@@ -724,7 +724,7 @@ Tiến độ 2026-11-13: người dùng chọn **MySQL 8 local + HTTPS tunnel mi
 1. Viết README theo thứ tự: vấn đề/người dùng → demo → features đã ship → kiến trúc/ERD → stack/tradeoffs → setup → tests/CI → đánh giá/performance → deployment/limitations → đóng góp cá nhân.
 2. Chạy lại setup guide trong checkout sạch hoặc môi trường khác. Mỗi biến env và bước migrate/seed phải có giải thích; sample credentials chỉ dành cho demo.
 3. Tạo video3–5 phút: listener flow, recommendation explanation, admin moderation và một bằng chứng kỹ thuật như CI/query plan/test security. Thêm screenshots desktop/mobile tương ứng bản hiện tại.
-4. Ghi rõ nền đồ án nhóm, phần mình bổ sung và phạm vi Python experiments. Thêm attribution/license media/dataset và license source phù hợp quyền sở hữu thực tế.
+4. Ghi đúng nền đồ án cá nhân theo xác nhận của chủ dự án ngày 2026-11-15, phần thực hiện và phạm vi Python experiments. Thêm attribution/license media/dataset và MIT cho source thuộc quyền tác giả theo lựa chọn của chủ dự án; không đổi quyền của nội dung bên thứ ba.
 5. Mỗi con số trong README/CV liên kết tới report có dataset/config/hardware/command. Nếu evaluator chỉ dùng synthetic fixture, ghi rõ; nếu chưa có improvement thì trình bày kết quả baseline trung thực.
 6. Chọn3–4 CV bullets từ bằng chứng thật: correctness/security, performance, recommendation và BA. Không điền placeholder bằng mục tiêu chưa đạt; không tuyên bố production traffic khi chỉ load test.
 
@@ -732,9 +732,11 @@ Tiến độ 2026-11-13: người dùng chọn **MySQL 8 local + HTTPS tunnel mi
 
 **Nghiệm thu:**
 
-- [ ] README chạy được từ clone sạch; link demo/video/CI/docs không hỏng.
-- [ ] Feature list khớp app; không có98%/999K giả hoặc metric sai tên.
-- [ ] Đóng góp cá nhân và hạn chế được ghi rõ; CV bullets có evidence.
+- [x] README chạy được từ clone sạch; link demo/video/CI/docs không hỏng tại thời điểm kiểm tra (HTTPS tunnel tạm có thể hết hạn).
+- [x] Feature list khớp app; không có98%/999K giả hoặc metric sai tên.
+- [x] Đóng góp cá nhân và hạn chế được ghi rõ; CV bullets có evidence.
+
+T24 VERIFIED ngày 2026-11-15 theo [báo cáo](verification/T24.md): API 125/UI 58 tests, build, bootstrap Docker DB mới, browser search/playback, video 3:04 và MIT source. Bàn giao tại workspace, chưa phát hành portfolio-v1; quyền asset/dataset legacy và branding cần rà trước T25.
 
 **Bàn giao:** README hoàn chỉnh, release assets và bản nháp CV bullets đã điền số liệu thực tế.
 
@@ -764,7 +766,7 @@ Tiến độ 2026-11-13: người dùng chọn **MySQL 8 local + HTTPS tunnel mi
 
 ## 4. Ma trận nghiệm thu xuyên hệ thống
 
-Các ID sau nên được đưa vào tên test hoặc tài liệu test để dễ truy vết. AT01–AT22 đã kiểm chứng ở [verification/T19.md](verification/T19.md); AT23 ở [verification/T20.md](verification/T20.md), theo phạm vi clone snapshot local; AT24 ở [verification/T21.md](verification/T21.md), theo commit ứng viên PR. AT25–AT26 chưa nghiệm thu.
+Các ID sau nên được đưa vào tên test hoặc tài liệu test để dễ truy vết. AT01–AT22 đã kiểm chứng ở [verification/T19.md](verification/T19.md); AT23 ở [verification/T20.md](verification/T20.md), theo phạm vi clone snapshot local; AT24 ở [verification/T21.md](verification/T21.md), theo commit ứng viên PR; AT25 ở [verification/T23.md](verification/T23.md), trong phạm vi HTTPS tunnel tạm người dùng chọn. AT26 PASS theo [verification/T24.md](verification/T24.md), phạm vi tài liệu/showcase và setup local, chưa phát hành T25.
 
 | ID | Kịch bản kiểm tra | Kết quả phải đạt | Task chính | Kết quả hiện tại |
 |---|---|---|---|---|
@@ -792,8 +794,8 @@ Các ID sau nên được đưa vào tên test hoặc tài liệu test để d�
 | AT22 | Audio timeupdate trong Profiler | Lists không rerender chỉ vì progress đổi | T18 | PASS |
 | AT23 | Clone sạch/Compose, DB down, restart/restore | Setup tái lập; readiness đúng; dữ liệu/backup dùng được | T20 | PASS (snapshot local T20) |
 | AT24 | CI đúng release commit | Type/lint/unit/integration/E2E/build đạt | T19, T21 | PASS ứng viên PR a9cbd8b; chưa release/deploy |
-| AT25 | Demo HTTPS listener + moderation flow | Hoạt động trên domain thật, không URL localhost | T23 | NOT_RUN |
-| AT26 | README metric/features/contribution review | Có bằng chứng, scope thật, không claim giả | T22, T24 | NOT_RUN |
+| AT25 | Demo HTTPS listener + moderation flow | Hoạt động trên domain thật, browser không URL localhost | T23 | PASS HTTPS tunnel tạm; PC/Docker phải chạy |
+| AT26 | README metric/features/contribution review | Có bằng chứng, scope thật, không claim giả | T22, T24 | PASS T24; quyền asset legacy còn rà trước T25 |
 
 
 ## 5. Checklist lệnh kiểm tra và quy tắc lưu bằng chứng

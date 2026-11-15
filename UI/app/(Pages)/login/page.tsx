@@ -6,11 +6,12 @@ import { useModal } from "@/app/context/ModalContext";
 import { loginService } from "@/app/features/auth/service";
 import { useUser } from "@/app/features/user/context/UserContext";
 import styles from "@/app/styles/Auth.module.css";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignInPage() {
   const router = useRouter();
+  const pathname = usePathname();
   const [submitting, setSubmitting] = useState(false);
   const [failure, setFailure] = useState("");
   const [username, setUsername] = useState("");
@@ -28,7 +29,8 @@ export default function SignInPage() {
       alert(data.message);
       await refreshUser();
       closeModal();
-      router.refresh();
+      if (pathname === '/login') router.replace('/Home');
+      else router.refresh();
     } catch (error: unknown) {
       const message = formError(error);
       setFailure(message);

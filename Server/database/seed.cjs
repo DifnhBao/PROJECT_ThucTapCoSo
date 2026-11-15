@@ -45,7 +45,7 @@ async function seed(mode, env = process.env) {
       await q.bulkInsert('ratings', [{ user_id: 1, song_id: 1, score: 5, ...times }], options);
       await q.bulkInsert('UserActivities', [{ user_id: 1, song_id: 1, session_id: 'synthetic-session-1', source: 'search', song_duration: 181, total_listened_time: 60, max_position_reached: 60, created_at: now }], options);
       await q.bulkInsert('song_similarities', [26, 27, 28, 2, 3, 4].map((song_id_2, i) => ({ song_id_1: 1, song_id_2, behavioral_score: 0.9 - i / 20, metadata_score: 0.8, final_score: 0.99 - i / 20, reason: 'Synthetic similarity', detail: JSON.stringify({ synthetic: true }), updated_at: now })), options);
-      return { users: 5, songs: 28, publicSongs: 25, playlists: 2, media: 'reserved example.test URLs; no playable audio supplied' };
+      return { users: 5, songs: 28, publicSongs: 25, playlists: 2, media: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? 'self-generated local demo tone' : 'reserved example.test URLs; no playable audio supplied' };
     });
   } finally { await db.close(); }
 }

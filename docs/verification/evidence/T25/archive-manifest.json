@@ -1,0 +1,652 @@
+[
+  {
+    "path": "experiments/python-recommendation/.dockerignore",
+    "bytes": 67,
+    "sha256": "d19eef1d8b64191ba3ecfe1be0ad0705112e1882e73ea93012fc49022c0ecd1a"
+  },
+  {
+    "path": "experiments/python-recommendation/.gitignore",
+    "bytes": 368,
+    "sha256": "c43d3d1963cb425ff4e1261ab2c58c46edc22c31ff478ccbeba50eb28195d7f3"
+  },
+  {
+    "path": "experiments/python-recommendation/Dockerfile",
+    "bytes": 258,
+    "sha256": "69b5b646df4acd64b9f5244f6dfe3ce3bbc89da7ca9da5d1080641844e824c88"
+  },
+  {
+    "path": "experiments/python-recommendation/README.md",
+    "bytes": 529,
+    "sha256": "f0b1b2dd8b2e3db8d715a8b7e53f1d906401d5990fd460ed79ebf5da103d8f5c"
+  },
+  {
+    "path": "experiments/python-recommendation/requirements.txt",
+    "bytes": 204,
+    "sha256": "392d338feac22cb09da689755e8d6eb1dda4f1787fa206cbfdf4125190989617"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/main.py",
+    "bytes": 3800,
+    "sha256": "12eccf5eb1a30013c091db04df93945512efbe929bbe3b4d31c14f1ecac36a56"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/ncfcore (1).ipynb",
+    "bytes": 212280,
+    "sha256": "79cbde9e3b80bcfc47915a63f0fb5d4c033afc9fc9fbac5168111ba573e3f2b9"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/test.ipynb",
+    "bytes": 4483,
+    "sha256": "d8ccaa26b737f327793f22b2165835415559c16a073a8d093978630f1bf64c23"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/test.py",
+    "bytes": 697,
+    "sha256": "69bcde3fbb72da9742cd04c4fd55c81a3a430b2fdaf95f912a989ab7dbcd2ee1"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/Checking/check_results.py",
+    "bytes": 820,
+    "sha256": "76ec756aab32cb564e4cc6f6a22e7e7f678de39fd1708a6186dfc967fe3c576b"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/Checking/check_user_vibe.py",
+    "bytes": 546,
+    "sha256": "a4c872145e9fa2d32ed712752369b4525ef1ec08daba23bfed4b750dbb538b87"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/models/item_to_index.pkl",
+    "bytes": 105345,
+    "sha256": "1c791c5257d50c8dda8a99b40f81b20f5b9169c4dc87034e4bccd8ae8c9e99a7"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/models/lastfm_clean.csv",
+    "bytes": 1022188,
+    "sha256": "9796ddebd879165310b674ac9d53a9f8ba2d085fbd58f47e138e3e8d90a4c6cc"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/models/ncf_model.keras",
+    "bytes": 7635003,
+    "sha256": "9c596ba63e224d7151006e19a0230d5a4fdd57a4f58ec6260335b29e17201b12"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/models/test_set.csv",
+    "bytes": 204573,
+    "sha256": "aa6a669f0b3b54b5af8e44a2fd968e3c32311ece739416d315f3eb5a27f7e95f"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/models/train_set.csv",
+    "bytes": 817644,
+    "sha256": "95a679e37bbc130b8ffa6e9e6f7dccf0006b221b6937ae952040cbe37c4e63e8"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/models/user_to_index.pkl",
+    "bytes": 10875,
+    "sha256": "a15839c88d89deb338960e02637d89b06127589979b6140a59176ad83514c861"
+  },
+  {
+    "path": "experiments/python-recommendation/Bảo/__pycache__/main.cpython-313.pyc",
+    "bytes": 3148,
+    "sha256": "580de131a91a63dbcaa28f4d8df47e99f603e9f4a87cc2a6531068baaa45d8cb"
+  },
+  {
+    "path": "experiments/python-recommendation/data/final_training_data.csv",
+    "bytes": 3519,
+    "sha256": "2cb5db1d93d97b21df8a7242de7aba485a23d390212f4cf93c0164607e5dcc04"
+  },
+  {
+    "path": "experiments/python-recommendation/data/mongo_activities.json",
+    "bytes": 14113,
+    "sha256": "c018d4ab7a03c850f33ad9c4d0dff7ed405cf49b4e17e7e73b5d3e5971c862c2"
+  },
+  {
+    "path": "experiments/python-recommendation/data/mysql_favorites.csv",
+    "bytes": 843,
+    "sha256": "1b4a0ce3c651fed629c64ddca0f31e2e372e7084e0a925638b485f57cddfd544"
+  },
+  {
+    "path": "experiments/python-recommendation/data/mysql_ratings.csv",
+    "bytes": 3519,
+    "sha256": "f032726217f8e70f0cb2364d276e759bd118fb401f8f79f1e2dc2359a0411101"
+  },
+  {
+    "path": "experiments/python-recommendation/data/song_metadata.csv",
+    "bytes": 3964,
+    "sha256": "34aed722be1c189e346babca1663fea43a6477ea28bc42dad66944c83bf3ac07"
+  },
+  {
+    "path": "experiments/python-recommendation/data/MockData/artists.dat",
+    "bytes": 1925879,
+    "sha256": "c173881362c6b28551368fecb3c0be5a6a30a6cd859e1f5775413dfe46d48648"
+  },
+  {
+    "path": "experiments/python-recommendation/data/MockData/lastfm_clean.csv",
+    "bytes": 1121016,
+    "sha256": "c690551d6780f2de5b7cad27ff075977c21ecae737ad10cfb7f5d4a25d3f2834"
+  },
+  {
+    "path": "experiments/python-recommendation/data/MockData/readme.txt",
+    "bytes": 4627,
+    "sha256": "6fe5d1e6f67b025fc50cd70883dd1a1ff16c5ff37b5b7abfb33644b83468b209"
+  },
+  {
+    "path": "experiments/python-recommendation/data/MockData/tags.dat",
+    "bytes": 234468,
+    "sha256": "e95175f259be4c0c47644ae23d66131cd6d5767142a1405000e79f5584691d70"
+  },
+  {
+    "path": "experiments/python-recommendation/data/MockData/user_artists.dat",
+    "bytes": 1296455,
+    "sha256": "001400dc3c7d2667fca6e4ea6dc6acc31a9dd28ad5cd0f74cea988c019934d3b"
+  },
+  {
+    "path": "experiments/python-recommendation/data/MockData/user_friends.dat",
+    "bytes": 251565,
+    "sha256": "9a3a8f7fa5f5ec832335e5b58ed69a4cf27c6f6f6afcde62134810eea46445a7"
+  },
+  {
+    "path": "experiments/python-recommendation/data/MockData/user_taggedartists-timestamps.dat",
+    "bytes": 5249917,
+    "sha256": "ec753318e453b15356853674b687da44d9f8c7e1215e1e0ff27aaa5f52e322bd"
+  },
+  {
+    "path": "experiments/python-recommendation/data/MockData/user_taggedartists.dat",
+    "bytes": 4366696,
+    "sha256": "d31fe938fcfeed6f0059f37a36b156f63674d073fc2553e5cc9dc1595e365bc7"
+  },
+  {
+    "path": "experiments/python-recommendation/MockData/artists.dat",
+    "bytes": 1925879,
+    "sha256": "c173881362c6b28551368fecb3c0be5a6a30a6cd859e1f5775413dfe46d48648"
+  },
+  {
+    "path": "experiments/python-recommendation/MockData/lastfm_clean.csv",
+    "bytes": 1121016,
+    "sha256": "c690551d6780f2de5b7cad27ff075977c21ecae737ad10cfb7f5d4a25d3f2834"
+  },
+  {
+    "path": "experiments/python-recommendation/MockData/readme.txt",
+    "bytes": 4627,
+    "sha256": "6fe5d1e6f67b025fc50cd70883dd1a1ff16c5ff37b5b7abfb33644b83468b209"
+  },
+  {
+    "path": "experiments/python-recommendation/MockData/tags.dat",
+    "bytes": 234468,
+    "sha256": "e95175f259be4c0c47644ae23d66131cd6d5767142a1405000e79f5584691d70"
+  },
+  {
+    "path": "experiments/python-recommendation/MockData/user_artists.dat",
+    "bytes": 1296455,
+    "sha256": "001400dc3c7d2667fca6e4ea6dc6acc31a9dd28ad5cd0f74cea988c019934d3b"
+  },
+  {
+    "path": "experiments/python-recommendation/MockData/user_friends.dat",
+    "bytes": 251565,
+    "sha256": "9a3a8f7fa5f5ec832335e5b58ed69a4cf27c6f6f6afcde62134810eea46445a7"
+  },
+  {
+    "path": "experiments/python-recommendation/MockData/user_taggedartists-timestamps.dat",
+    "bytes": 5249917,
+    "sha256": "ec753318e453b15356853674b687da44d9f8c7e1215e1e0ff27aaa5f52e322bd"
+  },
+  {
+    "path": "experiments/python-recommendation/MockData/user_taggedartists.dat",
+    "bytes": 4366696,
+    "sha256": "d31fe938fcfeed6f0059f37a36b156f63674d073fc2553e5cc9dc1595e365bc7"
+  },
+  {
+    "path": "experiments/python-recommendation/models/popularity.json",
+    "bytes": 892,
+    "sha256": "1afb1f7f6e6552d8242b17c2c3465337d3fed01eae823dc4240c4a21fd1ae98b"
+  },
+  {
+    "path": "experiments/python-recommendation/models/song_id_map.json",
+    "bytes": 982,
+    "sha256": "67b30c08218f6641031048be8dcbe3741ff13119cd9a3391f08a5b161889d0e4"
+  },
+  {
+    "path": "experiments/python-recommendation/models/song_vectors.npy",
+    "bytes": 12928,
+    "sha256": "94e15bff7eb62a460a150c39facef161a5e5b31d532563a9caabb69701a063b1"
+  },
+  {
+    "path": "experiments/python-recommendation/models/user_similarity.pkl",
+    "bytes": 61950,
+    "sha256": "ca3a2bc2d5430dc0eeead09c0a526391f6f7324983add66d6eda72098391df85"
+  },
+  {
+    "path": "experiments/python-recommendation/scripts/evaluate.py",
+    "bytes": 2331,
+    "sha256": "b47d1fc07fb194e9ead44b0b567429d1a4a953be97e520eb3ce014e987f20e64"
+  },
+  {
+    "path": "experiments/python-recommendation/scripts/generate_mock_data.py",
+    "bytes": 2227,
+    "sha256": "571fd7ba35e884f6ec1f3008012e6027cfb1ff343ce6df42c2ff14910a02f9c0"
+  },
+  {
+    "path": "experiments/python-recommendation/scripts/retrain_pipeline.py",
+    "bytes": 2895,
+    "sha256": "c3ff7bb354df457d1706e49c4bfc48b2fb759fe0f4758364d9c3978ff9439508"
+  },
+  {
+    "path": "experiments/python-recommendation/scripts/__pycache__/evaluate.cpython-313.pyc",
+    "bytes": 2569,
+    "sha256": "9b4dd9ae655c1572865faaecfd543dc2947187130142d1cdf93b30900fc97810"
+  },
+  {
+    "path": "experiments/python-recommendation/scripts/__pycache__/generate_mock_data.cpython-313.pyc",
+    "bytes": 3271,
+    "sha256": "29c30cfbebdbf7d7d43e6836e6f4219a9c139af5b4a99262ea30ec52f942d670"
+  },
+  {
+    "path": "experiments/python-recommendation/scripts/__pycache__/retrain_pipeline.cpython-313.pyc",
+    "bytes": 3722,
+    "sha256": "355a0088df3b8d3b70306ea5718ad5bdf82a9a498693cb8dc30680734f8cd6af"
+  },
+  {
+    "path": "experiments/python-recommendation/share/jupyter/kernels/python3/kernel.json",
+    "bytes": 193,
+    "sha256": "ebdcb9aaca71bac28a49b29fa58c3ce82e3f505574d4053a36d46e522f6dfa42"
+  },
+  {
+    "path": "experiments/python-recommendation/share/jupyter/kernels/python3/logo-32x32.png",
+    "bytes": 1084,
+    "sha256": "e32b5c282072d717887b60da73178fdd35a65dc3caeacba7a026e5a4255cc997"
+  },
+  {
+    "path": "experiments/python-recommendation/share/jupyter/kernels/python3/logo-64x64.png",
+    "bytes": 2180,
+    "sha256": "5c9063b436cedf0567480fe487ece0d1479ea9545f310cba93fa184ccbab290d"
+  },
+  {
+    "path": "experiments/python-recommendation/share/jupyter/kernels/python3/logo-svg.svg",
+    "bytes": 9605,
+    "sha256": "baec8662a1461c2cacc326b54d2727cb2f1ce07ba02d00f5b826d035104f649f"
+  },
+  {
+    "path": "experiments/python-recommendation/share/man/man1/ipython.1",
+    "bytes": 2058,
+    "sha256": "3d57503f6847987c94130ccb38f7206af9c27bd8d30d5accd63299b7872717f4"
+  },
+  {
+    "path": "experiments/python-recommendation/src/main.py",
+    "bytes": 873,
+    "sha256": "1cf89b39fef3b1bc673bb14d51d3cc99ef80ed6348cdd805bb56bf0464b1f870"
+  },
+  {
+    "path": "experiments/python-recommendation/src/recommender_v1.py",
+    "bytes": 5032,
+    "sha256": "d2018b2b245a9a6913d71060163ab574d972663d1c4d31ccdb78ab2dd71bb294"
+  },
+  {
+    "path": "experiments/python-recommendation/src/recommender.py",
+    "bytes": 2891,
+    "sha256": "257216ea806b97cd1e6a27aefd8d8826a35e2ab5429ca229a9d36e974059945a"
+  },
+  {
+    "path": "experiments/python-recommendation/src/api/server.py",
+    "bytes": 2830,
+    "sha256": "640ec916785a89b183d1d16eb0b1aa4e0dfcad9d785eb7c865ce436e3d457b3f"
+  },
+  {
+    "path": "experiments/python-recommendation/src/api/__pycache__/server.cpython-313.pyc",
+    "bytes": 4343,
+    "sha256": "761aba29a091b1bb217e8f432dde8149ab650fd02e03fc09a18a7b34f24b43bf"
+  },
+  {
+    "path": "experiments/python-recommendation/src/candidate_generation/collaborative_filter.py",
+    "bytes": 2029,
+    "sha256": "57ee7b713c9ed88985ce8797d576565fc9712a3f9233a8a73275e17e0c8829e0"
+  },
+  {
+    "path": "experiments/python-recommendation/src/candidate_generation/popularity_candidate.py",
+    "bytes": 783,
+    "sha256": "8c75198c61223b2ce0a722e1535faf723346c1a40c0d4a73466fe1e79136cd47"
+  },
+  {
+    "path": "experiments/python-recommendation/src/candidate_generation/vector_candidate.py",
+    "bytes": 1711,
+    "sha256": "3aed65d33bbfbc9c9192845a9ad5a531e378e80596e78441141a9ea9972fa284"
+  },
+  {
+    "path": "experiments/python-recommendation/src/candidate_generation/__pycache__/collaborative_filter.cpython-313.pyc",
+    "bytes": 3288,
+    "sha256": "e9701a36594efe4801749255ab0ef87d730cd073d7628d856c48f74073f64cb4"
+  },
+  {
+    "path": "experiments/python-recommendation/src/candidate_generation/__pycache__/popularity_candidate.cpython-313.pyc",
+    "bytes": 1412,
+    "sha256": "e86d6f060ed8d2e06eb0d211ac2f5ecc88988b548be67162268baf90040c9c68"
+  },
+  {
+    "path": "experiments/python-recommendation/src/candidate_generation/__pycache__/vector_candidate.cpython-313.pyc",
+    "bytes": 1985,
+    "sha256": "a9a06867d992b2cabbca2e815736132caead6b999ca20887d33f1730a1de9e53"
+  },
+  {
+    "path": "experiments/python-recommendation/src/config/settings.py",
+    "bytes": 928,
+    "sha256": "2069b5950f28744c8f5ae1dc7e13e52774fab22d1d8c121ec8fe7bf2fc8f83b2"
+  },
+  {
+    "path": "experiments/python-recommendation/src/config/__pycache__/settings.cpython-313.pyc",
+    "bytes": 1186,
+    "sha256": "9a52b796dbd6c16ae7d3d52ffbff3ae3480b9b99211825fd27bf6ee1469888b2"
+  },
+  {
+    "path": "experiments/python-recommendation/src/database/mongodb_handler.py",
+    "bytes": 443,
+    "sha256": "cb6a8a27905a00e4d001ed8eea0282f69e55a6069cec5e74120d91cfcc870ade"
+  },
+  {
+    "path": "experiments/python-recommendation/src/database/mysql_handler.py",
+    "bytes": 804,
+    "sha256": "d24c4a15f6f9099e1e87ebbc3cb87f83325bb0eec9d431e88d73f9afaae3f7fb"
+  },
+  {
+    "path": "experiments/python-recommendation/src/data_pipeline/data_processor.py",
+    "bytes": 4632,
+    "sha256": "aabf7db2fe949a1968e499d6e831d2f407c05ab4cad85b8c846cb69f16608da0"
+  },
+  {
+    "path": "experiments/python-recommendation/src/data_pipeline/mongo_loader.py",
+    "bytes": 651,
+    "sha256": "ac80a11948a3dfba82602c2a1e876e3ab06a74faf27e9e4affb471875c523c05"
+  },
+  {
+    "path": "experiments/python-recommendation/src/data_pipeline/mysql_loader.py",
+    "bytes": 1008,
+    "sha256": "e1acf7446246ad89205cdf5b49eb96f3670ba4314aa01231b964e0b050c6dea5"
+  },
+  {
+    "path": "experiments/python-recommendation/src/data_pipeline/__pycache__/data_processor.cpython-313.pyc",
+    "bytes": 2623,
+    "sha256": "81a594c9d33119b616a619835962e33b6fedef31bd42f4c4beb7190852bc329e"
+  },
+  {
+    "path": "experiments/python-recommendation/src/data_pipeline/__pycache__/mongo_loader.cpython-313.pyc",
+    "bytes": 670,
+    "sha256": "b27e8e713ccd4f48a2609bec45871373b3bc5fb5c5e3e2950e458946f124a4c1"
+  },
+  {
+    "path": "experiments/python-recommendation/src/data_pipeline/__pycache__/mysql_loader.cpython-313.pyc",
+    "bytes": 897,
+    "sha256": "10913d6eb4eaf47bcc01be06a6e62647a18045bfc53e6a7128e047fbf68a59a6"
+  },
+  {
+    "path": "experiments/python-recommendation/src/embeddings/metadata_vectorizer.py",
+    "bytes": 1613,
+    "sha256": "1415536ca572e48fe0f70a65b1abfc52ad59ccb53dc7c0a6d3435a944339f68a"
+  },
+  {
+    "path": "experiments/python-recommendation/src/embeddings/__pycache__/metadata_vectorizer.cpython-313.pyc",
+    "bytes": 3472,
+    "sha256": "caea606ab96f005b2a88aa2c37c0949a80b77e11c2a30c23dd44a5d341986df6"
+  },
+  {
+    "path": "experiments/python-recommendation/src/processors/merger.py",
+    "bytes": 2178,
+    "sha256": "a540dd6da1a8cf690881c5088b48f3882f76482a5d7ef93649b2cfd91ef3ca38"
+  },
+  {
+    "path": "experiments/python-recommendation/src/processors/mongodb_processor.py",
+    "bytes": 2010,
+    "sha256": "01223ee6fef26418660de02280ab3c84d5cd35992e5a603762f36d4bcb195b7f"
+  },
+  {
+    "path": "experiments/python-recommendation/src/processors/mysql_processor.py",
+    "bytes": 431,
+    "sha256": "3639c3c87d80bbaefdb02edfb606e1c797e11e1da191d4e40a23f6d8c4643345"
+  },
+  {
+    "path": "experiments/python-recommendation/src/ranking/heuristic_ranker.py",
+    "bytes": 521,
+    "sha256": "b2b68d7ea9499930487ad91720a46b8779f6070c0d7bd913b814a67132ea990e"
+  },
+  {
+    "path": "experiments/python-recommendation/src/ranking/__pycache__/heuristic_ranker.cpython-313.pyc",
+    "bytes": 1312,
+    "sha256": "1bc135428976a379feb5d9884f96bbbeebc0a1cecae81ae82e0f2493b6e240ff"
+  },
+  {
+    "path": "experiments/python-recommendation/src/__pycache__/recommender.cpython-313.pyc",
+    "bytes": 2912,
+    "sha256": "9321ac740afd3b291f649b154efdae46f17ae4adeda2bdb1ba0ae51c06a267fe"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/requirements.txt",
+    "bytes": 133,
+    "sha256": "a8e153278eb21b929ce73ce8df1f1028e1fa7c5d300b199669111bd382414988"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/BànGiao/lastfm_clean.csv",
+    "bytes": 1121016,
+    "sha256": "c690551d6780f2de5b7cad27ff075977c21ecae737ad10cfb7f5d4a25d3f2834"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/baseline_mf.ipynb",
+    "bytes": 22394,
+    "sha256": "c32af40fe100c38785b4e357ba81dc63ff6c14ea1b9d2158c55331a9bc71e372"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/baseline_mf.pkl",
+    "bytes": 4208428,
+    "sha256": "ec54fd3dc03db623be06ed35c4f6fb49174120870fbf917a54349040422b85d8"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/evaluate.py",
+    "bytes": 2516,
+    "sha256": "512b66cae6436efa3e5a5d32fc499c309817c97af5135bd788576c082d429c90"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/explore_data.py",
+    "bytes": 1906,
+    "sha256": "a5fc8da0323eac8e6408f718e337baa690de64d4054c9945479f61f822c20cd2"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/keras_mf.ipynb",
+    "bytes": 100758,
+    "sha256": "57c4bf238b7edbfb824f65018036a84270b3c6d7a6ea0a85cd639e2d2d49a9bc"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/main.py",
+    "bytes": 2964,
+    "sha256": "45ee5c09b83b6da893b974716a072d971dc1dbf77bf6865b62f35832ff7cc0d4"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/process_rating.py",
+    "bytes": 1445,
+    "sha256": "bc55cfd97955473d240a30a9aa3bf8012b420fbb2762a7a88d569c81221ced43"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/data/baseline_mf.keras",
+    "bytes": 7527452,
+    "sha256": "23e4996032e6451012d4fa196ccd86725611a9bbb6f66dee99e162da65117b48"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/data/best_mf_model.keras",
+    "bytes": 7527452,
+    "sha256": "23e4996032e6451012d4fa196ccd86725611a9bbb6f66dee99e162da65117b48"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/data/item_to_index.pkl",
+    "bytes": 105345,
+    "sha256": "1c791c5257d50c8dda8a99b40f81b20f5b9169c4dc87034e4bccd8ae8c9e99a7"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/data/lastfm_clean.csv",
+    "bytes": 1115023,
+    "sha256": "1a872d5d656a04348d4b42c493238906781a61c12b3e4728fc489172d26e9955"
+  },
+  {
+    "path": "experiments/python-recommendation/Thạch/DataProcessor/data/test_set.csv",
+    "bytes": 223141,
+    "sha256": "c800dd582605eb069647d0114f7f52fd4b6544e52f182bf245deb56d4bc2d0f3"
+  },
+  {
+    "path": "UI/public/images/Avatar/avt01.png",
+    "bytes": 33868,
+    "sha256": "ea204e2b11df7f8837593810405e30de76cba62ec8daf508926d19d1632476f4"
+  },
+  {
+    "path": "UI/public/images/Banner/acousticViet.png",
+    "bytes": 28831,
+    "sha256": "84bfbc01934d2da615a11d055f3acc99c8aea9806e5b2de737d5d5d2e0cdd5a1"
+  },
+  {
+    "path": "UI/public/images/Banner/banner_music_chill.png",
+    "bytes": 949012,
+    "sha256": "846def6cf8ccfa7b7f45a85ff5ec27ccb57249d20c1cf74506da14697849e157"
+  },
+  {
+    "path": "UI/public/images/Banner/banner_music_premium.png",
+    "bytes": 940740,
+    "sha256": "42e473f7c1ba437554b44e2d7ad3a0ffb4c029a41fe6304dcdf229160373c9c2"
+  },
+  {
+    "path": "UI/public/images/Banner/banner_music_trending.png",
+    "bytes": 897250,
+    "sha256": "4c99be5594db05597d4b23f58b5ece4e7c95ce53fa110422dc7afd558b0e974d"
+  },
+  {
+    "path": "UI/public/images/Banner/bringmusictolife.jpg",
+    "bytes": 107959,
+    "sha256": "5ab394c9e3b98cc99d23c5f132008e58d2af1de66f48e959b0dc8804d78d2f96"
+  },
+  {
+    "path": "UI/public/images/Banner/chill.png",
+    "bytes": 25894,
+    "sha256": "79f5269f273da1aab6904ddb9b782e5c8ce204f366f6a2b8e534977066a2f967"
+  },
+  {
+    "path": "UI/public/images/Banner/hip-hop.png",
+    "bytes": 18779,
+    "sha256": "b51ab6261f14e354a189f23c36b4355e459e8641c57f1378651e71c3734a5ffa"
+  },
+  {
+    "path": "UI/public/images/Banner/indieViet.png",
+    "bytes": 25297,
+    "sha256": "2385d9f8f43dd1969597eda1e2c63a02e0bc2258af54f8519f2762f24d58de47"
+  },
+  {
+    "path": "UI/public/images/Banner/nen-tim.webp",
+    "bytes": 29386,
+    "sha256": "5125b2349f77ccd6978cbeed4fcd8511df075ea82c416a4e31c43fa68c65f7cc"
+  },
+  {
+    "path": "UI/public/images/Banner/ngay_moi_nhac_moi.webp",
+    "bytes": 49880,
+    "sha256": "c2c0e9f8ea5b7d00e243b8ebd165ee436fdb64905cad97821c2614e9ce8f9351"
+  },
+  {
+    "path": "UI/public/images/Banner/ngungon.jpg",
+    "bytes": 6243,
+    "sha256": "277f7652aac390e44d34cd8c808d322cbc4b5035187cc826c883601837f4157a"
+  },
+  {
+    "path": "UI/public/images/Banner/nhac_chill_trieu_view.webp",
+    "bytes": 40770,
+    "sha256": "7d333c968aa6e8ef6d57a77a9dfa4d5ff94010deaf4dd300240da2a938ccdefc"
+  },
+  {
+    "path": "UI/public/images/Banner/nhac_pop.webp",
+    "bytes": 45674,
+    "sha256": "f6dc396c422ecec872d53a155ce46e195cb395f8813aacaeeedd7af4f8f4edd6"
+  },
+  {
+    "path": "UI/public/images/Banner/nhacdance.png",
+    "bytes": 24392,
+    "sha256": "b30e72e54483d8eef1ed2d3fa32212c6812e726ef91b7b29a4843ea02ce0811a"
+  },
+  {
+    "path": "UI/public/images/Banner/nhacpop.png",
+    "bytes": 28269,
+    "sha256": "1d62daeb863ad5e055d76cdd312323caf3782cc6cc0557ba6ca3db0455bf41cb"
+  },
+  {
+    "path": "UI/public/images/Banner/nhacTrung.jpg",
+    "bytes": 7513,
+    "sha256": "fc1ace8198bc946efdb0d73828ec9fa73e68b259fdda5641c812492088f10eb6"
+  },
+  {
+    "path": "UI/public/images/Banner/quang_cao.webp",
+    "bytes": 45508,
+    "sha256": "043c7f56d913129a970a0d13dba2f7db5195c83b50369d19aa10dcaa4fc8356a"
+  },
+  {
+    "path": "UI/public/images/Banner/tapluyen.png",
+    "bytes": 24412,
+    "sha256": "420388b1ce0e0959a2a56628f4143dafe1a68af4d7e1d75d6a04e0327340037a"
+  },
+  {
+    "path": "UI/public/images/Banner/yeu.png",
+    "bytes": 21275,
+    "sha256": "1ec5d02cf6b3f879a969be13e0a62988535789e929b60a8f95f3b77a6ebc6eab"
+  },
+  {
+    "path": "UI/public/images/Logo/admin-logo.png",
+    "bytes": 47590,
+    "sha256": "5626c4c8112018685da5a3cddb6275e0f5b5b40c4c5d5c061113729234c67ada"
+  },
+  {
+    "path": "UI/public/images/Logo/dmca.png",
+    "bytes": 3622,
+    "sha256": "b72ce0a9235b9fc9f1263248438f05ec2ad71d2cd1cfa19dd0196a1f60088b94"
+  },
+  {
+    "path": "UI/public/images/Logo/logo.png",
+    "bytes": 3649,
+    "sha256": "5eaa0fc94fbd71b42599d0395ac9b233cf7ac74593fb7c0af875f8f8bc70dd14"
+  },
+  {
+    "path": "UI/public/images/Logo/nct-footer-logo.png",
+    "bytes": 3405,
+    "sha256": "80009e5184f6de22459ad8af4e688878675308323d599128b278d0abba7d9bdc"
+  },
+  {
+    "path": "UI/public/images/Logo/t_bo_cong_thuong.png",
+    "bytes": 4822,
+    "sha256": "fe0bf16cd84c4841280f7dfaedf3a8f17a5ed73f3f18b48a038de60d2e19f5a6"
+  },
+  {
+    "path": "UI/public/images/Members/banner-bg.jpg",
+    "bytes": 35692,
+    "sha256": "b13ee516b25a1900571c3ec7778eb59903310889fa285445079f2efa1cb8991e"
+  },
+  {
+    "path": "UI/public/images/Members/bg.png",
+    "bytes": 976173,
+    "sha256": "7fde4cf3ba3aa157ace946d3076c7cb032260a42280b472c49e9b35e6ccfa8de"
+  },
+  {
+    "path": "UI/public/images/Members/ChatGPT.webp",
+    "bytes": 13786,
+    "sha256": "857cdcc83aed62ec2f2f03d71c83390e27b5c65fbe72629b364454ebff781f0a"
+  },
+  {
+    "path": "UI/public/images/Members/HuynhDinhThach.jpg",
+    "bytes": 398308,
+    "sha256": "cb8e5651eb36415176ebea0448937bc89c1cd47a4d8e436c7ecb9d68df45395c"
+  },
+  {
+    "path": "UI/public/images/Members/LeDinhBao.jpg",
+    "bytes": 309968,
+    "sha256": "7cfd00a74ef4c754ae72519bea042c6dad9d44fc215d74b6d624c6db6d4672c9"
+  },
+  {
+    "path": "UI/public/images/Members/YouTube.jpg",
+    "bytes": 53057,
+    "sha256": "43d09a780bd2bbdbc92dbb8286dc6859a97658e967635988860ce7eed95cc085"
+  },
+  {
+    "path": "UI/public/images/badges/DownloadOnTheAppStore.svg",
+    "bytes": 10804,
+    "sha256": "a26fc5b38380272c92e9019a2eb8b45542a66814b3e2b203772db8904b9fb99f"
+  },
+  {
+    "path": "UI/public/images/badges/GetItOnGooglePlay.png",
+    "bytes": 10454,
+    "sha256": "a7dbeba4623dd255798dd1159e543cdbeeb9e43faa6db7f859b0f9ed3699932c"
+  }
+]

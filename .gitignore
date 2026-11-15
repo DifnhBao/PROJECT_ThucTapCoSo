@@ -74,3 +74,11 @@ Thumbs.db
 
 # CI exports only explicitly sanitized diagnostics.
 /artifacts/
+
+# T25: legacy research/media retained only in private archive until rights review.
+/experiments/python-recommendation/
+/UI/public/images/Avatar/
+/UI/public/images/Banner/
+/UI/public/images/Logo/
+/UI/public/images/Members/
+/UI/public/images/badges/
