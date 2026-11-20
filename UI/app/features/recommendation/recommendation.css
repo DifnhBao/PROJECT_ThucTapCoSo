@@ -888,3 +888,7 @@
   flex-shrink: 0;
 }
 
+
+button.dev-toggle { background: transparent; color: inherit; border: 1px solid currentColor; border-radius: 8px; padding: 8px 12px; }
+button.dev-toggle:focus-visible { outline: 3px solid var(--tt-orange, #e86b27); outline-offset: 3px; }
+button.dev-toggle[aria-pressed="true"] { color: var(--tt-orange, #e86b27); }

@@ -9,6 +9,7 @@ import { usePlayerControls } from "@/app/features/player/context/PlayerContext";
 import "@/app/features/recommendation/recommendation.css";
 import { getRecommendationsForUser } from "../recommendation.api";
 import type { RecommendationSong } from "../recommendation.types";
+import ExplanationToggle from "./ExplanationToggle";
 import RecommendSongCard from "./RecommendSongCard";
 
 interface Props {
@@ -24,26 +25,7 @@ interface Props {
 /* ------------------------------------------------------------------ */
 /*  DevMode Toggle Switch                                               */
 /* ------------------------------------------------------------------ */
-interface ToggleProps {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}
-const DevModeToggle: React.FC<ToggleProps> = ({ checked, onChange }) => (
-  <label className="dev-toggle" title="Chế độ Giảng viên: Hiển thị thông số AI">
-    <input
-      type="checkbox"
-      checked={checked}
-      onChange={(e) => onChange(e.target.checked)}
-      style={{ display: "none" }}
-    />
-    <span className={`dev-toggle-track${checked ? " dev-toggle-track--on" : ""}`}>
-      <span className="dev-toggle-thumb" />
-    </span>
-    <span className="dev-toggle-label">
-      {checked ? "🤖 Thông số AI" : "🎧 Thông số AI"}
-    </span>
-  </label>
-);
+
 
 /* ------------------------------------------------------------------ */
 /*  Horizontal group scroller                                           */
@@ -91,7 +73,7 @@ const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
         Đề xuất cho bạn
       </h2>
       <div className="rec-header-actions">
-        <DevModeToggle checked={isDevMode} onChange={setIsDevMode} />
+        <ExplanationToggle checked={isDevMode} onChange={setIsDevMode} />
         
         <div className="rec-scroll-controls" aria-label="Cuộn đề xuất">
           <button

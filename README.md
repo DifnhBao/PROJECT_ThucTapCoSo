@@ -6,7 +6,7 @@ Website nghe nhạc với Next.js/React, Express, MySQL và Cloudinary; recommen
 
 | Phạm vi | Demo được | Điều kiện chạy | Giới hạn |
 |---|---|---|---|
-| Catalog, search, player | Khám phá/phát bài công khai, queue/shuffle/repeat | API + DB; media truy cập được | Chỉ approved + visible; seed dùng tone synthetic |
+| Catalog, search, player | Khám phá/phát bài công khai, queue/shuffle/repeat | API + DB; media truy cập được | Chỉ approved + visible; seed dùng 28 bản synthetic 25–30 giây |
 | Tài khoản và library | Login/refresh/logout, favorite/rating, playlist | Cookie cùng origin, migrations đầy đủ | Quyền owner/admin theo API; chưa test lại mọi edge case ở Phase 1 |
 | Upload và moderation | Upload pending, admin approve/reject/hide | Cloudinary thật để upload | URL public legacy chưa tự được thu hồi |
 | Recommendation | Hybrid, explanation, public fallback | Rebuild offline để có neighbors | Synthetic evaluation; chưa chứng minh tốt hơn Content-only |
@@ -34,3 +34,11 @@ Seed chỉ dành cho DB demo rỗng và cần hai mật khẩu khác nhau qua `D
 - [Vận hành và kiểm thử](docs/OPERATIONS_AND_TESTING.md): Docker/manual, env, migrations/seed, CI/test, backup.
 - [Recommendation và đánh giá](docs/RECOMMENDATION_AND_EVALUATION.md): ranking, atomic snapshots, offline protocol, Python research.
 - [Showcase và đóng góp](docs/SHOWCASE_AND_CONTRIBUTION.md): screenshot/video, attribution hai giai đoạn và quyền sử dụng.
+
+### Audio và gợi ý cho demo Phase 3
+
+Chạy `node scripts/generate-demo-audio.cjs` từ root trước khi khởi động/build UI để tạo 28 tệp WAV riêng trong `UI/public/demo` (Next phục vụ qua `/demo/track-01.wav` … `/demo/track-28.wav`). Mỗi bài dài 25–30 giây; phát liên tục hơn 20 giây để đủ điều kiện ghi nhận lượt nghe, không tua để thay thế thời gian nghe thật. Quy tắc 20 giây không thay đổi; test seed vẫn dùng fixture cũ.
+
+Ngay sau `npm --prefix Server run db:seed:demo`, chạy `npm --prefix Server run recommendations:rebuild` để có snapshot gợi ý active. Với Docker, ngay sau seed chạy `docker compose exec -T api npm run recommendations:rebuild`. Các lệnh này cần MySQL hoạt động và cấu hình môi trường tương ứng.
+
+Trang `/administrator` và đường dẫn cũ `/administrator/Statistics` đều chuyển đến `/administrator/PendingSongs`.

@@ -29,34 +29,28 @@ export default function Sidebar() {
     <div className="sidebar">
       <nav>
         <Link
-          href="/administrator/Statistics"
-          className={pathname === "/administrator/Statistics" ? "active" : ""}
-        >
-          <i className="fa-solid fa-chart-line"></i> Statistics
-        </Link>
-        <Link
           href="/administrator/ManageUser"
           className={pathname === "/administrator/ManageUser" ? "active" : ""}
         >
-          <i className="fa-solid fa-users"></i> Manage User
+          <i className="fa-solid fa-users"></i> Người dùng
         </Link>
         <Link
           href="/administrator/ManageAdmin"
           className={pathname === "/administrator/ManageAdmin" ? "active" : ""}
         >
-          <i className="fa-solid fa-user-shield"></i> Manage Admin
+          <i className="fa-solid fa-user-shield"></i> Quản trị viên
         </Link>
         <Link
           href="/administrator/ManageSong"
           className={pathname === "/administrator/ManageSong" ? "active" : ""}
         >
-          <i className="fa-solid fa-list"></i> Manage Song
+          <i className="fa-solid fa-list"></i> Bài hát
         </Link>
         <Link
           href="/administrator/PendingSongs"
           className={`${pathname === "/administrator/PendingSongs" ? "active" : ""} pending-link`}
         >
-          <i className="fa-solid fa-clock"></i> Pending Songs
+          <i className="fa-solid fa-clock"></i> Chờ duyệt
           {pendingCount > 0 && (
             <span className="pending-badge">{pendingCount}</span>
           )}

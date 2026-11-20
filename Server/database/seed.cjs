@@ -1,3 +1,4 @@
+const { demoTrack } = require('./demo-media.cjs');
 const { getTestDatabaseConfig } = require('../config/test-database');
 const { getDatabaseConfig } = require('../src/config/env');
 
@@ -53,7 +54,7 @@ async function seed(mode, env = process.env) {
       await q.bulkInsert('genres', ['Pop', 'Rock', 'Jazz', 'Electronic'].map((name, i) => ({ genre_id: i + 1, name, normalized_name: name.toLowerCase() })), options);
       await q.bulkInsert('songs', Array.from({ length: 28 }, (_, index) => {
         const i = index + 1;
-        return { song_id: i, title: `Synthetic Track ${String(i).padStart(2, '0')}`, duration: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? 6 : 180 + i, audio_url: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? '/demo/tone.wav' : `https://media.example.test/audio/${i}.mp3`, image_url: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? '/images/default-song.svg' : null, view_count: 100 - i, is_visible: i !== 28, status: i === 26 ? 'pending' : i === 27 ? 'rejected' : 'approved', uploaded_by: 3, lyrics: 'Synthetic fixture', mood: JSON.stringify(['calm']), keywords: JSON.stringify(['synthetic']), vector_embedding: JSON.stringify([i / 28, 0.5]), ...times };
+        return { song_id: i, title: `Synthetic Track ${String(i).padStart(2, '0')}`, duration: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? demoTrack(i).duration : 180 + i, audio_url: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? demoTrack(i).audio_url : `https://media.example.test/audio/${i}.mp3`, image_url: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? '/images/default-song.svg' : null, view_count: 100 - i, is_visible: i !== 28, status: i === 26 ? 'pending' : i === 27 ? 'rejected' : 'approved', uploaded_by: 3, lyrics: 'Synthetic fixture', mood: JSON.stringify(['calm']), keywords: JSON.stringify(['synthetic']), vector_embedding: JSON.stringify([i / 28, 0.5]), ...times };
       }), options);
       await q.bulkInsert('song_artists', Array.from({ length: 28 }, (_, i) => ({ song_id: i + 1, artist_id: i % 3 + 1 })), options);
       await q.bulkInsert('song_genres', Array.from({ length: 28 }, (_, i) => ({ song_id: i + 1, genre_id: i % 4 + 1 })), options);
@@ -63,7 +64,7 @@ async function seed(mode, env = process.env) {
       await q.bulkInsert('ratings', [{ user_id: 1, song_id: 1, score: 5, ...times }], options);
       await q.bulkInsert('UserActivities', [{ user_id: 1, song_id: 1, session_id: 'synthetic-session-1', source: 'search', song_duration: 181, total_listened_time: 60, max_position_reached: 60, created_at: now }], options);
       await q.bulkInsert('song_similarities', [26, 27, 28, 2, 3, 4].map((song_id_2, i) => ({ song_id_1: 1, song_id_2, behavioral_score: 0.9 - i / 20, metadata_score: 0.8, final_score: 0.99 - i / 20, reason: 'Synthetic similarity', detail: JSON.stringify({ synthetic: true }), updated_at: now })), options);
-      return { users: 5, songs: 28, publicSongs: 25, playlists: 2, media: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? 'self-generated local demo tone' : 'reserved example.test URLs; no playable audio supplied' };
+      return { users: 5, songs: 28, publicSongs: 25, playlists: 2, media: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? '28 distinct local demo tracks, 25–30 seconds; run node scripts/generate-demo-audio.cjs before starting UI' : 'reserved example.test URLs; no playable audio supplied' };
     });
   } finally { await db.close(); }
 }

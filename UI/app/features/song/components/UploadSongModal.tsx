@@ -2,10 +2,11 @@
 import { useModal } from "@/app/context/ModalContext";
 import { useUser } from "@/app/features/user/context/UserContext";
 import { formError } from "@/app/lib/form-error";
-import { useRef,useState } from "react";
+import { useEffect,useRef,useState } from "react";
 import { FcPicture } from "react-icons/fc";
 import { IoIosMusicalNote } from "react-icons/io";
 import { uploadSongByUser } from "../song.api";
+import { readAudioMetadata } from "./audio-metadata";
 import styles from "./UploadSongModal.module.css";
 
 export default function UploadSongModal() {
@@ -26,20 +27,23 @@ export default function UploadSongModal() {
   const audioInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
-  // Tự động lấy duration khi user chọn file audio
+  const metadataCleanup = useRef<(() => void) | null>(null);
+  const [metadataStatus, setMetadataStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  useEffect(() => () => { metadataCleanup.current?.(); }, []);
+  const handleClose = () => { metadataCleanup.current?.(); closeModal(); };
   const handleAudioSelect = (file: File) => {
+    metadataCleanup.current?.();
     setAudioFile(file);
-
-    const audio = new Audio();
-    audio.src = URL.createObjectURL(file);
-    audio.addEventListener("loadedmetadata", () => {
-      setDuration(Math.round(audio.duration).toString());
-      URL.revokeObjectURL(audio.src);
-    });
+    setDuration('');
+    setMetadataStatus('loading');
+    metadataCleanup.current = readAudioMetadata(file, (seconds) => {
+      setDuration(String(seconds));
+      setMetadataStatus('ready');
+    }, () => setMetadataStatus('error'));
   };
 
   const handleSubmit = async () => {
-    if (submitting) return;
+    if (submitting || metadataStatus !== 'ready' || Number(duration) <= 0) return;
     setError("");
 
     if (!title.trim()) {
@@ -64,7 +68,7 @@ export default function UploadSongModal() {
       formData.append("title", title.trim());
       formData.append("artist", artist.trim());
       formData.append("genre", genre.trim());
-      formData.append("duration", duration || "0");
+      formData.append("duration", duration);
       formData.append("audioFile", audioFile);
       if (imageFile) formData.append("imageFile", imageFile);
 
@@ -90,7 +94,7 @@ export default function UploadSongModal() {
             <br />
             Bài hát sẽ được hiển thị sau khi quản trị viên duyệt.
           </p>
-          <button className={styles.uploadBtn} onClick={closeModal}>
+          <button className={styles.uploadBtn} onClick={handleClose}>
             Đóng
           </button>
         </div>
@@ -192,12 +196,14 @@ export default function UploadSongModal() {
             type="number"
             placeholder="Tự động"
             value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            min="0"
+            readOnly
+            min="1"
           />
         </div>
       </div>
 
+      {metadataStatus === 'loading' && <p role="status">Đang đọc thời lượng tệp nhạc…</p>}
+      {metadataStatus === 'error' && <p role="alert" className={styles.errorMsg}>Không đọc được tệp nhạc. Vui lòng chọn tệp âm thanh khác.</p>}
       {/* Image file */}
       <div className={styles.formGroup}>
         <label>Ảnh bìa</label>
@@ -235,11 +241,11 @@ export default function UploadSongModal() {
         <button
           className={styles.uploadBtn}
           onClick={handleSubmit}
-          disabled={submitting}
+          disabled={submitting || metadataStatus !== 'ready'}
         >
           {submitting ? "Đang tải lên..." : "Đăng bài hát"}
         </button>
-        <button className={styles.cancelBtn} onClick={closeModal}>
+        <button className={styles.cancelBtn} onClick={handleClose}>
           Hủy
         </button>
       </div>

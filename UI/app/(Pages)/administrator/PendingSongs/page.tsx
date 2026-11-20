@@ -1,4 +1,6 @@
 "use client";
+import Modal from "@/app/components/ui/Modal";
+import { pendingViewState } from "./pending-state";
 import Pagination from "@/app/components/ui/Pagination";
 import {
 approveSongApi,
@@ -26,40 +28,41 @@ function PendingSongsContent() {
   const loading = isLoading || busy;
   const [selectedSong, setSelectedSong] = useState<SongDto | null>(null);
 
-  const handleApprove = async (songId: number) => {
-    if (!confirm("Bạn có chắc muốn duyệt bài hát này?")) return;
+  const [confirmation, setConfirmation] = useState<{ songId: number; action: 'approve' | 'reject' } | null>(null);
+  const [feedback, setFeedback] = useState<{ error: boolean; message: string } | null>(null);
+  const viewState = pendingViewState({ error, isLoading, hasData: !!data, count: songs.length });
+  const handleApprove = (songId: number) => { setSelectedSong(null); setConfirmation({ songId, action: 'approve' }); };
+  const handleReject = (songId: number) => { setSelectedSong(null); setConfirmation({ songId, action: 'reject' }); };
+  const moderate = async () => {
+    if (!confirmation || busy) return;
+    setLoading(true);
+    setFeedback(null);
     try {
-      setLoading(true);
-      await approveSongApi(songId);
+      await (confirmation.action === 'approve' ? approveSongApi : rejectSongApi)(confirmation.songId);
+      setConfirmation(null);
+      setFeedback({ error: false, message: 'Đã xử lý bài hát.' });
       await mutate();
-      if (selectedSong?.song_id === songId) setSelectedSong(null);
     } catch (error: unknown) {
-      alert(errorMessage(error, "Duyệt thất bại"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleReject = async (songId: number) => {
-    if (!confirm("Bạn có chắc muốn từ chối bài hát này?")) return;
-    try {
-      setLoading(true);
-      await rejectSongApi(songId);
-      await mutate();
-      if (selectedSong?.song_id === songId) setSelectedSong(null);
-    } catch (error: unknown) {
-      alert(errorMessage(error, "Từ chối thất bại"));
-    } finally {
-      setLoading(false);
-    }
+      setFeedback({ error: true, message: errorMessage(error, 'Không thể xử lý bài hát. Vui lòng thử lại.') });
+      setConfirmation(null);
+    } finally { setLoading(false); }
   };
 
   return (
     <div className={styles.container}>
       <h2 className={styles.header}>Duyệt bài hát</h2>
-      {error && <div role="alert">Không tải được danh sách.<button onClick={() => void mutate()}>Thử lại</button></div>}
+      {feedback && <p role={feedback.error ? "alert" : "status"}>{feedback.message}</p>}
+      <Modal isOpen={!!confirmation} onClose={() => { if (!busy) setConfirmation(null); }}>
+        <h3>{confirmation?.action === 'approve' ? 'Duyệt bài hát này?' : 'Từ chối bài hát này?'}</h3>
+        <div className={pendingStyles.actionGroup}>
+          <button className={pendingStyles.viewBtn} disabled={busy} onClick={() => setConfirmation(null)}>Hủy</button>
+          <button className={pendingStyles.approveBtn} disabled={busy} onClick={() => void moderate()}>{busy ? 'Đang xử lý…' : 'Xác nhận'}</button>
+        </div>
+      </Modal>
 
-      {songs.length === 0 && !loading ? (
+      {viewState === 'error' ? <div role="alert">Không tải được danh sách.<button onClick={() => void mutate()}>Thử lại</button></div>
+        : viewState === 'loading' ? <p role="status">Đang tải danh sách…</p>
+        : viewState === 'empty' ? (
         <div className={pendingStyles.emptyState}>
           <span className={pendingStyles.emptyIcon}>✅</span>
           <h3>Không có bài hát nào đang chờ duyệt</h3>
@@ -105,7 +108,7 @@ function PendingSongsContent() {
                 </td>
                 <td>
                   {song.artists?.map((a) => a.name).join(", ") ||
-                    "Unknown"}
+                    "Chưa rõ"}
                 </td>
                 <td>
                   <span className={pendingStyles.uploaderName}>
@@ -145,7 +148,7 @@ function PendingSongsContent() {
         </table>
       )}
 
-      <Pagination currentPage={currentPage} totalPages={totalPages} />
+      {viewState === 'data' && <Pagination currentPage={currentPage} totalPages={totalPages} />}
 
       {selectedSong && (
         <SongDetailModal
@@ -162,7 +165,7 @@ function PendingSongsContent() {
 
 export default function PendingSongsPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>Đang tải…</div>}>
       <PendingSongsContent />
     </Suspense>
   );
