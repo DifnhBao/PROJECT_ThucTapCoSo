@@ -1,8 +1,7 @@
 "use client";
-
-import { useRouter } from "next/navigation";
 import "@/app/components/layout/Header/AdminPage/Header.css";
 import { useAdminUser } from "@/app/features/admin/context/AdminUserContext";
+import { useRouter } from "next/navigation";
 // import { logoutAdmin } from "@/app/utils/authApi";
 import { logoutAdminService } from "@/app/features/admin/service";
 
@@ -31,7 +30,7 @@ export default function Header() {
           router.push("/administrator");
         }}
       >
-        <img src="../images/Logo/admin-logo.png" alt="logo web page" />
+        <span aria-label="TuneTrek">TuneTrek</span>
         <h2 id="page-title">Dashboard</h2>
       </div>
 

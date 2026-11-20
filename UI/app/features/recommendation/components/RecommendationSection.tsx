@@ -1,15 +1,15 @@
 "use client";
-
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { RiResetRightLine } from "react-icons/ri";
+import React,{ useCallback,useRef,useState } from "react";
+import { FaChevronLeft,FaChevronRight } from "react-icons/fa";
 import { PiSparkle } from "react-icons/pi";
+import { RiResetRightLine } from "react-icons/ri";
+import useSWR from 'swr';
 
+import { usePlayerControls } from "@/app/features/player/context/PlayerContext";
+import "@/app/features/recommendation/recommendation.css";
 import { getRecommendationsForUser } from "../recommendation.api";
 import type { RecommendationSong } from "../recommendation.types";
-import { usePlayer } from "@/app/features/player/context/PlayerContext";
 import RecommendSongCard from "./RecommendSongCard";
-import "@/app/features/recommendation/recommendation.css";
 
 interface Props {
   userId: number;
@@ -19,7 +19,6 @@ interface Props {
 /* ------------------------------------------------------------------ */
 /*  Helper: gom nhóm theo seed song (bóc tách từ reason)               */
 /* ------------------------------------------------------------------ */
-type SeedGroup = { seedTitle: string; songs: RecommendationSong[] };
 
 
 /* ------------------------------------------------------------------ */
@@ -49,25 +48,16 @@ const DevModeToggle: React.FC<ToggleProps> = ({ checked, onChange }) => (
 /* ------------------------------------------------------------------ */
 /*  Horizontal group scroller                                           */
 /* ------------------------------------------------------------------ */
-interface GroupProps {
-  group: SeedGroup;
-  songs: RecommendationSong[]; // full list để setPlaylist đúng index
-  isDevMode: boolean;
-  currentTrackId?: number;
-  isPlaying: boolean;
-  onPlay: (globalIndex: number) => void;
-}
 
 /* ------------------------------------------------------------------ */
 /*  RecommendationSection                                               */
 /* ------------------------------------------------------------------ */
 const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
-  const [songs, setSongs] = useState<RecommendationSong[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data: songs = [], error: failure, isLoading: loading, mutate } = useSWR<RecommendationSong[]>(userId ? ['recommendations', userId, limit] : null, () => getRecommendationsForUser(limit));
+  const error = failure ? 'Không thể tải gợi ý. Vui lòng thử lại.' : null;
   const [isDevMode, setIsDevMode] = useState(false);
 
-  const { setPlaylist, currentTrack, isPlaying, togglePlay } = usePlayer();
+  const { setPlaylist, currentTrack, isPlaying, togglePlay } = usePlayerControls();
 
   const gridRef = useRef<HTMLDivElement | null>(null);
 
@@ -81,23 +71,7 @@ const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
     });
   };
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await getRecommendationsForUser(userId, limit);
-      setSongs(data);
-    } catch (e: unknown) {
-      setError("Không thể tải gợi ý. Vui lòng thử lại.");
-      console.error("[RecommendationSection]", e);
-    } finally {
-      setLoading(false);
-    }
-  }, [userId, limit]);
-
-  useEffect(() => {
-    if (userId) fetchData();
-  }, [userId, fetchData]);
+  const fetchData = useCallback(async () => { await mutate(); }, [mutate]);
 
   const handlePlay = (index: number) => {
     const song = songs[index];

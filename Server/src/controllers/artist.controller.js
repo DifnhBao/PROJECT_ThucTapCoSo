@@ -1,3 +1,4 @@
+const { AppError } = require('../utils/app-error');
 const artistService = require("../services/artist.service");
 
 const getAllArtists = async (req, res, next) => {
@@ -10,26 +11,18 @@ const getAllArtists = async (req, res, next) => {
       data: artists,
     });
   } catch (error) {
-    console.error("ArtistController error:", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch artists",
-    });
+    next(error);
   }
 };
 
-const getArtistDetail = async (req, res) => {
+const getArtistDetail = async (req, res, next) => {
   try {
     const { artistId } = req.params;
 
     const artist = await artistService.getArtistById(artistId);
 
     if (!artist) {
-      return res.status(404).json({
-        success: false,
-        message: "Artist not found",
-      });
+      throw new AppError("Artist not found", 404, 'RESOURCE_NOT_FOUND');
     }
 
     res.status(200).json({
@@ -38,11 +31,7 @@ const getArtistDetail = async (req, res) => {
       data: artist,
     });
   } catch (error) {
-    console.error("Get artist detail error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch artist detail",
-    });
+    next(error);
   }
 };
 
@@ -71,11 +60,7 @@ const getTopArtists = async (req, res, next) => {
       data: topArtists,
     });
   } catch (error) {
-    console.error("Get top artists error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch top artists",
-    });
+    next(error);
   }
 };
 
@@ -85,3 +70,5 @@ module.exports = {
   createArtist,
   getTopArtists,
 };
+
+module.exports = require('../validation/validate-controller').withContracts(module.exports, require('../validation/contracts').contracts.artists);

@@ -7,17 +7,25 @@ export class PlayerService {
   private isShuffle: boolean = false;
 
   setPlaylist(list: Track[], startIndex: number) {
-    this.originalPlaylist = [...list];
-    
+    const safeIndex = Number.isInteger(startIndex) ? Math.max(0, Math.min(startIndex, list.length - 1)) : 0;
+    const selected = list[safeIndex]?.trackId;
+    const ids = new Set<number>();
+    this.originalPlaylist = list.filter((track) => {
+      if (!track || !Number.isSafeInteger(track.trackId) || track.trackId <= 0 || ids.has(track.trackId)) return false;
+      ids.add(track.trackId); return true;
+    });
+    startIndex = Math.max(0, this.originalPlaylist.findIndex((track) => track.trackId === selected));
+    list = this.originalPlaylist;
+
     if (this.isShuffle) {
       const currentTrack = list[startIndex];
       let remainingTracks = [...list];
-      
+
       if (currentTrack) {
         remainingTracks = remainingTracks.filter(t => t.trackId !== currentTrack.trackId);
       }
       this.shuffledPlaylist = this.shuffleArray(remainingTracks);
-      
+
       if (currentTrack) {
         this.shuffledPlaylist.unshift(currentTrack);
       }
@@ -30,11 +38,9 @@ export class PlayerService {
 
   setShuffle(shuffle: boolean) {
     if (this.isShuffle === shuffle) return;
-    this.isShuffle = shuffle;
-
-    if (!this.originalPlaylist.length) return;
-
     const currentTrack = this.getCurrentTrack();
+    this.isShuffle = shuffle;
+    if (!this.originalPlaylist.length) return;
 
     if (shuffle) {
       let remainingTracks = [...this.originalPlaylist];
@@ -42,7 +48,7 @@ export class PlayerService {
         remainingTracks = remainingTracks.filter(t => t.trackId !== currentTrack.trackId);
       }
       this.shuffledPlaylist = this.shuffleArray(remainingTracks);
-      
+
       if (currentTrack) {
         this.shuffledPlaylist.unshift(currentTrack);
       }
@@ -73,20 +79,21 @@ export class PlayerService {
     return this.activePlaylist[this.currentIndex] || null;
   }
 
-  next(): Track | null {
+  next(wrap = false): Track | null {
     if (!this.activePlaylist.length) return null;
 
     if (this.currentIndex < this.activePlaylist.length - 1) {
       this.currentIndex++;
       return this.getCurrentTrack();
     }
+    if (wrap) { this.currentIndex = 0; return this.getCurrentTrack(); }
     return null;
   }
 
-  prev(): Track | null {
+  prev(wrap = false): Track | null {
     if (!this.activePlaylist.length) return null;
-    this.currentIndex =
-      (this.currentIndex - 1 + this.activePlaylist.length) % this.activePlaylist.length;
+    if (this.currentIndex === 0 && !wrap) return null;
+    this.currentIndex = (this.currentIndex - 1 + this.activePlaylist.length) % this.activePlaylist.length;
     return this.getCurrentTrack();
   }
 
@@ -102,12 +109,15 @@ export class PlayerService {
   }
 
   getPlaylist() {
-    return this.originalPlaylist;
+    return [...this.originalPlaylist];
   }
 
   appendTracks(tracks: Track[]) {
     const existingIds = new Set(this.originalPlaylist.map((t) => t.trackId));
-    const unique = tracks.filter((t) => !existingIds.has(t.trackId));
+    const unique = tracks.filter((t) => {
+      if (!t || !Number.isSafeInteger(t.trackId) || t.trackId <= 0 || existingIds.has(t.trackId)) return false;
+      existingIds.add(t.trackId); return true;
+    });
 
     this.originalPlaylist = [...this.originalPlaylist, ...unique];
 
@@ -118,6 +128,6 @@ export class PlayerService {
   }
 
   remaining() {
-    return this.activePlaylist.length - this.currentIndex - 1;
+    return Math.max(0, this.activePlaylist.length - this.currentIndex - 1);
   }
 }

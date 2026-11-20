@@ -4,7 +4,10 @@
 
 # --- Env files: KHÔNG BAO GIỜ commit file thật ---
 .env
+.env.*
 .env.local
+.env.test
+**/.env.test
 .env.*.local
 Server/.env
 Server/.env.local
@@ -14,8 +17,19 @@ AI_Services/.env
 !.env.example
 !Server/.env.example
 !AI_Services/.env.example
+!**/.env.example
+!**/.env.test.example
 
 # --- Dependencies ---
+/.local-backups/
+/TTCS-PROJECT.zip
+/docs/verification/evidence/
+/docs/audit/evidence/
+/docs/verification/T[01][0-9]*
+/docs/verification/T2[0-5]*
+/AI_Services/pyvenv.cfg
+/Server/public/uploads/temp/
+*.zip
 node_modules/
 **/node_modules/
 .venv/
@@ -33,7 +47,7 @@ build/
 
 # --- Database dumps ---
 *.sql.bak
-# Chú ý: db/init.sql NÊN commit 
+# Chú ý: db/init.sql NÊN commit
 # Chỉ thêm vào đây nếu chứa data nhạy cảm
 # db/init.sql
 
@@ -60,3 +74,16 @@ Thumbs.db
 
 # --- Python notebook artifacts ---
 *.ipynb_checkpoints/
+
+**/.runtime/
+
+# CI exports only explicitly sanitized diagnostics.
+/artifacts/
+
+# T25: legacy research/media retained only in private archive until rights review.
+/experiments/python-recommendation/
+/UI/public/images/Avatar/
+/UI/public/images/Banner/
+/UI/public/images/Logo/
+/UI/public/images/Members/
+/UI/public/images/badges/

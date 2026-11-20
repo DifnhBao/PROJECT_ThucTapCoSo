@@ -1,13 +1,14 @@
+const { AppError } = require('../utils/app-error');
 const { where } = require("sequelize");
 const ratingService = require("../services/rating.service"); // Gọi Service vào
 
-exports.rateSong = async (req, res) => {
+exports.rateSong = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.auth.userId;
     const { songId, score } = req.body;
 
     if (score < 1 || score > 5) {
-      return res.status(400).json({ message: "Điểm phải từ 1 đến 5" });
+      throw new AppError("Điểm phải từ 1 đến 5", 400, 'VALIDATION_ERROR');
     }
 
     const { rating, created } = await ratingService.rateSong(
@@ -21,27 +22,11 @@ exports.rateSong = async (req, res) => {
       data: rating,
     });
   } catch (error) {
-    console.error("rateSong error:", error);
-
-    if (error.message === "INVALID_SCORE") {
-      return res.status(400).json({
-        message: "Điểm rating phải từ 1 đến 5",
-      });
-    }
-
-    if (error.message === "SONG_NOT_FOUND") {
-      return res.status(404).json({
-        message: "Bài hát không tồn tại",
-      });
-    }
-
-    return res.status(500).json({
-      message: "Lỗi hệ thống",
-    });
+    next(error);
   }
 };
 
-exports.getSongRatingSummary = async (req, res) => {
+exports.getSongRatingSummary = async (req, res, next) => {
   try {
     const { songId } = req.params;
 
@@ -49,21 +34,16 @@ exports.getSongRatingSummary = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: "Lỗi hệ thống",
-    });
+    next(error);
   }
 };
 
-exports.getMyRating = async (req, res) => {
+exports.getMyRating = async (req, res, next) => {
   try {
-    const userId = req.user?.userId;
+    const userId = req.auth?.userId;
 
     if (!userId) {
-      return res.status(401).json({
-        message: "Chưa đăng nhập",
-      });
+      throw new AppError("Chưa đăng nhập", 401, 'AUTH_REQUIRED');
     }
 
     const { songId } = req.params;
@@ -74,9 +54,8 @@ exports.getMyRating = async (req, res) => {
       rating,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: "Lỗi hệ thống",
-    });
+    next(error);
   }
 };
+
+module.exports = require('../validation/validate-controller').withContracts(module.exports, require('../validation/contracts').contracts.ratings);

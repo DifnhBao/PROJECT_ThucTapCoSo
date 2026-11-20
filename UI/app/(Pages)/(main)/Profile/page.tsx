@@ -1,14 +1,13 @@
 "use client";
-
-import { useState, useRef, useEffect } from "react";
 import Profile from "@/app/features/user/components/Profile";
-import styles from "./ProfilePage.module.css";
 import { useUser } from "@/app/features/user/context/UserContext";
 import { useProfile } from "@/app/features/user/hooks/useProfile";
+import { useEffect,useRef,useState } from "react";
+import styles from "./ProfilePage.module.css";
 
 export default function ProfilePage() {
   const { user } = useUser();
-  const { uploadAvatar, isUploading } = useProfile();
+  const { uploadAvatar } = useProfile();
 
   // State lưu URL ảnh preview tạm thời
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -43,7 +42,7 @@ export default function ProfilePage() {
         await uploadAvatar(file);
         // Thành công: Xóa preview khi đã có ảnh thật từ DB (hook đã gọi refreshUser)
         setPreviewUrl(null);
-      } catch (error) {
+      } catch {
         // Thất bại: Trả lại trạng thái cũ
         setPreviewUrl(null);
       }
@@ -53,7 +52,7 @@ export default function ProfilePage() {
   // Logic hiển thị Avatar: Ưu tiên ảnh Preview -> Ảnh User từ DB -> Ảnh mặc định
   // Lưu ý: Sửa lại user?.avatar theo đúng key trong database của bạn nhé
   const displayAvatar =
-    previewUrl || user?.avatar || "/images/Avatar/avt01.png";
+    previewUrl || user?.avatar || "/images/default-avatar.svg";
 
   return (
     <div className={styles.pageContainer}>

@@ -17,8 +17,6 @@ export interface Playlist {
   tracks: Track[];
 }
 
-
-
 export interface DetailViewData {
   type: "playlist" | "artist";
   title: string;

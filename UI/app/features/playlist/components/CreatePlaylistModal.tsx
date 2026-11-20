@@ -1,8 +1,10 @@
 "use client";
+import { useDialog } from "@/app/lib/use-dialog";
+import { formError } from "@/app/lib/form-error";
 
+import "@/app/features/playlist/components/CreatePlaylistModal.css";
 import { useState } from "react";
 import { createPlaylistService } from "../service";
-import "@/app/features/playlist/components/CreatePlaylistModal.css";
 
 type Props = {
   onClose: () => void;
@@ -15,12 +17,14 @@ export default function CreatePlaylistModal({
   onCreated,
   isNested = false,
 }: Props) {
+  const dialog = useDialog(true, onClose);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async () => {
+    if (loading) return;
     if (!name.trim()) {
       setError("Vui lòng nhập tên playlist");
       return;
@@ -34,9 +38,9 @@ export default function CreatePlaylistModal({
 
       onCreated?.();
       onClose();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(
-        err.message || "Lỗi khi tạo playlist. Vui lòng thử lại.",
+        formError(err),
       );
     } finally {
       setLoading(false);
@@ -54,34 +58,33 @@ export default function CreatePlaylistModal({
     return (
       <div className="create-playlist-nested-overlay" onClick={onClose}>
         <div
-          className="create-playlist-nested-content"
+          ref={dialog} role="dialog" aria-modal="true" aria-label="Tạo Playlist Mới" tabIndex={-1} className="create-playlist-nested-content"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="nested-header">
             <h3>Tạo Playlist Mới</h3>
-            <button className="nested-close-btn" onClick={onClose}>
+            <button aria-label="Đóng hộp thoại" className="nested-close-btn" onClick={onClose}>
               ✕
             </button>
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && <div role="alert" className="error-message">{error}</div>}
 
           <div className="nested-form">
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Tên playlist"
+              aria-label="Tên playlist" placeholder="Tên playlist"
               className="input-field"
               disabled={loading}
-              autoFocus
             />
 
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Mô tả (tùy chọn)"
+              aria-label="Mô tả playlist" placeholder="Mô tả (tùy chọn)"
               className="textarea-field"
               disabled={loading}
               rows={3}
@@ -109,34 +112,33 @@ export default function CreatePlaylistModal({
   return (
     <div className="create-playlist-overlay" onClick={onClose}>
       <div
-        className="create-playlist-content"
+        ref={dialog} role="dialog" aria-modal="true" aria-label="Tạo Playlist Mới" tabIndex={-1} className="create-playlist-content"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="header">
           <h2>Tạo Playlist Mới</h2>
-          <button className="close-btn" onClick={onClose}>
+          <button aria-label="Đóng hộp thoại" className="close-btn" onClick={onClose}>
             ✕
           </button>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div role="alert" className="error-message">{error}</div>}
 
         <div className="form">
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Tên playlist"
+            aria-label="Tên playlist" placeholder="Tên playlist"
             className="input-field"
             disabled={loading}
-            autoFocus
           />
 
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Mô tả (tùy chọn)"
+            aria-label="Mô tả playlist" placeholder="Mô tả (tùy chọn)"
             className="textarea-field"
             disabled={loading}
             rows={3}

@@ -1,0 +1,4 @@
+# Optional MySQL access from host tools. Omit this override in deployment.
+services:
+  db:
+    ports: ["127.0.0.1:${DB_PORT:-3306}:3306"]

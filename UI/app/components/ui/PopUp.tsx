@@ -1,6 +1,6 @@
 "use client";
-import { useRef, useEffect } from "react";
 import styles from "@/app/styles/PopUp.module.css";
+import { useEffect,useRef } from "react";
 
 interface PopUpProps {
   show: boolean;

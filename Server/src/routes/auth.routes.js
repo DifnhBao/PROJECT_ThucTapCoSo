@@ -1,7 +1,7 @@
+const { guard } = require('../midlewares/security');
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/auth.controller");
-const { protect, protectAdmin } = require("../midlewares/auth.midleware");
 
 // USER PAGE
 
@@ -9,19 +9,20 @@ const { protect, protectAdmin } = require("../midlewares/auth.midleware");
 router.post("/register", authController.register);
 
 //route for login
-router.post("/login", authController.login);
+router.post("/login", guard("loginAccount"), authController.login);
 
 //route for refresh token
 router.post("/refresh-token", authController.requestRefreshToken);
 
 //route for log out
-router.post("/logout", protect, authController.logout);
+// Logout must also work after access expiry/revocation, using only the refresh cookie.
+router.post("/logout", authController.logout);
 
 // ADMIN PAGE
 
 // routes/auth.route.js
-router.post("/admin/login", authController.loginAdmin);
-router.post("/admin/logout", protectAdmin, authController.logoutAdmin);
+router.post("/admin/login", guard("loginAccount"), authController.loginAdmin);
+router.post("/admin/logout", authController.logoutAdmin);
 router.post("/admin/refresh-token", authController.refreshAdminToken);
 
 module.exports = router;

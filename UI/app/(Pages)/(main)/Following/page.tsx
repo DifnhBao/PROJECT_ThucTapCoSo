@@ -1,3 +1,2 @@
-export default function following() {
-  return <div>Following is updated soon!</div>;
-}
+import { redirect } from 'next/navigation';
+export default function Page() { redirect('/Home'); }

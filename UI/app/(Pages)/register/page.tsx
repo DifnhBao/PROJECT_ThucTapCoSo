@@ -1,14 +1,17 @@
 "use client";
+import { formError } from '@/app/lib/form-error';
 
-import { useState } from "react";
 import { useModal } from "@/app/context/ModalContext";
+import { useState } from "react";
 // import { registerUser } from "@/app/utils/authApi";
-import { registerService } from "@/app/features/auth/service";
-import { validatePassword } from "@/app/utils/passwordValidator";
-import styles from "@/app/styles/Auth.module.css";
 import Logo from "@/app/components/ui/Logo";
+import { registerService } from "@/app/features/auth/service";
+import styles from "@/app/styles/Auth.module.css";
+import { validatePassword } from "@/app/utils/passwordValidator";
 
 export default function RegisterPage() {
+  const [submitting, setSubmitting] = useState(false);
+  const [failure, setFailure] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +20,8 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setFailure("");
     setPasswordError("");
 
     const error = validatePassword(password);
@@ -25,14 +30,15 @@ export default function RegisterPage() {
       return;
     }
 
+    setSubmitting(true);
     try {
       const data = await registerService(username, email, password);
       alert(data.message);
       openModal("signin");
-    } catch (error: any) {
-      const message = error.response?.data?.message || "Đăng ký thất bại";
-      alert(message);
-    }
+    } catch (error: unknown) {
+      const message = formError(error);
+      setFailure(message);
+    } finally { setSubmitting(false); }
   };
 
   return (
@@ -41,11 +47,7 @@ export default function RegisterPage() {
         <header className={styles.header}>
           <div className={styles.logo}>
             <a>
-              {/* <img
-                src="/images/Logo/logo.png"
-                alt="logo"
-                className={styles.logoImg}
-              /> */}
+
               <Logo size={80} />
             </a>
           </div>
@@ -103,7 +105,8 @@ export default function RegisterPage() {
             {passwordError && <span className={styles.errorText}>{passwordError}</span>}
           </div>
 
-          <button type="submit" className={styles.submitButton}>
+          {failure && <p role="alert">{failure}</p>}
+          <button disabled={submitting} type="submit" className={styles.submitButton}>
             Get Started
           </button>
         </form>

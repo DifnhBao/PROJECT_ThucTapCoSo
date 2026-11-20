@@ -1,9 +1,7 @@
 "use client";
-
-import styles from "@/app/styles/AdminPage/ManageUser.module.css";
-import { useUsers } from "@/app/features/user/useUsers";
 import { useModal } from "@/app/context/ModalContext";
-import type { User } from "@/app/types/music";
+import { useUsers } from "@/app/features/user/useUsers";
+import styles from "@/app/styles/AdminPage/ManageUser.module.css";
 
 export default function ManageUser() {
   const { users, isLoading, error, deleteUser } = useUsers();

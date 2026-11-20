@@ -1,8 +1,7 @@
 "use client";
-
 import { useState } from "react";
-import { uploadAvatarService } from "../service";
 import { useUser } from "../context/UserContext";
+import { uploadAvatarService } from "../service";
 
 export function useProfile() {
   const { refreshUser } = useUser();

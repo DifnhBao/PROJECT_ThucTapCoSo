@@ -1,16 +1,18 @@
+import type { AdminLoginDto, UserDto } from '../../types/api';
 import http from "@/app/lib/http";
+import { authAction } from '../../lib/auth-actions';
 
 export const loginAdminApi = (username: string, password: string) =>
-  http.post(
+  authAction('admin', 'login', () => http.post<AdminLoginDto>(
     "/auth/admin/login",
     { username, password },
     {
-      headers: { "x-type-auth": "admin" },
+      headers: { "x-auth-type": "admin" },
     },
-  );
+  ));
 
 export const logoutAdminApi = () =>
-  http.post("/auth/admin/logout", { headers: { "x-type-auth": "admin" } });
+  authAction('admin', 'logout', () => http.post("/auth/admin/logout", {}, { headers: { "x-auth-type": "admin" } }));
 
 export const getCurrentAdminApi = () =>
-  http.get("/users/admin/me", { headers: { "x-type-auth": "admin" } });
+  http.get<{ data: UserDto }>("/users/admin/me", { headers: { "x-auth-type": "admin" } });

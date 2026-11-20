@@ -1,14 +1,13 @@
 "use client";
-
-import { useState } from "react";
-import "@/app/styles/feature-playlists.css";
-import { useUser } from "@/app/features/user/context/UserContext";
-import TrackSection from "./TrackSection";
-import ArtistSection from "../../features/artist/components/ArtistSection";
-import { SelectedItem } from "@/app/types/music";
+import { usePlayerControls } from "@/app/features/player/context/PlayerContext";
 import RecommendationSection from "@/app/features/recommendation/components/RecommendationSection";
 import SimilarSongsSection from "@/app/features/recommendation/components/SimilarSongsSection";
-import { usePlayer } from "@/app/features/player/context/PlayerContext";
+import { useUser } from "@/app/features/user/context/UserContext";
+import "@/app/styles/feature-playlists.css";
+import { SelectedItem } from "@/app/types/music";
+import { useState } from "react";
+import ArtistSection from "../../features/artist/components/ArtistSection";
+import TrackSection from "./TrackSection";
 
 interface Props {
   onSelect: (item: SelectedItem) => void;
@@ -16,20 +15,10 @@ interface Props {
 
 const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
   const { user, loading } = useUser();
-  const { currentTrack } = usePlayer();
+  const { currentTrack } = usePlayerControls();
   const [activeTab, setActiveTab] = useState("tracks");
-  const currentTrackIds = currentTrack as unknown as {
-    song_id?: number;
-    id?: number;
-  } | null;
-  const currentSongId =
-    Number(
-      currentTrackIds?.song_id ?? currentTrackIds?.id ?? currentTrack?.trackId,
-    ) || 0;
-  const userId =
-    Number(
-      user?.userId ?? (user as unknown as { user_id?: number } | null)?.user_id,
-    ) || 0;
+  const currentSongId = currentTrack?.trackId ?? 0;
+  const userId = user?.userId ?? 0;
 
   return (
     <div className="explore-container">
@@ -55,12 +44,7 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
             Mới cập nhật
           </button>
 
-          <button
-            className={activeTab === "playlist" ? "active" : ""}
-            onClick={() => setActiveTab("playlist")}
-          >
-            Daily Mix
-          </button>
+
 
           <button
             className={activeTab === "artist" ? "active" : ""}
@@ -75,9 +59,7 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
           <div style={{ display: activeTab === "tracks" ? "block" : "none" }}>
             <TrackSection />
           </div>
-          {/* <div style={{ display: activeTab === "playlist" ? "block" : "none" }}>
-            <PlaylistSection onSelect={onSelect} />
-          </div> */}
+
           <div style={{ display: activeTab === "artist" ? "block" : "none" }}>
             <ArtistSection onSelect={onSelect} />
           </div>

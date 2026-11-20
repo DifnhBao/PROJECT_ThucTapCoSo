@@ -1,13 +1,12 @@
 "use client";
-
-import { useState } from "react";
-import styles from "@/app/styles/form.module.css";
 import { useModal } from "@/app/context/ModalContext";
 import { addNewAdmin } from "@/app/features/auth/authApi";
-import { mutate } from "swr";
+import styles from "@/app/styles/form.module.css";
 import { validatePassword } from "@/app/utils/passwordValidator";
+import { useState } from "react";
+import { readApiResponse } from "../../../lib/api-contract";
 
-export default function AddNewAdmin() {
+export default function AddNewAdmin({ onCreated }: { onCreated?: () => Promise<unknown> }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,12 +24,12 @@ export default function AddNewAdmin() {
     try {
       // Gửi dữ liệu này đến backend
       const res = await addNewAdmin(username, email, password);
-      const data = await res.json();
+      const data = await readApiResponse<{ message?: string }>(res);
 
       alert(data.message);
 
       if (res.ok) {
-        mutate("admins");
+        await onCreated?.().catch(() => {});
         closeModal();
       }
     } catch (error) {

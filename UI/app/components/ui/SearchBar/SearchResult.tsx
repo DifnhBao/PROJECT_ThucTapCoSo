@@ -1,10 +1,8 @@
 "use client";
-
-import React from "react";
-import { useState } from "react";
-import styles from "./search.module.css";
+import { usePlayerControls } from "@/app/features/player/context/PlayerContext";
 import { Track } from "@/app/types/music";
-import { usePlayer } from "@/app/features/player/context/PlayerContext";
+import React from "react";
+import styles from "./search.module.css";
 
 interface SearchResultProps {
   result: Track;
@@ -12,7 +10,7 @@ interface SearchResultProps {
 }
 
 const SearchResult = ({ result, searchTerm }: SearchResultProps) => {
-  const { setPlaylist } = usePlayer();
+  const { setPlaylist } = usePlayerControls();
 
   const highlight = (text: string, term: string) => {
     if (!term) return text;
@@ -38,8 +36,8 @@ const SearchResult = ({ result, searchTerm }: SearchResultProps) => {
         setPlaylist([{ ...result }], 0, "search");
       }}
     >
-      <img
-        src={result.imageUrl || "/images/default-song.jpg"}
+      <img alt=""
+        src={result.imageUrl || "/images/default-song.svg"}
         className={styles.resultImg}
       />
 
