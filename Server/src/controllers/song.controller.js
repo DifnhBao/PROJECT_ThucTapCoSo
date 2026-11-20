@@ -145,14 +145,14 @@ const toggleSongVisibility = async (req, res, next) => {
 
 const searchSongs = async (req, res, next) => {
   try {
-    const { q = "", limit = 10 } = req.query;
+    const { q = "", page = 1, limit = 10 } = req.query;
 
     if (!q.trim()) {
-      return res.json({ data: [] });
+      return res.set("X-Total-Count", "0").json({ data: [] });
     }
 
-    const songs = await songService.searchSongs(q, Number(limit));
-    res.json({ data: songs });
+    const { rows, count } = await songService.searchSongs(q, Number(limit), (page - 1) * limit);
+    res.set("X-Total-Count", String(count)).json({ data: rows });
   } catch (err) {
     next(err);
   }

@@ -555,12 +555,17 @@ const toggleSongVisibility = async (songId, adminUser) => {
   };
 };
 
-const searchSongs = async (keyword, limit) => {
-  return Song.findAll({
+const searchSongs = async (keyword, limit, offset = 0) => {
+  // Match artists inside the song query so Sequelize can page songs before
+  // joining the complete artist list for the response.
+  return Song.findAndCountAll({
     where: publicSongWhere({
       [Op.or]: [
         { title: { [Op.like]: `%${keyword}%` } },
-        { "$artists.name$": { [Op.like]: `%${keyword}%` } },
+        sequelize.literal(`EXISTS (
+          SELECT 1 FROM song_artists sa JOIN artists a ON a.artist_id = sa.artist_id
+          WHERE sa.song_id = Song.song_id AND a.name LIKE :artistPattern
+        )`),
       ],
     }),
 
@@ -574,10 +579,11 @@ const searchSongs = async (keyword, limit) => {
       },
     ],
 
-    order: [["view_count", "DESC"]],
+    replacements: { artistPattern: `%${keyword}%` },
+    order: [["view_count", "DESC"], ["song_id", "ASC"]],
     limit,
+    offset,
     distinct: true,
-    subQuery: false,
   });
 };
 

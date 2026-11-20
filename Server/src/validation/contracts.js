@@ -25,7 +25,7 @@ const contracts = {
     createSong: { body: multipartMetadata }, userUploadSong: { body: multipartMetadata },
     getAllSongs: { query: page(10).extend({ search: text(200).default('') }) },
     getSongList: { query: page(20) }, getPendingSongs: { query: page(20) },
-    searchSongs: { query: z.strictObject({ q: text(200).default(''), limit: decimal(integer(1, 100)).default(10) }) },
+    searchSongs: { query: page(10).extend({ q: text(200).default('') }) },
     updateSongById: { body: z.strictObject({ ...songMetadata, title: songMetadata.title.optional(), is_visible: z.boolean().optional(), status: z.enum(['pending', 'approved', 'rejected']).optional() }).refine((data) => Object.keys(data).length > 0) },
     getSongById: {}, getSongPreview: {}, deleteSongById: {}, toggleSongVisibility: {}, increaseView: {}, getPendingSongsCount: {}, approveSong: {}, rejectSong: {},
   },
