@@ -1,6 +1,6 @@
 # Kiến trúc và các bất biến
 
-Browser → Next.js/React → `/api` cùng origin → Express modular monolith → MySQL 8. Cloudinary lưu media mới ở chế độ authenticated; Python không nằm trên đường phục vụ. [Next rewrites](../UI/next.config.ts) dùng `API_INTERNAL_URL` phía server lúc build. [app.js](../Server/src/app.js) lắp middleware/routes; [server.js](../Server/src/server.js) quản lý startup/shutdown.
+Trong Compose, browser → ingress Nginx → Next.js/React cho trang web hoặc Express cho `/api` và `/health` cùng origin. Express dùng MySQL 8. Cloudinary lưu media mới ở chế độ authenticated; Python không nằm trên đường phục vụ. Khi chạy Next trực tiếp, [Next rewrites](../UI/next.config.ts) dùng `API_INTERNAL_URL` phía server lúc build. [app.js](../Server/src/app.js) lắp middleware/routes; [server.js](../Server/src/server.js) quản lý startup/shutdown.
 
 MySQL giữ nghiệp vụ, session, receipts và snapshots. Schema do [migrations](../Server/migrations/) quản lý, không tự sync/alter lúc startup. [OpenAPI](api/openapi.json) là hợp đồng endpoint; tái sinh bằng `npm --prefix Server run docs:api` khi API thay đổi.
 
@@ -13,6 +13,12 @@ MySQL giữ nghiệp vụ, session, receipts và snapshots. Schema do [migration
 - User/admin có scope và cookie riêng. Cookie HttpOnly, SameSite=Lax, Secure ở production; mutation áp dụng origin policy. Client refresh single-flight theo scope, dùng Web Locks khi hỗ trợ và chỉ retry request gốc một lần. Cache/response gắn auth epoch để tránh dữ liệu tài khoản cũ xuất hiện sau chuyển phiên.
 
 Nguồn: [session service](../Server/src/services/session.service.js), [auth middleware](../Server/src/midlewares/auth.midleware.js). Session migration loại credentials legacy, yêu cầu đăng nhập lại.
+
+## IP và quota
+
+[Ingress Compose](../deploy/compose-ingress.conf) ghi đè `X-Forwarded-For` bằng `$remote_addr` rồi chuyển `/api` và `/health` tới Express. Compose chỉ publish cổng ingress và đặt `TRUSTED_PROXY_CIDRS` của API đúng bằng địa chỉ IPv4 `/32` của ingress. Các request từ Next.js hoặc peer ngoài allowlist dùng IP socket. Các địa chỉ client khác nhau mà ingress nhìn thấy có bucket riêng theo IPv4 hoặc prefix IPv6 `/64`. Quota theo tài khoản và theo user vẫn dùng định danh tương ứng.
+
+Khi chạy API ngoài Compose, bỏ trống `TRUSTED_PROXY_CIDRS` để dùng IP socket. Với proxy được tin cậy, Express đọc chuỗi từ phải sang trái và dừng ở hop đầu tiên ngoài allowlist. Next rewrite có thể chuyển tiếp `X-Forwarded-For` do client gửi, vì vậy chỉ cấu hình tin cậy proxy có kiểm soát header. Xem [hướng dẫn vận hành](OPERATIONS_AND_TESTING.md) khi có NAT hoặc một lớp ingress khác.
 
 ## Playlist concurrency
 

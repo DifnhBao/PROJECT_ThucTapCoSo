@@ -26,7 +26,7 @@ docker compose up -d --build --wait --wait-timeout 240
 docker compose --profile demo run --rm --build seed
 ```
 
-Seed chỉ dành cho DB demo rỗng và cần `DEMO_SEED_PASSWORD`. Mở `http://localhost:3000/Home`. Không seed/reset lại DB đang dùng.
+Seed chỉ dành cho DB demo rỗng và cần hai mật khẩu khác nhau qua `DEMO_SEED_PASSWORD` (listener) và `DEMO_ADMIN_PASSWORD` (admin và super admin). Mở `http://localhost:3000/Home`. Không seed/reset lại DB đang dùng.
 
 ## Bốn tài liệu chính
 

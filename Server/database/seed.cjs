@@ -1,6 +1,18 @@
 const { getTestDatabaseConfig } = require('../config/test-database');
 const { getDatabaseConfig } = require('../src/config/env');
 
+function seedPassword(env, name) {
+  const password = env[name];
+  const demo = name !== 'TEST_SEED_PASSWORD';
+  if (typeof password !== 'string' || /^(replace|change|your)[-_ ]/i.test(password) || (demo
+    ? Buffer.byteLength(password) > 72 || Array.from(password).length < 12
+    : password.length > 72 || password.length < 12)) {
+    const limit = demo ? 'at least 12 characters and at most 72 UTF-8 bytes' : '12–72 characters';
+    throw new Error(`${name} requires a non-placeholder password (${limit})`);
+  }
+  return password;
+}
+
 function seedConfig(mode, env = process.env) {
   let database;
   if (mode === 'test') database = getTestDatabaseConfig(env, { destructive: true });
@@ -8,13 +20,15 @@ function seedConfig(mode, env = process.env) {
     database = getDatabaseConfig(env);
     if (!/^tunetrek_demo(?:_[a-z0-9]+)*$/.test(database.database) || !['127.0.0.1', 'localhost', '::1', 'db'].includes(database.host)) throw new Error('Demo seed requires an isolated local tunetrek_demo database');
   } else throw new Error('Seed requires explicit test or opted-in development demo environment');
-  const password = env[mode === 'test' ? 'TEST_SEED_PASSWORD' : 'DEMO_SEED_PASSWORD'];
-  if (typeof password !== 'string' || password.length < 12 || password.length > 72 || /^(replace|change|your)[-_ ]/i.test(password)) throw new Error('Seed password must be supplied via the matching env variable (12-72 characters)');
-  return { database, password };
+  if (mode === 'test') return { database, password: seedPassword(env, 'TEST_SEED_PASSWORD') };
+  const password = seedPassword(env, 'DEMO_SEED_PASSWORD');
+  const adminPassword = seedPassword(env, 'DEMO_ADMIN_PASSWORD');
+  if (Buffer.from(password).equals(Buffer.from(adminPassword))) throw new Error('DEMO_SEED_PASSWORD and DEMO_ADMIN_PASSWORD must be different');
+  return { database, password, adminPassword };
 }
 
 async function seed(mode, env = process.env) {
-  const { database, password } = seedConfig(mode, env); // Before importing models or connecting.
+  const { database, password, adminPassword } = seedConfig(mode, env); // Before importing models or connecting.
   const { Sequelize, QueryTypes } = require('sequelize');
   const bcrypt = require('bcryptjs');
   const db = new Sequelize(database);
@@ -29,8 +43,12 @@ async function seed(mode, env = process.env) {
       const q = db.getQueryInterface();
       const now = new Date('2026-01-01T00:00:00Z');
       const times = { created_at: now, updated_at: now };
-      const hash = await bcrypt.hash(password, 10);
-      await q.bulkInsert('users', ['userA', 'userB', 'admin', 'super_admin', 'cold_start'].map((name, i) => ({ user_id: i + 1, username: `demo_${name}`, email: `${name.toLowerCase()}@example.test`, password: hash, role: i === 2 ? 'admin' : i === 3 ? 'super_admin' : 'user', is_active: true, activity_status: 'offline', ...times })), options);
+      const listenerHash = await bcrypt.hash(password, 10);
+      const adminHash = adminPassword ? await bcrypt.hash(adminPassword, 10) : listenerHash;
+      await q.bulkInsert('users', ['userA', 'userB', 'admin', 'super_admin', 'cold_start'].map((name, i) => {
+        const role = i === 2 ? 'admin' : i === 3 ? 'super_admin' : 'user';
+        return { user_id: i + 1, username: `demo_${name}`, email: `${name.toLowerCase()}@example.test`, password: role === 'user' ? listenerHash : adminHash, role, is_active: true, activity_status: 'offline', ...times };
+      }), options);
       await q.bulkInsert('artists', [1, 2, 3].map((i) => ({ artist_id: i, name: `Synthetic Artist ${i}`, normalized_name: `synthetic-artist-${i}` })), options);
       await q.bulkInsert('genres', ['Pop', 'Rock', 'Jazz', 'Electronic'].map((name, i) => ({ genre_id: i + 1, name, normalized_name: name.toLowerCase() })), options);
       await q.bulkInsert('songs', Array.from({ length: 28 }, (_, index) => {

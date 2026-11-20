@@ -22,12 +22,15 @@ if (!(Test-Path .env)) { Copy-Item .env.example .env }
 # Điền cấu hình trước khi khởi động.
 docker compose config --quiet
 docker compose up -d --build --wait --wait-timeout 240
+docker compose exec -T ingress nginx -t
 docker compose --profile demo run --rm --build seed
 ```
 
-Mở `http://localhost:3000/Home`. Seed chỉ dùng một lần trên DB rỗng tên `tunetrek_demo` hoặc `tunetrek_demo_<suffix>`, `DEMO_SEED_PASSWORD` thực tế 12–72 ký tự. Compose bật `DEMO_SEED_ALLOWED=yes`, `DEMO_LOCAL_MEDIA=yes`: 28 bài synthetic dùng tone 440Hz tự sinh. Accounts: demo_userA, demo_userB, demo_admin, demo_super_admin, demo_cold_start; password từ env. Không seed lại khi restart.
+Mở `http://localhost:3000/Home`. Seed chỉ dùng một lần trên DB rỗng tên `tunetrek_demo` hoặc `tunetrek_demo_<suffix>`. Đặt `DEMO_SEED_PASSWORD` cho `demo_userA`, `demo_userB`, `demo_cold_start` và `DEMO_ADMIN_PASSWORD` cho `demo_admin`, `demo_super_admin`. Hai giá trị phải khác nhau, mỗi giá trị ít nhất 12 ký tự và tối đa 72 byte UTF-8. Seed từ chối giá trị mẫu hoặc bỏ trống. Compose bật `DEMO_SEED_ALLOWED=yes` và `DEMO_LOCAL_MEDIA=yes` để tạo 28 bài synthetic dùng tone 440 Hz. Với DB demo đã seed bằng mật khẩu chung, đăng nhập từng tài khoản đặc quyền và đổi mật khẩu qua `POST /api/users/admin/change-password` trước khi dùng lại DB đó. Test fixtures tiếp tục dùng `TEST_SEED_PASSWORD`.
 
-Stack DB → migrate → API → web. DB không publish port mặc định; khi cần API host dùng [local override](../docker-compose.local.yml). API chỉ có DML, migrator có DDL riêng. [Init hook](../db/10-app-permissions.sh) chỉ chạy trên volume mới; volume cũ cần cấp quyền có phối hợp, không xóa volume để ép hook chạy lại.
+Stack khởi động theo thứ tự DB → migrate → API → web → ingress. Ingress giữ cổng `127.0.0.1:${WEB_PORT:-3000}`, định tuyến `/api` và `/health` thẳng tới API và chuyển các request còn lại tới Next.js. DB không publish port mặc định. Khi cần API host dùng [local override](../docker-compose.local.yml). API chỉ có DML, migrator có DDL riêng. [Init hook](../db/10-app-permissions.sh) chỉ chạy trên volume mới; volume cũ cần cấp quyền có phối hợp, không xóa volume để ép hook chạy lại.
+
+Ingress ghi đè `X-Forwarded-For` bằng IP TCP peer. Compose cấu hình `TRUSTED_PROXY_CIDRS` cho API bằng IP ingress `/32` (mặc định `172.30.248.2/32`). Nếu subnet trùng mạng hiện có hoặc chạy nhiều stack, đặt `COMPOSE_FRONTEND_SUBNET` khác nhau và chọn `COMPOSE_INGRESS_IP` tương ứng trong mỗi subnet. Nếu Docker Desktop, NAT hoặc tunnel gộp nhiều kết nối thành cùng một IP mà ingress thấy, các kết nối đó sẽ dùng chung bucket. Để giữ IP gốc qua một lớp ingress khác, cần cấu hình lớp nhận IP xác thực từ proxy đó và giới hạn kết nối tới ingress theo topology đã triển khai. Với API chạy ngoài Compose, chỉ đặt `TRUSTED_PROXY_CIDRS` cho IP/CIDR hẹp của proxy có kiểm soát header và giữ API ở mạng riêng. Để trống khi chạy API trực tiếp hoặc dùng Next rewrites qua localhost.
 
 ## Chạy thủ công và migrations
 
@@ -44,7 +47,7 @@ npm --prefix Server run dev
 npm --prefix UI run dev
 ```
 
-Seed host cần `NODE_ENV=development`, `DEMO_SEED_ALLOWED=yes` và password hợp lệ; bật `DEMO_LOCAL_MEDIA=yes` để phát tone demo. Nếu không bật, seed có thể dùng URL example.test không phát được. Rebuild explicit sau seed hoặc đổi catalog/signals/config; chưa rebuild thì personal dùng trending, similar có thể rỗng.
+Seed host cần `NODE_ENV=development`, `DEMO_SEED_ALLOWED=yes` và cặp mật khẩu demo như trên. Bật `DEMO_LOCAL_MEDIA=yes` để phát tone demo. Nếu không bật, seed có thể dùng URL example.test không phát được. Rebuild explicit sau seed hoặc đổi catalog/signals/config; chưa rebuild thì personal dùng trending, similar có thể rỗng.
 
 [Migrations](../Server/migrations/) là nguồn schema; legacy ở thư mục con không chạy tự động. Không sửa applied migrations hoặc thay baseline bằng SQL dump. DB cũ cần đủ lịch sử/schema mới tự nhận diện được. MySQL DDL implicit commit: backup, thử clone và lên lịch bảo trì trước nâng cấp. Session migration buộc phiên legacy login lại.
 
