@@ -1,8 +1,20 @@
 "use client";
 import "@/app/(Pages)/(main)/Library/library.css";
+import { useModal } from "@/app/context/ModalContext";
 import LibraryTable from "@/app/features/song/components/LibraryTable/LibraryTable";
+import SongSubmissions from "@/app/features/song/components/SongSubmissions";
+import { fetchMySubmissions, submissionsKey } from "@/app/features/song/song.api";
+import { useAuthState } from "@/app/lib/use-auth-state";
+import useSWR from "swr";
 
 export default function LibraryPage() {
+  const { principal, epoch } = useAuthState("user");
+  const { openModal } = useModal();
+  const { data, error, mutate } = useSWR(
+    principal ? submissionsKey(principal.userId, epoch) : null,
+    fetchMySubmissions,
+  );
+
   return (
     <div id="library_menu">
       <h2 className="main-title">Your Library</h2>
@@ -16,6 +28,14 @@ export default function LibraryPage() {
 
         <LibraryTable />
       </div>
+      {principal && (
+        <SongSubmissions
+          submissions={data}
+          hasError={!!error}
+          onRetry={() => void mutate()}
+          onUpload={() => openModal("upload-song")}
+        />
+      )}
     </div>
   );
 }

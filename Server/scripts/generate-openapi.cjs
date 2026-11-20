@@ -14,6 +14,19 @@ const businessDtos = {
   Song: song,
   SongList: object({ songs: list(ref('Song')), total: integer, page: integer, limit: integer }),
   SongDetail: object({ data: ref('Song') }),
+  SongSubmission: closed({
+    song_id: integer,
+    title: string,
+    duration: { type: ['integer', 'null'] },
+    image_url: { type: ['string', 'null'] },
+    artists: list(object({ artist_id: integer, name: string })),
+    genres: list(object({ genre_id: integer, name: string })),
+    status: { type: 'string', enum: ['pending', 'approved', 'rejected'] },
+    rejection_reason: { type: ['string', 'null'], maxLength: 500 },
+    created_at: { type: 'string', format: 'date-time' },
+    reviewed_at: { type: ['string', 'null'], format: 'date-time' },
+  }),
+  SongSubmissions: object({ data: list(ref('SongSubmission')) }),
   Playlist: object({ playlist_id: integer, name: string, user_id: integer, is_public: { type: 'boolean' }, songs: list(ref('Song')) }, ['playlist_id', 'name']),
   PlaylistDetail: object({ data: ref('Playlist') }),
   PlaylistList: object({ data: list(ref('Playlist')) }),
@@ -31,7 +44,7 @@ const businessDtos = {
   Recommendations: object({ data: list(object({ song: ref('Song'), reason: string }, ['song'])), count: integer }, ['data']),
   ListeningReceipt: object({ event_id: { type: 'string', format: 'uuid' }, activity_id: string, qualified: { type: 'boolean' }, song_duration: { type: 'number' }, duplicate: { type: 'boolean' } }),
 };
-const dto = { requestRefreshToken: 'SessionRefresh', refreshAdminToken: 'SessionRefresh', getSongList: 'SongList', getSongById: 'SongDetail', getSongPreview: 'SongDetail', getPlaylistDetail: 'PlaylistDetail', getMyPlaylists: 'PlaylistList', getUserProfile: 'UserDetail', getUserProfileByAdmin: 'UserDetail', login: 'Login', loginAdmin: 'AdminLogin', register: 'Registration', toggleLikeSong: 'Like', getLikeStatus: 'Like', getMyFavoriteSongs: 'Favorites', getSongRatingSummary: 'RatingSummary', getMyRating: 'Rating', getSimilarSongs: 'Recommendations', getRecommendationsForUser: 'Recommendations', logActivity: 'ListeningReceipt' };
+const dto = { requestRefreshToken: 'SessionRefresh', refreshAdminToken: 'SessionRefresh', getSongList: 'SongList', getSongById: 'SongDetail', getSongPreview: 'SongDetail', getMySubmissions: 'SongSubmissions', getPlaylistDetail: 'PlaylistDetail', getMyPlaylists: 'PlaylistList', getUserProfile: 'UserDetail', getUserProfileByAdmin: 'UserDetail', login: 'Login', loginAdmin: 'AdminLogin', register: 'Registration', toggleLikeSong: 'Like', getLikeStatus: 'Like', getMyFavoriteSongs: 'Favorites', getSongRatingSummary: 'RatingSummary', getMyRating: 'Rating', getSimilarSongs: 'Recommendations', getRecommendationsForUser: 'Recommendations', logActivity: 'ListeningReceipt' };
 function jsonSchema(schema) {
   const result = z.toJSONSchema(schema, { io: 'output', unrepresentable: 'any' });
   delete result.$schema;
@@ -60,7 +73,7 @@ function buildOpenApi() {
         operation.responses[409].description = 'OFFLINE_REBUILD_REQUIRED: use the offline maintenance CLI';
       }
       if (!['get', 'head', 'options'].includes(method)) operation.parameters.push({ name: 'Origin', in: 'header', required: true, schema: { type: 'string', format: 'uri' }, description: 'Exact allowed frontend origin; missing/null/cross-site mutations are rejected' });
-      if (contract.body) operation.requestBody = { required: true, content: { [/(createSong|userUploadSong)/.test(handler) ? 'multipart/form-data' : 'application/json']: { schema: jsonSchema(contract.body) } } };
+      if (contract.body) operation.requestBody = { required: !contract.bodyOptional, content: { [/(createSong|userUploadSong)/.test(handler) ? 'multipart/form-data' : 'application/json']: { schema: jsonSchema(contract.body) } } };
       if (/(createSong|userUploadSong)/.test(handler)) {
         const body = operation.requestBody.content['multipart/form-data'].schema;
         body.properties.audioFile = { type: 'string', format: 'binary' };

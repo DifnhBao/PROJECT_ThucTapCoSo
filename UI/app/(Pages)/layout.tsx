@@ -13,13 +13,11 @@ export default function PagesLayout({
   children: React.ReactNode;
 }) {
   const isAdmin = usePathname().startsWith("/administrator");
-  const content = <PlayerProvider><LikeProvider>{children}</LikeProvider></PlayerProvider>;
+  const content = <ModalProvider><PlayerProvider><LikeProvider>{children}</LikeProvider></PlayerProvider></ModalProvider>;
   return (
     <UserProvider>
-      <ModalProvider>
-        {/* Admin pages own their cache boundary; user discovery must not remount admin forms. */}
-        {isAdmin ? content : <AccountCacheBoundary scope="user">{content}</AccountCacheBoundary>}
-      </ModalProvider>
+      {/* Upload and Library share the user cache. Admin pages own their cache boundary. */}
+      {isAdmin ? content : <AccountCacheBoundary scope="user">{content}</AccountCacheBoundary>}
     </UserProvider>
   );
 }

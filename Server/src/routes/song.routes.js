@@ -17,6 +17,7 @@ router.get("/search", songController.searchSongs);
 
 // track list hằng ngày
 router.get("/", songController.getSongList);
+router.get("/me/submissions", protect, songController.getMySubmissions);
 
 // user upload nhạc (phải đặt TRƯỚC /:songId/view)
 router.post(

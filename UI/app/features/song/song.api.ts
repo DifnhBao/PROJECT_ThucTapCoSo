@@ -2,7 +2,7 @@ import { mapSongToTrack } from "@/app/utils/song.mapper";
 import { readApiResponse } from "../../lib/api-contract";
 import { apiFetch } from '../../lib/api-transport';
 import { uploadKey } from '../../lib/upload-key';
-import type { SongDto,SongMetadata,SongMutationDto,SongPageDto } from '../../types/api';
+import type { SongDto,SongMetadata,SongMutationDto,SongPageDto,SongSubmissionDto } from '../../types/api';
 import { Track } from "../../types/music";
 import { adminFetch,userFetch } from "../../utils/refreshToken";
 
@@ -124,6 +124,14 @@ export async function uploadSongByUser(formData: FormData) {
   return result;
 }
 
+export const submissionsKey = (userId: number, epoch: number) => ['song-submissions', userId, epoch] as const;
+
+export async function fetchMySubmissions() {
+  const res = await userFetch(`${URL}/songs/me/submissions`);
+  const result = await readApiResponse<{ data: SongSubmissionDto[] }>(res);
+  return result.data;
+}
+
 /* --- DUYỆT BÀI HÁT (ADMIN) --- */
 
 export async function fetchPendingSongs({
@@ -166,10 +174,15 @@ export async function approveSongApi(songId: number) {
   return json;
 }
 
-export async function rejectSongApi(songId: number) {
+export async function rejectSongApi(songId: number, reason?: string) {
+  const rejectionReason = reason?.trim();
   const res = await adminFetch(`${URL}/songs/${songId}/reject`, {
     method: "PATCH",
     credentials: "include",
+    ...(rejectionReason ? {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rejection_reason: rejectionReason }),
+    } : {}),
   });
 
   const json = await readApiResponse<{ message?: string }>(res);

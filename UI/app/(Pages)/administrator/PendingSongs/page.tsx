@@ -15,6 +15,7 @@ import { formatDate,formatDuration } from "@/app/utils/dateHelper";
 import { useSearchParams } from "next/navigation";
 import { Suspense,useState } from "react";
 import useSWR from 'swr';
+import ModerationConfirmation from "./ModerationConfirmation";
 import pendingStyles from "./PendingSongs.module.css";
 import SongDetailModal from "./SongDetailModal";
 
@@ -29,16 +30,22 @@ function PendingSongsContent() {
   const [selectedSong, setSelectedSong] = useState<SongDto | null>(null);
 
   const [confirmation, setConfirmation] = useState<{ songId: number; action: 'approve' | 'reject' } | null>(null);
+  const [rejectionReason, setRejectionReason] = useState("");
   const [feedback, setFeedback] = useState<{ error: boolean; message: string } | null>(null);
   const viewState = pendingViewState({ error, isLoading, hasData: !!data, count: songs.length });
   const handleApprove = (songId: number) => { setSelectedSong(null); setConfirmation({ songId, action: 'approve' }); };
-  const handleReject = (songId: number) => { setSelectedSong(null); setConfirmation({ songId, action: 'reject' }); };
-  const moderate = async () => {
+  const handleReject = (songId: number) => {
+    setSelectedSong(null);
+    setRejectionReason("");
+    setConfirmation({ songId, action: 'reject' });
+  };
+  const moderate = async (reason?: string) => {
     if (!confirmation || busy) return;
     setLoading(true);
     setFeedback(null);
     try {
-      await (confirmation.action === 'approve' ? approveSongApi : rejectSongApi)(confirmation.songId);
+      if (confirmation.action === 'approve') await approveSongApi(confirmation.songId);
+      else await rejectSongApi(confirmation.songId, reason);
       setConfirmation(null);
       setFeedback({ error: false, message: 'Đã xử lý bài hát.' });
       await mutate();
@@ -53,11 +60,21 @@ function PendingSongsContent() {
       <h2 className={styles.header}>Duyệt bài hát</h2>
       {feedback && <p role={feedback.error ? "alert" : "status"}>{feedback.message}</p>}
       <Modal isOpen={!!confirmation} onClose={() => { if (!busy) setConfirmation(null); }}>
-        <h3>{confirmation?.action === 'approve' ? 'Duyệt bài hát này?' : 'Từ chối bài hát này?'}</h3>
-        <div className={pendingStyles.actionGroup}>
-          <button className={pendingStyles.viewBtn} disabled={busy} onClick={() => setConfirmation(null)}>Hủy</button>
-          <button className={pendingStyles.approveBtn} disabled={busy} onClick={() => void moderate()}>{busy ? 'Đang xử lý…' : 'Xác nhận'}</button>
-        </div>
+        {confirmation && (
+          <div className={pendingStyles.confirmation}>
+            <ModerationConfirmation
+              action={confirmation.action}
+              reason={rejectionReason}
+              busy={busy}
+              onReasonChange={setRejectionReason}
+              onCancel={() => setConfirmation(null)}
+              onConfirm={(reason) => void moderate(reason)}
+              className={pendingStyles.actionGroup}
+              cancelClassName={pendingStyles.viewBtn}
+              confirmClassName={confirmation.action === 'approve' ? pendingStyles.approveBtn : pendingStyles.rejectBtn}
+            />
+          </div>
+        )}
       </Modal>
 
       {viewState === 'error' ? <div role="alert">Không tải được danh sách.<button onClick={() => void mutate()}>Thử lại</button></div>

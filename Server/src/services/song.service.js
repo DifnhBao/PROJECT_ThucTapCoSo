@@ -302,6 +302,16 @@ const getSongPreview = async (songId, actor) => {
   return song;
 };
 
+const getMySubmissions = (userId) => Song.findAll({
+  where: { uploaded_by: requireId(userId) },
+  attributes: ["song_id", "title", "duration", "image_url", "status", "rejection_reason", "created_at", "reviewed_at"],
+  include: [
+    { model: Artist, as: "artists", attributes: ["artist_id", "name"], through: { attributes: [] } },
+    { model: Genre, as: "genres", attributes: ["genre_id", "name"], through: { attributes: [] } },
+  ],
+  order: [["created_at", "DESC"], ["song_id", "DESC"]],
+});
+
 async function getSongs({ page = 1, limit = 20 }) {
   const offset = (page - 1) * limit;
 
@@ -347,7 +357,7 @@ const updateSongById = async (songId, updateData) => {
   const t = await sequelize.transaction();
 
   try {
-    const song = await Song.findByPk(songId, { transaction: t });
+    const song = await Song.findByPk(songId, { transaction: t, lock: t.LOCK.UPDATE });
     if (!song) {
       throw new AppError("Bài hát không tồn tại.", 404, "SONG_NOT_FOUND");
     }
@@ -359,6 +369,10 @@ const updateSongById = async (songId, updateData) => {
         duration: duration !== undefined ? duration : song.duration,
         is_visible: is_visible !== undefined ? is_visible : song.is_visible,
         status: status ?? song.status,
+        ...(status && status !== song.status ? {
+          rejection_reason: null,
+          reviewed_at: status === "pending" ? null : new Date(),
+        } : {}),
       },
       { transaction: t },
     );
@@ -635,39 +649,36 @@ const getPendingSongsCount = async () => {
   return count;
 };
 
-const approveSong = async (songId) => {
+const moderateSong = async (songId, status, rejectionReason = null) => {
   const song = await Song.findByPk(songId);
   if (!song) throw new AppError("Không tìm thấy bài hát.", 404, "SONG_NOT_FOUND");
   if (song.status !== "pending") throw new AppError("Bài hát không ở trạng thái chờ duyệt.", 409, "INVALID_SONG_STATE");
 
-  await song.update({ status: "approved", is_visible: true });
+  const approved = status === "approved";
+  const [updated] = await Song.update({
+    status,
+    is_visible: approved,
+    rejection_reason: rejectionReason || null,
+    reviewed_at: new Date(),
+  }, { where: { song_id: songId, status: "pending" } });
+  if (!updated) throw new AppError("Bài hát không ở trạng thái chờ duyệt.", 409, "INVALID_SONG_STATE");
 
   return {
-    message: "Đã duyệt bài hát thành công.",
+    message: approved ? "Đã duyệt bài hát thành công." : "Đã từ chối bài hát.",
     song_id: song.song_id,
     title: song.title,
   };
 };
 
-const rejectSong = async (songId) => {
-  const song = await Song.findByPk(songId);
-  if (!song) throw new AppError("Không tìm thấy bài hát.", 404, "SONG_NOT_FOUND");
-  if (song.status !== "pending") throw new AppError("Bài hát không ở trạng thái chờ duyệt.", 409, "INVALID_SONG_STATE");
-
-  await song.update({ status: "rejected", is_visible: false });
-
-  return {
-    message: "Đã từ chối bài hát.",
-    song_id: song.song_id,
-    title: song.title,
-  };
-};
+const approveSong = (songId) => moderateSong(songId, "approved");
+const rejectSong = (songId, reason) => moderateSong(songId, "rejected", reason);
 
 module.exports = {
   createSong,
   getAllSongs,
   getSongById,
   getSongPreview,
+  getMySubmissions,
   updateSongById,
   deleteSongById,
   toggleSongVisibility,

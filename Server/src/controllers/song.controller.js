@@ -14,6 +14,15 @@ const uploadSong = async (req, res, next) => {
 const createSong = uploadSong;
 const userUploadSong = uploadSong;
 
+const getMySubmissions = async (req, res, next) => {
+  try {
+    const data = await songService.getMySubmissions(req.auth.userId);
+    res.set('Cache-Control', 'private, no-store').json({ data });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getAllSongs = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -197,7 +206,7 @@ const approveSong = async (req, res, next) => {
 const rejectSong = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await songService.rejectSong(id);
+    const result = await songService.rejectSong(id, req.body.rejection_reason);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -207,6 +216,7 @@ const rejectSong = async (req, res, next) => {
 module.exports = {
   createSong,
   userUploadSong,
+  getMySubmissions,
   getAllSongs,
   getSongById,
   getSongPreview,

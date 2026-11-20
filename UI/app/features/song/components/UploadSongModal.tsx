@@ -2,16 +2,19 @@
 import { useModal } from "@/app/context/ModalContext";
 import { useUser } from "@/app/features/user/context/UserContext";
 import { formError } from "@/app/lib/form-error";
+import { getAuth } from "@/app/lib/auth-state";
 import { useEffect,useRef,useState } from "react";
 import { FcPicture } from "react-icons/fc";
 import { IoIosMusicalNote } from "react-icons/io";
-import { uploadSongByUser } from "../song.api";
+import { useSWRConfig } from "swr";
+import { submissionsKey, uploadSongByUser } from "../song.api";
 import { readAudioMetadata } from "./audio-metadata";
 import styles from "./UploadSongModal.module.css";
 
 export default function UploadSongModal() {
   const { closeModal } = useModal();
   const { user } = useUser();
+  const { mutate } = useSWRConfig();
 
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState(user?.username ?? "");
@@ -63,6 +66,7 @@ export default function UploadSongModal() {
 
     try {
       setSubmitting(true);
+      const { principal, epoch } = getAuth("user");
 
       const formData = new FormData();
       formData.append("title", title.trim());
@@ -74,6 +78,9 @@ export default function UploadSongModal() {
 
       await uploadSongByUser(formData);
 
+      if (principal && getAuth("user").epoch === epoch) {
+        void mutate(submissionsKey(principal.userId, epoch));
+      }
       setSuccess(true);
     } catch (err: unknown) {
       setError(formError(err));

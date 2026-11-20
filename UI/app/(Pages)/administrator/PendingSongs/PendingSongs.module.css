@@ -117,3 +117,16 @@
   color: #888;
   margin: 0;
 }
+.confirmation textarea {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin-block: 0.4rem;
+  padding: 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: 0.4rem;
+  background: var(--tt-surface);
+  color: var(--tt-text-primary);
+  font: inherit;
+  resize: vertical;
+}
