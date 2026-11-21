@@ -86,6 +86,7 @@ function PendingSongsContent() {
           <p>Tất cả bài hát đã được xử lý.</p>
         </div>
       ) : (
+        <div className={pendingStyles.tableScroll}>
         <table className={styles.songTable}>
           <colgroup>
             <col style={{ width: "20%" }} />
@@ -163,6 +164,7 @@ function PendingSongsContent() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       {viewState === 'data' && <Pagination currentPage={currentPage} totalPages={totalPages} />}
