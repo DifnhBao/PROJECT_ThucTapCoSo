@@ -20,10 +20,12 @@ Next cần `API_INTERNAL_URL` lúc build: host `http://127.0.0.1:5000`, Compose 
 ```powershell
 if (!(Test-Path .env)) { Copy-Item .env.example .env }
 # Điền cấu hình trước khi khởi động.
+node scripts/generate-demo-audio.cjs
 docker compose config --quiet
 docker compose up -d --build --wait --wait-timeout 240
 docker compose exec -T ingress nginx -t
 docker compose --profile demo run --rm --build seed
+docker compose exec -T api npm run recommendations:rebuild
 ```
 
 Mở `http://localhost:3000/Home`. Seed chỉ dùng một lần trên DB rỗng tên `tunetrek_demo` hoặc `tunetrek_demo_<suffix>`. Đặt `DEMO_SEED_PASSWORD` cho `demo_userA`, `demo_userB`, `demo_cold_start` và `DEMO_ADMIN_PASSWORD` cho `demo_admin`, `demo_super_admin`. Hai giá trị phải khác nhau, mỗi giá trị ít nhất 12 ký tự và tối đa 72 byte UTF-8. Seed từ chối giá trị mẫu hoặc bỏ trống. Compose bật `DEMO_SEED_ALLOWED=yes` và `DEMO_LOCAL_MEDIA=yes` để tạo 28 bài synthetic dài 25–30 giây với cao độ, giai điệu và nhịp khác nhau. Với DB demo đã seed bằng mật khẩu chung, đăng nhập từng tài khoản đặc quyền và đổi mật khẩu qua `POST /api/users/admin/change-password` trước khi dùng lại DB đó. Test fixtures tiếp tục dùng `TEST_SEED_PASSWORD`.
@@ -87,10 +89,108 @@ node --env-file=.local-backups/t04/test.env scripts/verify-t19.cjs
 
 [CI](../.github/workflows/ci.yml): UI, API, MySQL/browser, dependency/secret gates, container builds, required aggregator. [Release workflow](../.github/workflows/release.yml) không thay smoke: review/stage, chạy CI trên commit, kiểm tra migration/health/media riêng rồi tag/publish thủ công. Rollback code phải tương thích schema. Security gate chặn high/critical theo [exception policy](security/dependency-exceptions.json); moderate và history còn cần rà soát, không coi scan hiện tại là chứng nhận sạch lịch sử. Không khẳng định CI working tree đã xanh khi chưa chạy.
 
-### Audio và gợi ý cho demo Phase 3
+### Audio và gợi ý cho demo
 
 Chạy `node scripts/generate-demo-audio.cjs` từ root trước khi khởi động/build UI để tạo 28 tệp WAV riêng trong `UI/public/demo` (Next phục vụ qua `/demo/track-01.wav` … `/demo/track-28.wav`). Mỗi bài dài 25–30 giây; phát liên tục hơn 20 giây để đủ điều kiện ghi nhận lượt nghe, không tua để thay thế thời gian nghe thật. Quy tắc 20 giây không thay đổi; test seed vẫn dùng fixture cũ.
 
 Ngay sau `npm --prefix Server run db:seed:demo`, chạy `npm --prefix Server run recommendations:rebuild` để có snapshot gợi ý active. Với Docker, ngay sau seed chạy `docker compose exec -T api npm run recommendations:rebuild`. Các lệnh này cần MySQL hoạt động và cấu hình môi trường tương ứng.
 
 Trang `/administrator` và đường dẫn cũ `/administrator/Statistics` đều chuyển đến `/administrator/PendingSongs`.
+
+## Nghiệm thu Phase 4/5 trên MySQL thật
+
+Docker/MySQL không chạy trong lượt kiểm tra Phase 5 local; các bước dưới đây là checklist cần chạy trên máy cá nhân trước push. `config --quiet` chỉ kiểm tra cấu hình, không chứng minh image build, Nginx routing hoặc DB transaction đã hoạt động.
+
+Với DB cũ: backup và dừng writers trước migration. Với checkout mới: quickstart bên trên tự chạy toàn bộ migrations trước API. Migration [20261120000100](../Server/migrations/20261120000100-song-moderation-metadata.js) thêm `songs.rejection_reason VARCHAR(500) NULL` và `reviewed_at DATETIME NULL`, forward-only; không tự backfill lý do cũ.
+
+```powershell
+docker compose stop api web
+docker compose run --rm --build migrate
+docker compose up -d --build --wait --wait-timeout 240
+docker compose exec -T ingress nginx -t
+# Mở mysql client; dùng mật khẩu app từ .env khi được hỏi (không dán secret vào shell history):
+docker compose exec db sh -c 'exec mysql -u"$MYSQL_USER" -p "$MYSQL_DATABASE"'
+```
+
+Trong MySQL client, chạy các câu sau; chọn user có receipts và thay cursor boundary bằng timestamp/song ID có thật để kiểm tra trang tiếp theo:
+
+```sql
+SELECT name FROM SequelizeMeta ORDER BY name;
+SHOW COLUMNS FROM songs LIKE 'rejection_reason';
+SHOW COLUMNS FROM songs LIKE 'reviewed_at';
+SHOW INDEX FROM UserActivities;
+SHOW INDEX FROM song_artists;
+SHOW INDEX FROM artists;
+SHOW INDEX FROM songs;
+SET @uid = (SELECT user_id FROM UserActivities GROUP BY user_id ORDER BY COUNT(*) DESC LIMIT 1);
+SET @cursor_time = '2026-11-21 00:00:00.000000';
+SET @cursor_id = 2147483647;
+EXPLAIN SELECT s.song_id, s.title, recent.last_played
+FROM (SELECT song_id, MAX(created_at) AS last_played
+      FROM UserActivities WHERE user_id = @uid GROUP BY song_id) recent
+JOIN songs s ON s.song_id = recent.song_id
+WHERE s.status = 'approved' AND s.is_visible = 1
+  AND (recent.last_played < @cursor_time
+       OR (recent.last_played = @cursor_time AND s.song_id < @cursor_id))
+ORDER BY recent.last_played DESC, s.song_id DESC LIMIT 21;
+EXPLAIN SELECT s.song_id FROM songs s
+WHERE s.status = 'approved' AND s.is_visible = 1
+  AND (s.title LIKE '%Jazz%' OR EXISTS (
+    SELECT 1 FROM song_artists sa JOIN artists a ON a.artist_id = sa.artist_id
+    WHERE sa.song_id = s.song_id AND a.name LIKE '%Jazz%'))
+ORDER BY s.view_count DESC, s.song_id ASC LIMIT 20 OFFSET 0;
+```
+
+Xác nhận `idx_user_song_created` có đúng thứ tự `(user_id,song_id,created_at)` và PK song_artists `(song_id,artist_id)`. Lưu `possible_keys`, `key`, `rows`, `Extra` của EXPLAIN; optimizer có thể chọn scan với fixture nhỏ, aggregate/sort có thể cần temporary/filesort. Không tuyên bố “index-only/no filesort” hoặc search dùng index cho `%keyword%`. Chạy lại truy vấn F2 bỏ predicate cursor để đối chiếu trang đầu; dùng API lấy cursor thật, kiểm tra không trùng song và giữ thứ tự khi timestamp bằng nhau.
+
+Full regression giống CI, trên DB test riêng (runner reset dữ liệu):
+
+```powershell
+# Tạo test.env theo phần Tests và CI; TEST_DB_RESET_ALLOWED=yes, chỉ DB disposable.
+docker compose --env-file .local-backups/t04/test.env -f docker-compose.test.yml -p tunetrek-t04-test up -d --wait --wait-timeout 180
+npm install --prefix .local-backups/phase5/browser --no-save --package-lock=false --ignore-scripts playwright@1.62.1
+& ./.local-backups/phase5/browser/node_modules/.bin/playwright.cmd install chromium
+$env:PLAYWRIGHT_MODULE_PATH = (Resolve-Path .local-backups/phase5/browser/node_modules/playwright).Path
+$env:PLAYWRIGHT_CHANNEL = 'chromium'
+$env:API_INTERNAL_URL = 'http://127.0.0.1:5000'
+npm --prefix UI run build
+node --env-file=.local-backups/t04/test.env scripts/ci/run-stack.cjs
+```
+
+Runner tự start/stop Next cổng 3016 rồi chạy MySQL integration, full-stack E2E, player, account và accessibility; không chạy đồng thời với runner reset DB khác. Khi cần E2E riêng với Next đã chạy: `node --env-file=.local-backups/t04/test.env --test --test-concurrency=1 UI/tests/e2e/full-stack.test.mjs`. Provider vẫn mock trong suite; upload Cloudinary thật cần smoke riêng. Sau seed demo và rebuild, kiểm tra thủ công Library F1/F2, moderation reason, nghe mới rồi load-more, đổi tài khoản, và onboarding của `demo_cold_start`.
+
+## Dependency audit — 2026-11-21
+
+Next.js và eslint-config-next nâng từ 16.4.2 lên **16.4.6**, giữ React/React DOM 19.3.1 và major Next 16; lockfile được npm cập nhật. Không tắt security check, không dùng `npm audit fix --force`. Registry `npm view next@16 version` tại thời điểm kiểm tra kết thúc ở 16.4.6. Các advisory Next qua 16.4.4 được mô tả tại [Next.js security advisories](https://github.com/vercel/next.js/security/advisories).
+
+| Audit sau nâng cấp | High/critical | Moderate | Phạm vi còn lại |
+|---|---|---:|---|
+| UI | 0/0 | 7 | Dev lint: minimatch và chuỗi typescript-eslint |
+| Server | 0/0 | 7 | 5 package dev qua sequelize-cli; 2 package runtime sequelize/uuid |
+
+UI: [minimatch globparts amplification](https://github.com/advisories/GHSA-g3hv-75wg-m249) đi qua `@typescript-eslint/typescript-estree`, parser/utils/type-utils/eslint-plugin và typescript-eslint. Server dev: cùng minimatch qua editorconfig/glob/js-beautify/sequelize-cli, cộng [glob cancellation bypass](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4). Không nhận glob input không tin cậy khi chạy tooling; migrator image có dev dependencies nên vẫn phải giới hạn môi trường vận hành. npm đề xuất downgrade sequelize-cli ngoài range hiện tại; chưa force thay đổi tooling migration trong lúc không có MySQL để kiểm chứng.
+
+**Không gọi tất cả advisory là dev-only:** [uuid buffer bounds](https://github.com/advisories/GHSA-w5hq-g745-h8pq) ảnh hưởng dependency runtime của Sequelize. Audit gợi ý downgrade Sequelize xuống 3.30.0 (breaking), nên giữ 6.37.8 và ghi nhận rủi ro còn mở; chưa chứng minh khả năng khai thác trong app và không coi là miễn nhiễm. Kiểm tra lại `npm audit --prefix Server`, `npm audit --prefix UI` trước release vì advisory có thể thay đổi.
+
+### Kết quả local Phase 5 — 2026-11-21
+
+| Lệnh | Kết quả thực chạy |
+|---|---|
+| `npm --prefix Server test` | 145 pass, 0 fail/skipped |
+| `npm --prefix Server run lint` | Exit 0 |
+| `npm --prefix UI run typecheck` | Exit 0 |
+| `npm --prefix UI run lint` | Exit 0; 0 errors, 21 warnings còn tồn tại |
+| `npm --prefix UI test` | 74 pass, 0 fail/skipped |
+| `npm --prefix UI run build` | **Lần đầu sau upgrade pass**, Next 16.4.6; compile 12.2 giây, static pages 18/18; 0 SecurityFatalError |
+| `docker compose --env-file .env.example config --quiet` | Exit 0; demo profile và local override cũng pass |
+| `git diff --check` | Exit 0 |
+| `npm ci --prefix UI --dry-run --ignore-scripts --no-audit --no-fund` và tương tự với `Server` | Exit 0; manifest/lockfile nhất quán, không thay thế cài/build container thật |
+| Link check README và `docs/*.md` | 5 files, 77 internal links, 0 broken links (kiểm tra target và anchor nếu có) |
+| `npm audit --prefix UI --omit=dev` | 0 vulnerabilities |
+| `npm audit --prefix Server --omit=dev` | 2 moderate, exit 1; không có high/critical |
+
+Build dùng `API_INTERNAL_URL=http://127.0.0.1:5000`, chuyển `.next` cũ sang backup trước khi chạy; Next vẫn đọc `.env.local` hiện có. Đây là build local sạch cache, chưa phải nghiệm thu container/checkout mới. Log local nằm trong `.local-backups/phase5/` (ignored). Audit đầy đủ có moderate nên exit 1 là kết quả dự kiến, không phải “audit sạch”.
+
+CI đã dùng test seed riêng (`TEST_SEED_PASSWORD`), helper tự chạy migrations, API lint cài cả UI dependencies; không cần thay bằng demo passwords. Compose demo truyền riêng `DEMO_SEED_PASSWORD`/`DEMO_ADMIN_PASSWORD`; ingress là service riêng, build image do upstream cung cấp. Gate container được bổ sung validate demo profile và local DB override, không thay logic ứng dụng. Chưa chạy GitHub Actions/container builds/MySQL E2E trong phiên này.
+
+Readiness trước push: `LICENSE` đang có trên disk nhưng chưa tracked ở thời điểm kiểm tra; cần đưa vào candidate để link tồn tại trên checkout mới. `.dockerignore` root và việc xóa file ghi chú DB là thay đổi đã có trước Phase 5, không được agent sửa/stage/commit. Hai build context `Server/` và `UI/` đã có `.dockerignore` riêng được tracked. Không tự commit trong lượt này.

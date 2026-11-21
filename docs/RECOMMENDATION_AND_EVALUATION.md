@@ -32,7 +32,7 @@ Frozen training: chia raw events theo global cutoff trước TF-IDF, behavioral 
 
 So Popularity (qualified train receipts), Content-only, Hybrid trên cùng catalog/cohort/K. Recall@K = hits/relevant; NDCG dùng binary relevance, log2 discount/ideal DCG; coverage = distinct recommended songs/eligible catalog. Seen chỉ là positive profile giới hạn như serving, không phải mọi bài từng nghe. Genre smoke không đo MAP/serendipity hoặc chất lượng người dùng thật.
 
-Kết quả synthetic đã lưu, test/all K=5, không phải lượt chạy lại Phase 1:
+Kết quả synthetic đã lưu, test/all K=5 (khác fixture onboarding bên dưới):
 
 | Model | Recall@5 | NDCG@5 | Coverage@5 |
 |---|---:|---:|---:|
@@ -41,6 +41,14 @@ Kết quả synthetic đã lưu, test/all K=5, không phải lượt chạy lạ
 | Hybrid | 0.8000 | 0.5047 | 0.7778 |
 
 Artifacts: [metrics](evaluation/results/synthetic-v1/metrics.json), [CSV](evaluation/results/synthetic-v1/metrics.csv), [rankings](evaluation/results/synthetic-v1/rankings.json), [manifest](evaluation/results/synthetic-v1/manifest.json). Fixture có 12 users, 18 eligible songs, mỗi split chấm 10 users. Hybrid chưa tốt hơn Content-only; cold test Recall/NDCG bằng 0. Không suy production uplift/retention từ synthetic.
+
+## F3 — Cold-start onboarding
+
+`GET /api/recommendations/me` trả mode `cold_start` khi không có positive seed và không có favorite/rating; có lịch sử nhưng không tạo được đề xuất thì dùng `trending`. UI chỉ mời onboarding ở cold-start chưa dismiss. Catalog starter phân trang 12 bài; chọn 3–10 bài rồi `POST /api/favorites/batch`. Server lấy user từ session, khóa shared các song theo ID, kiểm tra public toàn bộ trước ghi; upsert favorite trong một transaction làm retry idempotent. Nếu có bài bị ẩn/reject, trả `STARTER_SONG_UNAVAILABLE` và không lưu một phần.
+
+Save thành công revalidate favorite và feed theo auth epoch; không trộn tài khoản và không rebuild online. Snapshot có neighbors phù hợp thì feed thành `personalized`, giải thích dựa trên favorite; thiếu snapshot/neighbors vẫn fallback trung thực. Dismiss theo user trong localStorage, không phải preference lưu ở server.
+
+[Fixture deterministic F3](../Server/tests/api/recommendation-onboarding.test.cjs) chạy trong `npm --prefix Server test`: trước chọn bài, ranking `[7,8,9]` có Recall@3/NDCG@3 **0/0**; chọn ba favorite `[1,2,3]`, snapshot có sẵn đưa `[4,5,6]` lên đầu, đạt **1/1**. Gửi lại batch vẫn đúng 3 favorites. DB/snapshot được mock có kiểm soát, không phải đo uplift người dùng thật và không thay thế benchmark temporal K=5 hay MySQL E2E. [Component tests](../UI/tests/components/cold-start-onboarding.test.mjs) kiểm tra trạng thái và lỗi UI.
 
 ## Python research
 
