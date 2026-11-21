@@ -139,7 +139,11 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with: {node-version: '22.19.0'}
       - run: node scripts/ci/prepare-env.cjs "$CI_ENV_FILE"
-      - run: docker compose --env-file "$CI_ENV_FILE" config --quiet
+      - name: Validate default, demo and host-DB Compose configurations
+        run: |
+          docker compose --env-file "$CI_ENV_FILE" config --quiet
+          docker compose --env-file "$CI_ENV_FILE" --profile demo config --quiet
+          docker compose --env-file "$CI_ENV_FILE" -f docker-compose.yml -f docker-compose.local.yml config --quiet
       - run: docker compose --env-file "$CI_ENV_FILE" build api migrate web
   required:
     name: CI required

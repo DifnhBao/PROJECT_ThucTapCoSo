@@ -26,3 +26,97 @@
   font-weight: 800;
   letter-spacing: 1px;
 }
+
+.song-submissions {
+  margin-block: 2rem;
+  color: var(--tt-text-primary);
+}
+
+.song-submissions h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.song-submissions button {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid currentColor;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.song-submissions-list {
+  overflow: hidden;
+  padding: 0;
+  list-style: none;
+  border-radius: 1rem;
+  background: var(--tt-surface);
+}
+
+.song-submissions-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.song-submissions-row + .song-submissions-row {
+  border-top: 1px solid var(--tt-text-muted);
+}
+
+.song-submissions-track {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.song-submissions-track p {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+}
+
+.song-submissions-reason {
+  white-space: pre-wrap;
+}
+
+.song-submissions-badge {
+  flex-shrink: 0;
+  padding: 0.25rem 0.6rem;
+  border-radius: 1rem;
+  background: #fef3c7;
+  color: #713f12;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.song-submissions-badge[data-status="approved"] {
+  background: #dcfce7;
+  color: #14532d;
+}
+
+.song-submissions-badge[data-status="rejected"] {
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+
+.recent-history ul {
+  list-style: none;
+  padding: 0;
+  border-radius: 1rem;
+  background: var(--tt-surface);
+  overflow: hidden;
+}
+
+.recent-history li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  overflow-wrap: anywhere;
+}
+
+.recent-history li + li { border-top: 1px solid var(--tt-text-muted); }
+.recent-history li button { margin: 0; text-align: left; }
+.recent-history time { color: var(--tt-text-muted); font-size: 0.875rem; }
+.recent-history button:disabled { opacity: 0.6; cursor: wait; }

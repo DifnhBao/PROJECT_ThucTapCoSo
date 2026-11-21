@@ -25,8 +25,17 @@
 }
 
 /* Action buttons group */
+.tableScroll {
+  overflow-x: auto;
+}
+
+.tableScroll table {
+  min-width: 44rem;
+}
+
 .actionGroup {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -116,4 +125,37 @@
   font-size: 14px;
   color: #888;
   margin: 0;
+}
+.confirmation {
+  box-sizing: border-box;
+  width: min(24rem, 90vw);
+  padding: 1.5rem;
+  background: white;
+  color: #222;
+  border-radius: 12px;
+  box-shadow: 0 12px 36px rgb(0 0 0 / 20%);
+}
+
+.confirmation h3 {
+  margin: 0;
+  padding-right: 2rem;
+}
+
+.confirmation .actionGroup {
+  margin-top: 1.25rem;
+  justify-content: flex-end;
+}
+
+.confirmation textarea {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin-block: 0.4rem;
+  padding: 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: 0.4rem;
+  background: var(--tt-surface);
+  color: var(--tt-text-primary);
+  font: inherit;
+  resize: vertical;
 }

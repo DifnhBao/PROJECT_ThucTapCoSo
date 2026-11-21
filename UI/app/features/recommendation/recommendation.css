@@ -9,6 +9,90 @@
   margin-bottom: 28px;
 }
 
+.rec-onboarding {
+  background: var(--tt-surface);
+  color: var(--tt-text-primary);
+  border: 1px solid var(--tt-border);
+  border-radius: 16px;
+  padding: clamp(14px, 3vw, 24px);
+  margin-bottom: 16px;
+}
+
+.rec-onboarding-header,
+.rec-onboarding-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.rec-onboarding-header {
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.rec-onboarding h3,
+.rec-onboarding p {
+  margin: 0;
+}
+
+.rec-onboarding h3 {
+  font-size: 18px;
+}
+
+.rec-onboarding button:not(.rec-refresh-btn) {
+  border: 1px solid var(--tt-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.rec-onboarding button:disabled {
+  opacity: .55;
+  cursor: default;
+}
+
+.rec-onboarding-tracks {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 8px;
+}
+
+.rec-onboarding-tracks label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  min-height: 44px;
+  border: 1px solid var(--tt-border);
+  border-radius: 8px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.rec-onboarding-tracks label:has(:checked) {
+  border-color: var(--tt-orange);
+}
+
+.rec-onboarding-tracks small {
+  display: block;
+}
+
+.rec-onboarding :is(button, input):focus-visible {
+  outline: 2px solid var(--tt-orange);
+  outline-offset: 3px;
+}
+
+.rec-onboarding-reason {
+  margin: 0 0 12px;
+  color: var(--tt-text-primary);
+}
+
 .rec-section-header {
   display: flex;
   align-items: center;
@@ -888,3 +972,7 @@
   flex-shrink: 0;
 }
 
+
+button.dev-toggle { background: transparent; color: inherit; border: 1px solid currentColor; border-radius: 8px; padding: 8px 12px; }
+button.dev-toggle:focus-visible { outline: 3px solid var(--tt-orange, #e86b27); outline-offset: 3px; }
+button.dev-toggle[aria-pressed="true"] { color: var(--tt-orange, #e86b27); }

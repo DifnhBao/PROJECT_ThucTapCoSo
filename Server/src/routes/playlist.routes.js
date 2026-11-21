@@ -1,16 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const playlistController = require("../controllers/playlist.controller");
-const dailyMixController = require("../controllers/dailyMix.controller");
 const { protect, optionalAuth } = require("../midlewares/auth.midleware");
-const { route } = require("./auth.routes");
-
-// 6. Lay daily mix hom nay
-// router.get("/daily-mix/today", playlistController.getDailyMix);
-// lấy danh sách playlist
-// router.get("/daily-mixes", dailyMixController.getDailyMixList);
-//lấy danh sách bài hát trong playlist
-// router.get("/daily-mix/:playlistId", dailyMixController.getDailyMixDetail);
 
 // 1. Tao Playlist
 router.post("/", protect, playlistController.createPlaylist);

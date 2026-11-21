@@ -1,6 +1,29 @@
 const { AppError } = require("../utils/app-error");
-const { Favorite, Song, Artist } = require("../models");
+const { Favorite, Song, Artist, sequelize } = require("../models");
 const { publicSongWhere, requirePublicSong } = require("../policies/publication.policy");
+
+const addFavoriteBatch = async (userId, songIds) => {
+  const sortedIds = [...songIds].sort((a, b) => a - b);
+  await sequelize.transaction(async (transaction) => {
+    const songs = await Song.findAll({
+      where: publicSongWhere({ song_id: sortedIds }),
+      attributes: ["song_id"],
+      order: [["song_id", "ASC"]],
+      transaction,
+      lock: transaction.LOCK.SHARE,
+    });
+    if (songs.length !== songIds.length) {
+      throw new AppError("Có bài hát không còn công khai. Vui lòng chọn lại.", 400, "STARTER_SONG_UNAVAILABLE");
+    }
+
+    // The composite key deduplicates concurrent submissions. A replay preserves timestamps.
+    await Favorite.bulkCreate(sortedIds.map((songId) => ({ user_id: userId, song_id: songId })), {
+      transaction,
+      updateOnDuplicate: ["song_id"],
+    });
+  });
+  return { songIds, count: songIds.length };
+};
 
 const toggleLikeSong = async (userId, songId) => {
   const song = await requirePublicSong(songId);
@@ -105,6 +128,7 @@ const getMyFavoriteSongs = async (userId, page, limit) => {
 };
 
 module.exports = {
+  addFavoriteBatch,
   toggleLikeSong,
   getLikeStatus,
   countLikes,

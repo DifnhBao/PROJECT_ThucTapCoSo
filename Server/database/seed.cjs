@@ -1,20 +1,52 @@
+const { demoTrack } = require('./demo-media.cjs');
 const { getTestDatabaseConfig } = require('../config/test-database');
-const { getDatabaseConfig } = require('../src/config/env');
+const { ConfigurationError, getDatabaseConfig } = require('../src/config/env');
+
+class SeedError extends Error {}
+
+function seedPassword(env, name) {
+  const password = env[name];
+  const demo = name !== 'TEST_SEED_PASSWORD';
+  if (typeof password !== 'string' || /^(replace|change|your)[-_ ]/i.test(password) || (demo
+    ? Buffer.byteLength(password) > 72 || Array.from(password).length < 12
+    : password.length > 72 || password.length < 12)) {
+    const limit = demo ? 'at least 12 characters and at most 72 UTF-8 bytes' : '12–72 characters';
+    throw new SeedError(`Seed configuration: ${name} requires a non-placeholder password (${limit}).`);
+  }
+  return password;
+}
 
 function seedConfig(mode, env = process.env) {
   let database;
-  if (mode === 'test') database = getTestDatabaseConfig(env, { destructive: true });
-  else if (mode === 'demo' && env.NODE_ENV === 'development' && env.DEMO_SEED_ALLOWED === 'yes') {
-    database = getDatabaseConfig(env);
-    if (!/^tunetrek_demo(?:_[a-z0-9]+)*$/.test(database.database) || !['127.0.0.1', 'localhost', '::1', 'db'].includes(database.host)) throw new Error('Demo seed requires an isolated local tunetrek_demo database');
-  } else throw new Error('Seed requires explicit test or opted-in development demo environment');
-  const password = env[mode === 'test' ? 'TEST_SEED_PASSWORD' : 'DEMO_SEED_PASSWORD'];
-  if (typeof password !== 'string' || password.length < 12 || password.length > 72 || /^(replace|change|your)[-_ ]/i.test(password)) throw new Error('Seed password must be supplied via the matching env variable (12-72 characters)');
-  return { database, password };
+  if (mode === 'test') {
+    try {
+      database = getTestDatabaseConfig(env, { destructive: true });
+    } catch {
+      throw new SeedError('Seed configuration: set NODE_ENV=test, valid isolated TEST_DB_* settings and TEST_DB_RESET_ALLOWED=yes.');
+    }
+  } else if (mode === 'demo' && env.NODE_ENV === 'development' && env.DEMO_SEED_ALLOWED === 'yes') {
+    try {
+      database = getDatabaseConfig(env);
+    } catch (error) {
+      if (!(error instanceof ConfigurationError)) throw error;
+      throw new SeedError(`Seed configuration: ${error.message}.`);
+    }
+    const localHost = ['127.0.0.1', 'localhost', '::1', 'db'].includes(database.host);
+    const demoName = /^tunetrek_demo(?:_[a-z0-9]+)*$/.test(database.database);
+    const legacyComposeName = env.DEMO_SEED_COMPOSE === 'yes' && database.host === 'db' && database.database === 'Recommend_music_web_test';
+    if (!localHost || (!demoName && !legacyComposeName)) {
+      throw new SeedError('Seed refused: target must be a local tunetrek_demo database (optionally suffixed) or the supported legacy Compose database.');
+    }
+  } else throw new SeedError('Seed configuration: use test mode or set NODE_ENV=development and DEMO_SEED_ALLOWED=yes for demo mode.');
+  if (mode === 'test') return { database, password: seedPassword(env, 'TEST_SEED_PASSWORD') };
+  const password = seedPassword(env, 'DEMO_SEED_PASSWORD');
+  const adminPassword = seedPassword(env, 'DEMO_ADMIN_PASSWORD');
+  if (Buffer.from(password).equals(Buffer.from(adminPassword))) throw new SeedError('Seed configuration: DEMO_SEED_PASSWORD and DEMO_ADMIN_PASSWORD must be different.');
+  return { database, password, adminPassword };
 }
 
 async function seed(mode, env = process.env) {
-  const { database, password } = seedConfig(mode, env); // Before importing models or connecting.
+  const { database, password, adminPassword } = seedConfig(mode, env); // Before importing models or connecting.
   const { Sequelize, QueryTypes } = require('sequelize');
   const bcrypt = require('bcryptjs');
   const db = new Sequelize(database);
@@ -24,18 +56,22 @@ async function seed(mode, env = process.env) {
       // Empty-only seed: repeat/concurrent attempts fail clearly; never overwrite accounts.
       for (const table of Object.keys(require('./schema-v1.cjs')(Sequelize))) {
         const rows = await db.query(`SELECT COUNT(*) AS n FROM \`${table}\``, { ...options, type: QueryTypes.SELECT });
-        if (Number(rows[0].n)) throw new Error('Seed refused: target must contain no application data; repeat seed does not append duplicates');
+        if (Number(rows[0].n)) throw new SeedError('Seed refused: target must contain no application data; repeat seed does not append duplicates.');
       }
       const q = db.getQueryInterface();
       const now = new Date('2026-01-01T00:00:00Z');
       const times = { created_at: now, updated_at: now };
-      const hash = await bcrypt.hash(password, 10);
-      await q.bulkInsert('users', ['userA', 'userB', 'admin', 'super_admin', 'cold_start'].map((name, i) => ({ user_id: i + 1, username: `demo_${name}`, email: `${name.toLowerCase()}@example.test`, password: hash, role: i === 2 ? 'admin' : i === 3 ? 'super_admin' : 'user', is_active: true, activity_status: 'offline', ...times })), options);
+      const listenerHash = await bcrypt.hash(password, 10);
+      const adminHash = adminPassword ? await bcrypt.hash(adminPassword, 10) : listenerHash;
+      await q.bulkInsert('users', ['userA', 'userB', 'admin', 'super_admin', 'cold_start'].map((name, i) => {
+        const role = i === 2 ? 'admin' : i === 3 ? 'super_admin' : 'user';
+        return { user_id: i + 1, username: `demo_${name}`, email: `${name.toLowerCase()}@example.test`, password: role === 'user' ? listenerHash : adminHash, role, is_active: true, activity_status: 'offline', ...times };
+      }), options);
       await q.bulkInsert('artists', [1, 2, 3].map((i) => ({ artist_id: i, name: `Synthetic Artist ${i}`, normalized_name: `synthetic-artist-${i}` })), options);
       await q.bulkInsert('genres', ['Pop', 'Rock', 'Jazz', 'Electronic'].map((name, i) => ({ genre_id: i + 1, name, normalized_name: name.toLowerCase() })), options);
       await q.bulkInsert('songs', Array.from({ length: 28 }, (_, index) => {
         const i = index + 1;
-        return { song_id: i, title: `Synthetic Track ${String(i).padStart(2, '0')}`, duration: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? 6 : 180 + i, audio_url: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? '/demo/tone.wav' : `https://media.example.test/audio/${i}.mp3`, image_url: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? '/images/default-song.svg' : null, view_count: 100 - i, is_visible: i !== 28, status: i === 26 ? 'pending' : i === 27 ? 'rejected' : 'approved', uploaded_by: 3, lyrics: 'Synthetic fixture', mood: JSON.stringify(['calm']), keywords: JSON.stringify(['synthetic']), vector_embedding: JSON.stringify([i / 28, 0.5]), ...times };
+        return { song_id: i, title: `Synthetic Track ${String(i).padStart(2, '0')}`, duration: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? demoTrack(i).duration : 180 + i, audio_url: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? demoTrack(i).audio_url : `https://media.example.test/audio/${i}.mp3`, image_url: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? '/images/default-song.svg' : null, view_count: 100 - i, is_visible: i !== 28, status: i === 26 ? 'pending' : i === 27 ? 'rejected' : 'approved', uploaded_by: 3, lyrics: 'Synthetic fixture', mood: JSON.stringify(['calm']), keywords: JSON.stringify(['synthetic']), vector_embedding: JSON.stringify([i / 28, 0.5]), ...times };
       }), options);
       await q.bulkInsert('song_artists', Array.from({ length: 28 }, (_, i) => ({ song_id: i + 1, artist_id: i % 3 + 1 })), options);
       await q.bulkInsert('song_genres', Array.from({ length: 28 }, (_, i) => ({ song_id: i + 1, genre_id: i % 4 + 1 })), options);
@@ -45,8 +81,8 @@ async function seed(mode, env = process.env) {
       await q.bulkInsert('ratings', [{ user_id: 1, song_id: 1, score: 5, ...times }], options);
       await q.bulkInsert('UserActivities', [{ user_id: 1, song_id: 1, session_id: 'synthetic-session-1', source: 'search', song_duration: 181, total_listened_time: 60, max_position_reached: 60, created_at: now }], options);
       await q.bulkInsert('song_similarities', [26, 27, 28, 2, 3, 4].map((song_id_2, i) => ({ song_id_1: 1, song_id_2, behavioral_score: 0.9 - i / 20, metadata_score: 0.8, final_score: 0.99 - i / 20, reason: 'Synthetic similarity', detail: JSON.stringify({ synthetic: true }), updated_at: now })), options);
-      return { users: 5, songs: 28, publicSongs: 25, playlists: 2, media: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? 'self-generated local demo tone' : 'reserved example.test URLs; no playable audio supplied' };
+      return { users: 5, songs: 28, publicSongs: 25, playlists: 2, media: mode === 'demo' && env.DEMO_LOCAL_MEDIA === 'yes' ? '28 distinct local demo tracks, 25–30 seconds; run node scripts/generate-demo-audio.cjs before starting UI' : 'reserved example.test URLs; no playable audio supplied' };
     });
   } finally { await db.close(); }
 }
-module.exports = { seed, seedConfig };
+module.exports = { seed, seedConfig, SeedError };

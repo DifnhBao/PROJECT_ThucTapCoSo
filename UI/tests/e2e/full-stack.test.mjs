@@ -98,13 +98,25 @@ test('T19: full-stack browser journey on isolated MySQL', { timeout: 240000 }, a
     const uploaded=responseFor('/api/songs/upload','POST');await page.getByRole('button',{name:'Đăng bài hát',exact:true}).click();assert.equal((await uploaded).status(),201);await page.getByText('Gửi bài hát thành công!',{exact:true}).waitFor();await page.getByRole('button',{name:'Đóng',exact:true}).click();
     const song=await models.Song.findOne({where:{title:'T19 uploaded song'}});assert.equal(song.status,'pending');assert.ok(storageUploads>0);
     const guest=await browser.newContext();cleanups.push(()=>guest.close());assert.equal((await guest.request.get(origin+`/api/songs/${song.song_id}`)).status(),404);assert.equal((await guest.request.get(origin+'/api/recommendations/me')).status(),401);
-    step('admin UI approves and guest can then read song');const admin=await browser.newContext();cleanups.push(()=>admin.close());const ap=await admin.newPage();adminPage=ap;adminTrace=attachDiagnostics(ap);ap.setDefaultTimeout(15000);ap.on('dialog',d=>d.accept());ap.on('pageerror',e=>errors.push(e.message));
+    step('admin UI approves and guest can then read song');const admin=await browser.newContext();cleanups.push(()=>admin.close());const ap=await admin.newPage();adminPage=ap;adminTrace=attachDiagnostics(ap);ap.setDefaultTimeout(15000);ap.on('pageerror',e=>errors.push(e.message));
     let releaseBootstrap;adminBootstrapGate=new Promise(r=>{releaseBootstrap=r;});const enteredBootstrap=new Promise(r=>{adminBootstrapEntered=r;});
     await ap.goto(origin+'/administrator/login');await enteredBootstrap;await ap.getByLabel('Username',{exact:true}).fill('demo_admin');
     const bootstrapExpired=ap.waitForResponse(r=>r.url().includes('/api/auth/admin/refresh-token'));releaseBootstrap();await bootstrapExpired;
     await ap.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     assert.equal(await ap.getByLabel('Username',{exact:true}).inputValue(),'demo_admin','Session bootstrap must not clear the login draft');adminBootstrapGate=null;await ap.getByLabel('Password',{exact:true}).fill(process.env.TEST_SEED_PASSWORD);const adminLogin=ap.waitForResponse(r=>r.url().includes('/api/auth/admin/login')&&r.request().method()==='POST');await ap.getByRole('button',{name:'Sign In',exact:true}).click();assert.equal((await adminLogin).status(),200);await ap.waitForURL('**/administrator/ManageUser');
-    await ap.goto(origin+'/administrator/PendingSongs');const row=ap.getByRole('row').filter({hasText:'T19 uploaded song'});await row.waitFor();const approved=ap.waitForResponse(r=>r.url().endsWith(`/api/songs/${song.song_id}/approve`)&&r.request().method()==='PATCH');await row.getByRole('button',{name:'✓ Duyệt',exact:true}).click();assert.equal((await approved).status(),200);await row.waitFor({state:'hidden'});assert.equal((await guest.request.get(origin+`/api/songs/${song.song_id}`)).status(),200);
+    await ap.goto(origin+'/administrator/PendingSongs');
+    const row = ap.getByRole('row').filter({ has: ap.getByRole('cell', { name: song.title, exact: true }) });
+    await row.getByRole('button', { name: '✓ Duyệt', exact: true }).click();
+    const confirmation = ap.getByRole('dialog').filter({
+      has: ap.getByRole('heading', { name: 'Duyệt bài hát này?', exact: true }),
+    });
+    const [approved] = await Promise.all([
+      ap.waitForResponse(r => r.url() === origin + `/api/songs/${song.song_id}/approve` && r.request().method() === 'PATCH'),
+      confirmation.getByRole('button', { name: 'Xác nhận', exact: true }).click(),
+    ]);
+    assert.equal(approved.status(), 200);
+    await row.waitFor({ state: 'hidden' });
+    assert.equal((await guest.request.get(origin+`/api/songs/${song.song_id}`)).status(), 200);
     step('logout/direct login B redirects Home without exposing A private library');await page.getByRole('button',{name:new RegExp(username)}).click();await page.getByRole('button',{name:'Đăng xuất',exact:true}).click();await page.goto(origin+'/login');await page.getByLabel('Username',{exact:true}).fill('demo_userB');await page.getByLabel('Password',{exact:true}).fill(process.env.TEST_SEED_PASSWORD);await page.getByRole('button',{name:'Sign In',exact:true}).click();await page.waitForURL('**/Home');await page.getByRole('button',{name:/demo_userB/}).waitFor();
     const privateRead=await request('GET',`/playlists/${playlist.playlist_id}`);assert.equal(privateRead.status(),404);await page.goto(origin+'/Playlist');await page.getByRole('link',{name:'Synthetic Private',exact:true}).waitFor();assert.equal(await page.getByText('T19 private playlist',{exact:true}).count(),0);
     assert.deepEqual(errors,[]);await page.screenshot({path:path.join(evidence,'final-account-b.png'),fullPage:true});

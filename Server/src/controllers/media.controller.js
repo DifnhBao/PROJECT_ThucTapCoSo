@@ -7,6 +7,12 @@ const { AppError } = require('../utils/app-error');
 const storage = require('../storage/cloudinary');
 
 exports.readMedia = async (req, res, next) => {
+  const client = new AbortController();
+  const onDisconnect = () => {
+    if (!res.writableFinished) client.abort();
+  };
+  req.once('aborted', onDisconnect);
+  res.once('close', onDisconnect);
   try {
     if (!/^[0-9a-f-]{36}$/.test(req.params.assetId)) throw new AppError('Không tìm thấy media.', 404, 'MEDIA_NOT_FOUND');
     const asset = await MediaAsset.findByPk(req.params.assetId);
@@ -26,18 +32,23 @@ exports.readMedia = async (req, res, next) => {
     } else throw new AppError('Không tìm thấy media.', 404, 'MEDIA_NOT_FOUND');
     const range = req.get('Range');
     if (range && !/^bytes=\d+-\d*$/.test(range)) throw new AppError('Range không hợp lệ.', 416, 'INVALID_RANGE');
-    const upstream = await storage.read(asset, range);
+    if (res.destroyed || client.signal.aborted) return;
+    const upstream = await storage.read(asset, range, { signal: client.signal });
     if (![200, 206].includes(upstream.status) || !upstream.body) {
       await upstream.body?.cancel();
       throw new AppError('Media tạm thời chưa sẵn sàng.', upstream.status === 416 ? 416 : 502, 'MEDIA_UNAVAILABLE');
     }
     res.status(upstream.status).set({ 'Cache-Control': 'private, no-store', 'Content-Type': { mp3: 'audio/mpeg', wav: 'audio/wav', ogg: 'audio/ogg', png: 'image/png', jpg: 'image/jpeg' }[asset.format] || 'application/octet-stream' });
     for (const header of ['content-length', 'content-range', 'accept-ranges']) if (upstream.headers.has(header)) res.set(header, upstream.headers.get(header));
-    await pipeline(Readable.fromWeb(upstream.body), res);
+    await pipeline(Readable.fromWeb(upstream.body), res, { signal: client.signal });
   } catch (error) {
+    if (client.signal.aborted) return;
     if (res.headersSent) {
       console.error(JSON.stringify({ event: 'media_stream_failed', requestId: req.requestId }));
       res.destroy();
     } else next(error);
+  } finally {
+    req.off('aborted', onDisconnect);
+    res.off('close', onDisconnect);
   }
 };

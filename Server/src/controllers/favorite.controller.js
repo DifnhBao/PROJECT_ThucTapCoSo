@@ -1,5 +1,14 @@
 const favoriteService = require("../services/favorite.service");
 
+exports.addFavoriteBatch = async (req, res, next) => {
+  try {
+    const result = await favoriteService.addFavoriteBatch(req.auth.userId, req.body.songIds);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.toggleLikeSong = async (req, res, next) => {
   try {
     const userId = req.auth.userId;

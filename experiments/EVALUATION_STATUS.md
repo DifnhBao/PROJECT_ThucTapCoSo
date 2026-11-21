@@ -7,4 +7,4 @@ separate experiment review. T15 did not execute, retrain or repair those artifac
 
 Do not use their scores or plots as portfolio-v1 evaluation evidence. Original
 sources, attribution and historical README remain preserved. The supported v1
-evaluator is described in [docs/evaluation/README.md](../docs/evaluation/README.md).
+evaluator is described in [Recommendation và đánh giá](../docs/RECOMMENDATION_AND_EVALUATION.md).

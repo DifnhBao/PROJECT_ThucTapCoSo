@@ -2,7 +2,7 @@
 import { usePlayerControls } from "@/app/features/player/context/PlayerContext";
 import RecommendationSection from "@/app/features/recommendation/components/RecommendationSection";
 import SimilarSongsSection from "@/app/features/recommendation/components/SimilarSongsSection";
-import { useUser } from "@/app/features/user/context/UserContext";
+import { useAuthState } from "@/app/lib/use-auth-state";
 import "@/app/styles/feature-playlists.css";
 import { SelectedItem } from "@/app/types/music";
 import { useState } from "react";
@@ -14,19 +14,19 @@ interface Props {
 }
 
 const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
-  const { user, loading } = useUser();
+  const { principal, epoch, status } = useAuthState("user");
   const { currentTrack } = usePlayerControls();
   const [activeTab, setActiveTab] = useState("tracks");
   const currentSongId = currentTrack?.trackId ?? 0;
-  const userId = user?.userId ?? 0;
+  const userId = principal?.userId;
 
   return (
     <div className="explore-container">
       <SimilarSongsSection songId={currentSongId} limit={12} />
       <div className="make-for">
         {/* ── Recommendation section (real data) ── */}
-        {!loading && userId ? (
-          <RecommendationSection userId={userId} limit={10} />
+        {status === "authenticated" && userId ? (
+          <RecommendationSection key={`${userId}:${epoch}`} userId={userId} epoch={epoch} limit={10} />
         ) : (
           <div className="make-for-header">
             <h2 className="title">Đề xuất cho bạn</h2>

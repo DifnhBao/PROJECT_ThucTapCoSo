@@ -39,7 +39,7 @@ async function getSimilarSongs(songId, limit = 10) {
       behavioral_score: r.behavioral_score, reason: r.reason,
       detail: { algorithm_version: r.algorithm_version, run_id: r.run_id } })), limit);
 }
-async function getRecommendationsForUser(userId, limit = 10) {
+async function getRecommendationFeed(userId, limit = 10) {
   userId = requireId(userId);
   const [activities, favorites, ratings] = await Promise.all([
     UserActivity.findAll({ where: { user_id: userId, event_version: 1, qualified: true },
@@ -50,15 +50,23 @@ async function getRecommendationsForUser(userId, limit = 10) {
   ]);
   const { weights, rejected } = userSignals(activities, favorites, ratings);
   const seeds = selectSeeds(weights);
-  if (!seeds.length) return getTrendingSongs(limit, [...rejected], userId);
+  if (!seeds.length) return {
+    mode: favorites.length || ratings.length ? 'trending' : 'cold_start',
+    items: await getTrendingSongs(limit, [...rejected], userId),
+  };
   const rows = await repository.readNeighbors(seeds.map(([id]) => id));
   const checkedIds = [...new Set([...weights.keys(), ...rows.map((r) => Number(r.song_id))])];
   const vetoes = await Rating.findAll({ where: { user_id: userId, score: { [Op.lte]: config.lowRating }, song_id: { [Op.in]: checkedIds } },
     attributes: ['song_id'], limit: checkedIds.length });
   for (const row of vetoes) rejected.add(Number(row.song_id));
-  const items = rankPersonal(rows, weights, rejected);
+  const favoriteIds = new Set(favorites.map((row) => Number(row.song_id)));
+  const items = rankPersonal(rows, weights, rejected, favoriteIds);
   const result = await hydrate(items, limit);
-  return result.length ? result : getTrendingSongs(limit, [...weights.keys(), ...rejected], userId);
+  if (result.length) return { mode: 'personalized', items: result };
+  return { mode: 'trending', items: await getTrendingSongs(limit, [...weights.keys(), ...rejected], userId) };
+}
+async function getRecommendationsForUser(userId, limit = 10) {
+  return (await getRecommendationFeed(userId, limit)).items;
 }
 async function getSongPairDebug(a, b, actor) {
   requirePermission(isAdmin(actor)); a = requireId(a); b = requireId(b);
@@ -68,4 +76,4 @@ async function getSongPairDebug(a, b, actor) {
   if (!row) throw new AppError('Pair is not present in the active top-K snapshot.', 404, 'SNAPSHOT_PAIR_NOT_FOUND');
   return { ...row, source: 'snapshot' };
 }
-module.exports = { getSimilarSongs, getRecommendationsForUser, getSongPairDebug, getTrendingSongs };
+module.exports = { getSimilarSongs, getRecommendationFeed, getRecommendationsForUser, getSongPairDebug, getTrendingSongs };

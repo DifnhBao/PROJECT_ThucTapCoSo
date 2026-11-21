@@ -2,12 +2,16 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { once } = require('node:events');
 const fs = require('node:fs');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { Sequelize } = require('sequelize');
+const { seed } = require('../../database/seed.cjs');
 const { createApp } = require('../../src/app');
 const { getSecurityConfig, cookieOptions } = require('../../src/config/security');
 const { AppError } = require('../../src/utils/app-error');
 const sessions = require('../../src/services/session.service');
 const auth = require('../../src/services/auth.service');
+const { User, RefreshToken } = require('../../src/models');
 const hybrid = require('../../src/services/recommendation/hybridSimilarity.service');
 const origin = 'http://localhost:3000';
 const cookie = (userId = 1, role = 'user') => `${role === 'user' ? 'accessToken' : 'accessToken_admin'}=${jwt.sign({ userId, role, scope: role === 'user' ? 'user' : 'admin', sessionId: '00000000-0000-4000-8000-000000000001' }, process.env.JWT_SECRET)}`;
@@ -21,6 +25,48 @@ async function setup(t, env = {}, clock) {
 }
 const post = (headers = {}, body = '{}') => ({ method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json', ...headers }, body });
 const credentials = JSON.stringify({ username: 'fixture', password: 'fixture' });
+
+test('demo seed separates listener and privileged passwords and admin login enforces the split', { timeout: 15000 }, async (t) => {
+  const listenerPassword = 'fixture-listener-password';
+  const adminPassword = 'fixture-privileged-password';
+  const users = new Map();
+  t.mock.method(Sequelize.prototype, 'transaction', async (run) => run({ LOCK: { UPDATE: 'UPDATE' } }));
+  t.mock.method(Sequelize.prototype, 'query', async () => [{ n: 0 }]);
+  t.mock.method(Sequelize.prototype, 'getQueryInterface', () => ({
+    async bulkInsert(table, rows) {
+      if (table === 'users') for (const row of rows) users.set(row.username, row);
+    },
+  }));
+  await seed('demo', {
+    NODE_ENV: 'development', DEMO_SEED_ALLOWED: 'yes', DB_HOST: '127.0.0.1', DB_NAME: 'tunetrek_demo',
+    DB_PORT: '3306', DB_USER: 'demo', DB_PASS: 'fixture', DEMO_SEED_PASSWORD: listenerPassword, DEMO_ADMIN_PASSWORD: adminPassword,
+  });
+  const listenerHash = users.get('demo_userA').password;
+  for (const username of ['demo_userA', 'demo_userB', 'demo_cold_start']) {
+    assert.equal(users.get(username).password, listenerHash);
+    assert.ok(await bcrypt.compare(listenerPassword, users.get(username).password));
+  }
+
+  t.mock.method(User, 'findOne', async ({ where: { username } }) => {
+    const row = users.get(username);
+    return { ...row, toJSON: () => ({ ...row }) };
+  });
+  const issue = t.mock.method(RefreshToken, 'create', async (row) => row);
+  const { base } = await setup(t);
+  for (const username of ['demo_admin', 'demo_super_admin']) {
+    assert.notEqual(users.get(username).password, listenerHash);
+    const login = (password) => fetch(base + '/auth/admin/login', post({}, JSON.stringify({ username, password })));
+    const denied = await login(listenerPassword);
+    assert.equal(denied.status, 401);
+    assert.equal((await denied.json()).error.code, 'INVALID_CREDENTIALS');
+    assert.equal(denied.headers.has('set-cookie'), false);
+    const allowed = await login(adminPassword);
+    assert.equal(allowed.status, 200);
+    assert.match(allowed.headers.get('set-cookie'), /accessToken_admin=/);
+    assert.equal((await allowed.json()).data.admin.username, username);
+  }
+  assert.equal(issue.mock.callCount(), 2);
+});
 
 test('CSRF rejects absent/null/hostile Origin and cross-site mutation before any service runs', { timeout: 15000 }, async (t) => {
   const { base } = await setup(t);
@@ -60,6 +106,23 @@ test('account quota spans trusted client IPs and user/admin login endpoints with
   assert.equal(res.status, 429);
   const logs = JSON.stringify(log.mock.calls.map((call) => call.arguments));
   assert.equal(/fixture|198\.51|203\.0|password|refreshToken/i.test(logs), false);
+});
+
+test('API quota separates trusted client IPs and ignores spoofed headers from untrusted connections', { timeout: 15000 }, async (t) => {
+  for (const [proxy, expected] of [
+    ['', [404, 429, 429]],
+    ['192.0.2.10/32', [404, 429, 429]],
+    ['127.0.0.1/32', [404, 429, 404]],
+  ]) {
+    const { base } = await setup(t, { TRUSTED_PROXY_CIDRS: proxy, RATE_API_MAX: '1' });
+    const statuses = [];
+    for (const forwarded of ['198.51.100.10, 203.0.113.1', '198.51.100.11, 203.0.113.1', '203.0.113.2']) {
+      const response = await fetch(base + '/missing', { headers: { 'X-Forwarded-For': forwarded } });
+      statuses.push(response.status);
+      if (response.status === 429) assert.equal((await response.json()).error.code, 'RATE_LIMITED');
+    }
+    assert.deepEqual(statuses, expected, `TRUSTED_PROXY_CIDRS=${proxy}`);
+  }
 });
 
 test('per-user upload quota is checked before disk writes; activity has per-user quota and small body cap', { timeout: 15000 }, async (t) => {

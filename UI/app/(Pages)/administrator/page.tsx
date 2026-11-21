@@ -13,7 +13,7 @@ export default function AdminPage() {
     if (!admin) {
       router.replace("/administrator/login");
     } else {
-      router.replace("/administrator/Statistics");
+      router.replace("/administrator/PendingSongs");
     }
   }, [admin, loading, router]);
 
