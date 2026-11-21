@@ -37,3 +37,15 @@ test('submissions use user authentication and rejection accepts an optional boun
   assert.ok(!schema.required?.includes('rejection_reason'));
   assert.equal(schema.additionalProperties, false);
 });
+
+test('favorite batch documents bounded unique IDs and feed documents cold-start mode', () => {
+  const { paths, components } = buildOpenApi();
+  const batch = paths['/favorites/batch'].post;
+  assert.deepEqual(batch.security, [{ userCookie: [] }, { bearerAuth: [] }]);
+  const { minItems, maxItems, uniqueItems, items } = batch.requestBody.content['application/json'].schema.properties.songIds;
+  assert.deepEqual([minItems, maxItems, uniqueItems, items.type, items.minimum], [3, 10, true, 'integer', 1]);
+  assert.match(batch.responses[400].description, /STARTER_SONG_UNAVAILABLE/);
+  const feed = paths['/recommendations/me'].get.responses[200].content['application/json'].schema;
+  assert.equal(feed.properties.data.$ref, '#/components/schemas/RecommendationFeed');
+  assert.deepEqual(components.schemas.RecommendationFeed.properties.mode.enum, ['cold_start', 'trending', 'personalized']);
+});

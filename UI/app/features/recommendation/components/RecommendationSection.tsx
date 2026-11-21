@@ -5,15 +5,18 @@ import { PiSparkle } from "react-icons/pi";
 import { RiResetRightLine } from "react-icons/ri";
 import useSWR from 'swr';
 
+import { useLikeContext } from "@/app/features/like/context/LikeContext";
 import { usePlayerControls } from "@/app/features/player/context/PlayerContext";
+import { assertAuth, getAuth } from "@/app/lib/auth-state";
 import "@/app/features/recommendation/recommendation.css";
 import { getRecommendationsForUser } from "../recommendation.api";
-import type { RecommendationSong } from "../recommendation.types";
+import ColdStartOnboarding from "./ColdStartOnboarding";
 import ExplanationToggle from "./ExplanationToggle";
 import RecommendSongCard from "./RecommendSongCard";
 
 interface Props {
   userId: number;
+  epoch: number;
   limit?: number;
 }
 
@@ -34,10 +37,29 @@ interface Props {
 /* ------------------------------------------------------------------ */
 /*  RecommendationSection                                               */
 /* ------------------------------------------------------------------ */
-const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
-  const { data: songs = [], error: failure, isLoading: loading, mutate } = useSWR<RecommendationSong[]>(userId ? ['recommendations', userId, limit] : null, () => getRecommendationsForUser(limit));
+const RecommendationSection: React.FC<Props> = ({ userId, epoch, limit = 10 }) => {
+  const { data, error: failure, isLoading: loading, mutate } = useSWR(['recommendations', userId, epoch, limit], () => {
+    assertAuth("user", epoch);
+    return getRecommendationsForUser(limit);
+  });
+  const songs = data?.songs ?? [];
   const error = failure ? 'Không thể tải gợi ý. Vui lòng thử lại.' : null;
   const [isDevMode, setIsDevMode] = useState(false);
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
+  const { refreshAfterBatch } = useLikeContext();
+  const dismissKey = `recommendation-onboarding-dismissed:${userId}`;
+  const [dismissed, setDismissed] = useState(() => {
+    try { return localStorage.getItem(dismissKey) === "1"; } catch { return false; }
+  });
+  const dismiss = () => {
+    setDismissed(true);
+    try { localStorage.setItem(dismissKey, "1"); } catch { /* Storage unavailable. */ }
+  };
+  const refreshAfterOnboarding = async (songIds: number[]) => {
+    if (getAuth("user").epoch !== epoch) return;
+    setOnboardingCompleted(true);
+    await Promise.allSettled([mutate(), refreshAfterBatch(songIds)]);
+  };
 
   const { setPlaylist, currentTrack, isPlaying, togglePlay } = usePlayerControls();
 
@@ -137,24 +159,21 @@ const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
     );
   }
 
-  /* ---------- Empty ---------- */
-  if (!songs.length) {
-    return (
-      <div className="rec-section">
-        {SectionHeader}
-        <p className="rec-empty">
-          Chưa có đề xuất. Hãy nghe thêm nhạc để hệ thống học sở thích của bạn!
-        </p>
-      </div>
-    );
-  }
-
   /* ---------- Main — Flat View (Cá nhân hóa tổng thể) ---------- */
   return (
     <div className="rec-section">
       {SectionHeader}
 
-      <div className="rec-grid" ref={gridRef}>
+      {data?.mode === "cold_start" && !dismissed && (
+        <ColdStartOnboarding epoch={epoch} onDismiss={dismiss} onSaved={refreshAfterOnboarding} />
+      )}
+      {onboardingCompleted && data?.mode === "personalized" && songs[0]?.reason && (
+        <p className="rec-onboarding-reason" role="status">
+          <strong>Vì sao có gợi ý này?</strong> {songs[0].title}. {songs[0].reason}
+        </p>
+      )}
+
+      {songs.length ? <div className="rec-grid" ref={gridRef}>
         {songs.map((song, index) => (
           <RecommendSongCard
             key={song.trackId}
@@ -166,7 +185,11 @@ const RecommendationSection: React.FC<Props> = ({ userId, limit = 10 }) => {
             onClick={() => handlePlay(index)}
           />
         ))}
-      </div>
+      </div> : (
+        <p className="rec-empty">
+          Chưa có đề xuất. Hãy nghe thêm nhạc để hệ thống học sở thích của bạn!
+        </p>
+      )}
     </div>
   );
 };

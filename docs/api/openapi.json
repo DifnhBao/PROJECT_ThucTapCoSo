@@ -9399,6 +9399,206 @@
         }
       }
     },
+    "/favorites/batch": {
+      "post": {
+        "operationId": "favorites_addFavoriteBatch",
+        "tags": [
+          "favorites"
+        ],
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Exact allowed frontend origin; missing/null/cross-site mutations are rejected"
+          }
+        ],
+        "security": [
+          {
+            "userCookie": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/FavoriteBatch"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "requestId": {
+                          "type": "string",
+                          "format": "uuid"
+                        }
+                      },
+                      "required": [
+                        "requestId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed JSON or invalid request schema, or STARTER_SONG_UNAVAILABLE if any song is absent or not public",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing/invalid credentials or expired session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden by scope/role/policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource absent or not visible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Duplicate, reference conflict or invalid resource state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request/upload too large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported media type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Valid request shape but invalid resource/domain data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Quota exceeded; wait Retry-After seconds",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before a new attempt",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error; no internal details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "songIds": {
+                    "minItems": 3,
+                    "maxItems": 10,
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "uniqueItems": true
+                  }
+                },
+                "required": [
+                  "songIds"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "description": "Atomically ensures all requested public songs are favorites for the signed-in account. Replays return the same songIds and count."
+      }
+    },
     "/favorites/{id}/like": {
       "post": {
         "operationId": "favorites_toggleLikeSong",
@@ -10788,7 +10988,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Recommendations"
+                      "$ref": "#/components/schemas/RecommendationFeed"
                     },
                     "meta": {
                       "type": "object",
@@ -10922,7 +11122,8 @@
               }
             }
           }
-        }
+        },
+        "description": "cold_start indicates no personal signals. trending indicates fallback for a user with signals. personalized uses neighbors from the active snapshot."
       }
     },
     "/recommendations/debug/song-pair": {
@@ -11574,6 +11775,25 @@
           "song_id"
         ]
       },
+      "FavoriteBatch": {
+        "type": "object",
+        "properties": {
+          "songIds": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "songIds",
+          "count"
+        ],
+        "additionalProperties": false
+      },
       "Favorites": {
         "type": "object",
         "properties": {
@@ -11679,6 +11899,44 @@
         },
         "required": [
           "data"
+        ]
+      },
+      "RecommendationFeed": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "song": {
+                  "$ref": "#/components/schemas/Song"
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "song"
+              ]
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "cold_start",
+              "trending",
+              "personalized"
+            ]
+          }
+        },
+        "required": [
+          "data",
+          "count",
+          "mode"
         ]
       },
       "ListeningReceipt": {

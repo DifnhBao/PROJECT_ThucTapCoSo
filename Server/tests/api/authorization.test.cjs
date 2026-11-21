@@ -24,7 +24,7 @@ before(async () => {
 after(async () => { if (server) await new Promise((resolve) => server.close(resolve)); });
 
 test("recommendations/me uses signed actor identity and old user-ID route is gone", async (t) => {
-  const get = t.mock.method(recommendation, "getRecommendationsForUser", async () => []);
+  const get = t.mock.method(recommendation, "getRecommendationFeed", async () => ({ mode: "cold_start", items: [] }));
   assert.equal((await request("/recommendations/me")).status, 401);
   assert.equal((await request("/recommendations/me?userId=2&limit=3", { headers: cookie("user") })).status, 400);
   assert.equal(get.mock.callCount(), 0);

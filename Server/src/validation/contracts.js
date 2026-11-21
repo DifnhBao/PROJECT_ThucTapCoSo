@@ -32,7 +32,14 @@ const contracts = {
   },
   playlists: { createPlaylist: { body: z.strictObject({ name: text(255).min(1), description: text(2000).optional() }) }, addSongToPlaylist: { body: z.strictObject({ songId: integer(1, 2147483647) }) }, getMyPlaylists: {}, getPlaylistDetail: {}, removeSongFromPlaylist: {}, deletePlaylist: {} },
   ratings: { rateSong: { body: z.strictObject({ songId: integer(1, 2147483647), score: integer(1, 5) }) }, getSongRatingSummary: {}, getMyRating: {} },
-  favorites: { toggleLikeSong: {}, getLikeStatus: {}, getMyFavoriteSongs: { query: page(10) } },
+  favorites: {
+    addFavoriteBatch: { body: z.strictObject({
+      songIds: z.array(integer(1, 2147483647)).min(3).max(10)
+        .refine((ids) => new Set(ids).size === ids.length, 'Danh sách bài hát phải không trùng lặp.')
+        .meta({ uniqueItems: true }),
+    }) },
+    toggleLikeSong: {}, getLikeStatus: {}, getMyFavoriteSongs: { query: page(10) },
+  },
   artists: { getAllArtists: {}, getArtistDetail: {}, getTopArtists: { query: limit }, createArtist: { body: z.strictObject({ name: text(255).min(1) }) } },
   auth: { register: { body: registration }, login: { body: credentials }, loginAdmin: { body: credentials }, requestRefreshToken: {}, refreshAdminToken: {}, logout: {}, logoutAdmin: {} },
   users: { getUserProfile: {}, updateUserProfile: { body: profile }, uploadAvatar: {}, changeUserPassword: { body: z.strictObject({ oldPassword: password, newPassword }) }, getAllUsers: {}, getAllAdmins: {}, getUserProfileByAdmin: {}, updateUserById: { body: profile }, deleteUserById: {}, resetUserPassword: { body: z.strictObject({ newPassword }) }, addNewAdmin: { body: registration } },

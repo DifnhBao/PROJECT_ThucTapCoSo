@@ -11,6 +11,7 @@ import { getLikeStatus,toggleLikeSong } from '../like.api';
 type LikeContextType = {
   likedMap: Record<number, boolean>; likedSongsList: Track[]; loading: boolean; loadingMore: boolean; hasMore: boolean; listError: string | null;
   fetchLikeStatus: (id: number) => Promise<void>; toggleLike: (id: number) => Promise<void>; fetchLikedSongsList: () => Promise<void>; loadMore: () => Promise<void>;
+  refreshAfterBatch: (songIds: number[]) => Promise<void>;
 };
 const LikeContext = createContext<LikeContextType | null>(null);
 export function LikeProvider({ children }: { children: React.ReactNode }) {
@@ -88,7 +89,18 @@ function ScopedLikes({ auth, children }: { auth: AuthSnapshot; children: React.R
   const last = pages?.at(-1), hasMore = Boolean(last?.data.length && pages && pages.length < last.pagination.totalPages);
   const loadMore = useCallback(async () => { if (hasMore && !isValidating) await setSize(size + 1); }, [hasMore, isValidating, setSize, size]);
   const fetchLikedSongsList = useCallback(async () => { if (userId) await mutatePages(); }, [userId, mutatePages]);
-  return <LikeContext.Provider value={{ likedMap, likedSongsList, fetchLikeStatus, toggleLike, fetchLikedSongsList, loadMore, hasMore, loading: isLoading, loadingMore: isValidating, listError: error ? 'Không tải được thư viện. Vui lòng thử lại.' : null }}>
+  const refreshAfterBatch = useCallback(async (songIds: number[]) => {
+    if (!active()) return;
+    const nextStatuses = { ...statusRef.current };
+    for (const id of songIds) {
+      versions.set(id, (versions.get(id) ?? 0) + 1);
+      flights.delete(id);
+      nextStatuses[id] = true;
+    }
+    statusRef.current = nextStatuses;
+    await Promise.all([mutateStatuses(nextStatuses, { revalidate: false }), mutatePages()]);
+  }, [active, versions, flights, mutateStatuses, mutatePages]);
+  return <LikeContext.Provider value={{ likedMap, likedSongsList, fetchLikeStatus, toggleLike, fetchLikedSongsList, loadMore, refreshAfterBatch, hasMore, loading: isLoading, loadingMore: isValidating, listError: error ? 'Không tải được thư viện. Vui lòng thử lại.' : null }}>
     {children}
     {toast && <div role="alert" style={{ position: 'fixed', bottom: 220, right: 16, maxWidth: 'min(360px, 90vw)', padding: 12, background: '#7a221c', color: '#fff', borderRadius: 8, zIndex: 2000 }}>{toast} <button onClick={() => setToast(null)} aria-label="Đóng thông báo yêu thích">Đóng</button></div>}
   </LikeContext.Provider>;

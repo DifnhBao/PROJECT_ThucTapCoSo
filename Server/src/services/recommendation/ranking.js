@@ -34,18 +34,20 @@ function metadataFromSong(s) {
 function selectSeeds(weights) {
   return [...weights].sort((a, b) => b[1] - a[1] || a[0] - b[0]).slice(0, config.maxSeeds);
 }
-function rankPersonal(rows, weights, rejected) {
+function rankPersonal(rows, weights, rejected, favoriteIds) {
   const byId = new Map();
   for (const r of rows) {
     const id = Number(r.song_id);
-    if (weights.has(id) || rejected.has(id) || rejected.has(Number(r.seed_id))) continue;
-    const contribution = Number(r.final_score) * weights.get(Number(r.seed_id));
+    const seedId = Number(r.seed_id);
+    if (weights.has(id) || rejected.has(id) || rejected.has(seedId)) continue;
+    const contribution = Number(r.final_score) * weights.get(seedId);
     const item = byId.get(id) || { song_id: id, accumulated_score: 0, endorsed_by_count: 0,
       is_discovery_candidate: true, best: -1 };
     item.accumulated_score += contribution; item.endorsed_by_count++;
     if (contribution > item.best) {
       item.best = contribution;
-      item.reason = `Từ bài "${r.seed_title}" bạn có tương tác tích cực. ${r.reason}`;
+      const signal = favoriteIds?.has(seedId) ? 'đã yêu thích' : 'có tương tác tích cực';
+      item.reason = `Từ bài "${r.seed_title}" bạn ${signal}. ${r.reason}`;
       item.detail = { algorithm_version: r.algorithm_version, run_id: r.run_id };
     }
     byId.set(id, item);
