@@ -1,6 +1,8 @@
 const { demoTrack } = require('./demo-media.cjs');
 const { getTestDatabaseConfig } = require('../config/test-database');
-const { getDatabaseConfig } = require('../src/config/env');
+const { ConfigurationError, getDatabaseConfig } = require('../src/config/env');
+
+class SeedError extends Error {}
 
 function seedPassword(env, name) {
   const password = env[name];
@@ -9,22 +11,37 @@ function seedPassword(env, name) {
     ? Buffer.byteLength(password) > 72 || Array.from(password).length < 12
     : password.length > 72 || password.length < 12)) {
     const limit = demo ? 'at least 12 characters and at most 72 UTF-8 bytes' : '12–72 characters';
-    throw new Error(`${name} requires a non-placeholder password (${limit})`);
+    throw new SeedError(`Seed configuration: ${name} requires a non-placeholder password (${limit}).`);
   }
   return password;
 }
 
 function seedConfig(mode, env = process.env) {
   let database;
-  if (mode === 'test') database = getTestDatabaseConfig(env, { destructive: true });
-  else if (mode === 'demo' && env.NODE_ENV === 'development' && env.DEMO_SEED_ALLOWED === 'yes') {
-    database = getDatabaseConfig(env);
-    if (!/^tunetrek_demo(?:_[a-z0-9]+)*$/.test(database.database) || !['127.0.0.1', 'localhost', '::1', 'db'].includes(database.host)) throw new Error('Demo seed requires an isolated local tunetrek_demo database');
-  } else throw new Error('Seed requires explicit test or opted-in development demo environment');
+  if (mode === 'test') {
+    try {
+      database = getTestDatabaseConfig(env, { destructive: true });
+    } catch {
+      throw new SeedError('Seed configuration: set NODE_ENV=test, valid isolated TEST_DB_* settings and TEST_DB_RESET_ALLOWED=yes.');
+    }
+  } else if (mode === 'demo' && env.NODE_ENV === 'development' && env.DEMO_SEED_ALLOWED === 'yes') {
+    try {
+      database = getDatabaseConfig(env);
+    } catch (error) {
+      if (!(error instanceof ConfigurationError)) throw error;
+      throw new SeedError(`Seed configuration: ${error.message}.`);
+    }
+    const localHost = ['127.0.0.1', 'localhost', '::1', 'db'].includes(database.host);
+    const demoName = /^tunetrek_demo(?:_[a-z0-9]+)*$/.test(database.database);
+    const legacyComposeName = env.DEMO_SEED_COMPOSE === 'yes' && database.host === 'db' && database.database === 'Recommend_music_web_test';
+    if (!localHost || (!demoName && !legacyComposeName)) {
+      throw new SeedError('Seed refused: target must be a local tunetrek_demo database (optionally suffixed) or the supported legacy Compose database.');
+    }
+  } else throw new SeedError('Seed configuration: use test mode or set NODE_ENV=development and DEMO_SEED_ALLOWED=yes for demo mode.');
   if (mode === 'test') return { database, password: seedPassword(env, 'TEST_SEED_PASSWORD') };
   const password = seedPassword(env, 'DEMO_SEED_PASSWORD');
   const adminPassword = seedPassword(env, 'DEMO_ADMIN_PASSWORD');
-  if (Buffer.from(password).equals(Buffer.from(adminPassword))) throw new Error('DEMO_SEED_PASSWORD and DEMO_ADMIN_PASSWORD must be different');
+  if (Buffer.from(password).equals(Buffer.from(adminPassword))) throw new SeedError('Seed configuration: DEMO_SEED_PASSWORD and DEMO_ADMIN_PASSWORD must be different.');
   return { database, password, adminPassword };
 }
 
@@ -39,7 +56,7 @@ async function seed(mode, env = process.env) {
       // Empty-only seed: repeat/concurrent attempts fail clearly; never overwrite accounts.
       for (const table of Object.keys(require('./schema-v1.cjs')(Sequelize))) {
         const rows = await db.query(`SELECT COUNT(*) AS n FROM \`${table}\``, { ...options, type: QueryTypes.SELECT });
-        if (Number(rows[0].n)) throw new Error('Seed refused: target must contain no application data; repeat seed does not append duplicates');
+        if (Number(rows[0].n)) throw new SeedError('Seed refused: target must contain no application data; repeat seed does not append duplicates.');
       }
       const q = db.getQueryInterface();
       const now = new Date('2026-01-01T00:00:00Z');
@@ -68,4 +85,4 @@ async function seed(mode, env = process.env) {
     });
   } finally { await db.close(); }
 }
-module.exports = { seed, seedConfig };
+module.exports = { seed, seedConfig, SeedError };
