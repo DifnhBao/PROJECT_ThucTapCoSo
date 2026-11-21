@@ -25,17 +25,25 @@ const contracts = {
     createSong: { body: multipartMetadata }, userUploadSong: { body: multipartMetadata },
     getAllSongs: { query: page(10).extend({ search: text(200).default('') }) },
     getSongList: { query: page(20) }, getPendingSongs: { query: page(20) },
-    searchSongs: { query: z.strictObject({ q: text(200).default(''), limit: decimal(integer(1, 100)).default(10) }) },
+    searchSongs: { query: page(10).extend({ q: text(200).default('') }) },
     updateSongById: { body: z.strictObject({ ...songMetadata, title: songMetadata.title.optional(), is_visible: z.boolean().optional(), status: z.enum(['pending', 'approved', 'rejected']).optional() }).refine((data) => Object.keys(data).length > 0) },
-    getSongById: {}, getSongPreview: {}, deleteSongById: {}, toggleSongVisibility: {}, increaseView: {}, getPendingSongsCount: {}, approveSong: {}, rejectSong: {},
+    getSongById: {}, getSongPreview: {}, getMySubmissions: {}, deleteSongById: {}, toggleSongVisibility: {}, increaseView: {}, getPendingSongsCount: {}, approveSong: {},
+    rejectSong: { body: z.strictObject({ rejection_reason: text(500).optional() }), bodyOptional: true },
   },
   playlists: { createPlaylist: { body: z.strictObject({ name: text(255).min(1), description: text(2000).optional() }) }, addSongToPlaylist: { body: z.strictObject({ songId: integer(1, 2147483647) }) }, getMyPlaylists: {}, getPlaylistDetail: {}, removeSongFromPlaylist: {}, deletePlaylist: {} },
   ratings: { rateSong: { body: z.strictObject({ songId: integer(1, 2147483647), score: integer(1, 5) }) }, getSongRatingSummary: {}, getMyRating: {} },
-  favorites: { toggleLikeSong: {}, getLikeStatus: {}, getMyFavoriteSongs: { query: page(10) } },
+  favorites: {
+    addFavoriteBatch: { body: z.strictObject({
+      songIds: z.array(integer(1, 2147483647)).min(3).max(10)
+        .refine((ids) => new Set(ids).size === ids.length, 'Danh sách bài hát phải không trùng lặp.')
+        .meta({ uniqueItems: true }),
+    }) },
+    toggleLikeSong: {}, getLikeStatus: {}, getMyFavoriteSongs: { query: page(10) },
+  },
   artists: { getAllArtists: {}, getArtistDetail: {}, getTopArtists: { query: limit }, createArtist: { body: z.strictObject({ name: text(255).min(1) }) } },
   auth: { register: { body: registration }, login: { body: credentials }, loginAdmin: { body: credentials }, requestRefreshToken: {}, refreshAdminToken: {}, logout: {}, logoutAdmin: {} },
   users: { getUserProfile: {}, updateUserProfile: { body: profile }, uploadAvatar: {}, changeUserPassword: { body: z.strictObject({ oldPassword: password, newPassword }) }, getAllUsers: {}, getAllAdmins: {}, getUserProfileByAdmin: {}, updateUserById: { body: profile }, deleteUserById: {}, resetUserPassword: { body: z.strictObject({ newPassword }) }, addNewAdmin: { body: registration } },
   recommendations: { getSimilarSongs: { query: limit }, getRecommendationsForUser: { query: limit }, getSongPairDebug: { query: z.strictObject({ songA: id, songB: id }) }, rebuildSimilarity: { body: z.strictObject({ limit: decimal(integer(1, 100)).optional() }), query: z.strictObject({ limit: decimal(integer(1, 100)).optional() }) } },
-  activity: { logActivity: { body: activity } },
+  activity: { logActivity: { body: activity }, getRecent: { query: z.strictObject({ limit: decimal(integer(1, 100)).default(20), cursor: z.string().max(256).refine((value) => !!require('./recent-cursor').decodeRecentCursor(value)).optional() }) } },
 };
 module.exports = { contracts, id, empty };

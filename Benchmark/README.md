@@ -1,7 +1,7 @@
 # Recommendation checks
 
 - `evaluate.cjs`: supported Node v1 offline temporal evaluation. See
-  [protocol and results](../docs/evaluation/README.md).
+  [protocol and results](../docs/RECOMMENDATION_AND_EVALUATION.md).
 - `benchmark.js`: synthetic genre-consistency smoke test. It never uses engine
   explanations as relevance and does not calculate MAP or serendipity.
   Run with `--input Benchmark/fixtures/genre-smoke.json` from repo root.

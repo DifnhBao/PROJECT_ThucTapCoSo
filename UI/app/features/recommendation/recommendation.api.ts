@@ -13,6 +13,11 @@ interface RecommendationApiEnvelope {
   items?: RawRecommendationSong[];
 }
 
+export interface RecommendationFeed {
+  mode?: "cold_start" | "trending" | "personalized";
+  songs: RecommendationSong[];
+}
+
 interface SongPairDebugEnvelope {
   success: boolean;
   message?: string;
@@ -34,13 +39,12 @@ function extractRecommendationItems(payload: unknown): RawRecommendationSong[] {
  */
 export async function getRecommendationsForUser(
   limit = 10,
-): Promise<RecommendationSong[]> {
+): Promise<RecommendationFeed> {
   const endpoint = `/recommendations/me?limit=${limit}`;
-  const res = await http.get<unknown>(endpoint);
-  
+  const res = await http.get<RecommendationApiEnvelope & Pick<RecommendationFeed, "mode">>(endpoint);
   const raw = extractRecommendationItems(res.data);
-  
-  return raw.map(mapRawToRecommendationSong);
+
+  return { mode: res.data?.mode, songs: raw.map(mapRawToRecommendationSong) };
 }
 
 /**

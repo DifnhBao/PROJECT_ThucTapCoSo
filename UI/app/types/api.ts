@@ -10,6 +10,11 @@ export interface SongDto {
 export interface SongMetadata { title: string; artist?: string; genre?: string; duration?: number }
 export interface SongPageDto { data: SongDto[]; pagination: PaginationDto }
 export interface SongMutationDto { data: SongDto; message?: string }
+export interface SongSubmissionDto {
+  song_id: number; title: string; duration: number | null; image_url: string | null;
+  artists: NamedDto[]; genres: NamedDto[]; status: NonNullable<SongDto['status']>;
+  rejection_reason: string | null; created_at: string; reviewed_at: string | null;
+}
 export interface PlaylistDto {
   playlist_id: number; user_id: number; name: string; description?: string; cover_image_url?: string;
   is_public: boolean; created_at?: string; updated_at?: string; songs?: SongDto[];

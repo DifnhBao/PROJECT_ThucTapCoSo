@@ -39,13 +39,13 @@ function extractScoreBars(song: RecommendationSong): ScoreBar[] {
   const bars: ScoreBar[] = [];
 
   if (song.metadataScore !== undefined) {
-    bars.push({ label: "Metadata", value: Math.min(song.metadataScore, 1), color: "#a78bfa" });
+    bars.push({ label: "Đặc điểm bài hát", value: Math.min(song.metadataScore, 1), color: "#a78bfa" });
   }
   if (song.behavioralScore !== undefined) {
-    bars.push({ label: "Behavioral", value: Math.min(song.behavioralScore, 1), color: "#34d399" });
+    bars.push({ label: "Thói quen nghe", value: Math.min(song.behavioralScore, 1), color: "#34d399" });
   }
   if (song.finalScore !== undefined) {
-    bars.push({ label: "Final Score", value: Math.min(song.finalScore, 1), color: "var(--tt-orange)" });
+    bars.push({ label: "Điểm tổng hợp", value: Math.min(song.finalScore, 1), color: "var(--tt-orange)" });
   }
 
   // Bóc detail nếu có
@@ -53,10 +53,10 @@ function extractScoreBars(song: RecommendationSong): ScoreBar[] {
     const detail = song.detail;
     const extraKeys = ["content_score", "collab_score", "hybrid_score", "interaction_score"];
     const labelMap: Record<string, string> = {
-      content_score: "Content",
-      collab_score: "Collab",
-      hybrid_score: "Hybrid",
-      interaction_score: "Interaction",
+      content_score: "Nội dung",
+      collab_score: "Gu cộng đồng",
+      hybrid_score: "Kết hợp",
+      interaction_score: "Tương tác",
     };
     const colors = ["#60a5fa", "#f472b6", "#fbbf24", "#4ade80"];
     let ci = 0;
@@ -103,6 +103,11 @@ const RecommendSongCard: React.FC<CardProps> = ({
       <div
         className={`similar-item${isActive ? " similar-item--active" : ""}`}
         onClick={onClick}
+        tabIndex={0}
+        role="button"
+        onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onClick(); } }}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         title={song.title}
@@ -149,7 +154,7 @@ const RecommendSongCard: React.FC<CardProps> = ({
 
           {/* Dev mode: icon indicator */}
           {isDevMode && (
-            <span className="rec-dev-icon" title="Xem thông số AI">🤖</span>
+            <span className="rec-dev-icon" title="Xem lý do gợi ý">🤖</span>
           )}
         </div>
 
@@ -166,7 +171,12 @@ const RecommendSongCard: React.FC<CardProps> = ({
     <div
       className={`rec-card${isActive ? " rec-card--active" : ""}`}
       onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
+      tabIndex={0}
+        role="button"
+        onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onClick(); } }}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
+        onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       title={song.title}
       style={{ position: "relative" }}
@@ -240,7 +250,7 @@ const AiPopover: React.FC<PopoverProps> = ({ song, scoreBars }) => {
     // Xóa onClick={(e) => e.stopPropagation()} để khi click vào Popover vẫn phát nhạc được
     <div className="ai-popover">
       <div className="ai-popover-header">
-        <span>🤖 Explainable AI</span>
+        <span>Vì sao gợi ý bài này?</span>
       </div>
 
       {/* Điểm tổng hợp */}

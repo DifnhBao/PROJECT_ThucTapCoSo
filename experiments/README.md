@@ -15,9 +15,9 @@ notebooks, datasets and model artifacts. Node recommendation in `Server` remains
 the web application's serving engine. No Next.js/Express/Compose path calls this
 Python code. Moving files does not validate the models, metrics or data provenance.
 
-Original author directories (`Bảo`, `Thạch`), code, notebooks and the original
-README were preserved byte-for-byte; see
-`docs/verification/evidence/T13/research-move.json` for checksums and old/new paths.
+Original author directories (`Bảo`, `Thạch`) and attribution belong to the
+research history. Historical evidence dumps are no longer in the release tree;
+this cleanup does not revalidate the private archive or its checksums.
 Keep their attribution. Consult the original research README only as historical
 instructions, not as the current website deployment guide. Python entrypoints,
 evaluation and training claims still require a separate review before use.

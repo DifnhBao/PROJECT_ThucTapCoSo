@@ -44,6 +44,14 @@ const Song = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    rejection_reason: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
+    reviewed_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
 
     // metadata cho recommend
     lyrics: {

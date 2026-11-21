@@ -20,7 +20,7 @@ test("public detail status matrix: only approved visible songs are readable", as
 test("list/search/trending filter before limit; pending-only catalog stays empty", async (t) => {
   mockSongReads(t);
   assert.equal((await songService.getSongs({ limit: 1 })).total, 2);
-  assert.deepEqual((await songService.searchSongs("Track", 1)).map((s) => s.song_id), [1]);
+  assert.deepEqual((await songService.searchSongs("Track", 1)).rows.map((s) => s.song_id), [1]);
   assert.deepEqual((await rec.getTrendingSongs(1)).map((s) => s.song.song_id), [1]);
 });
 

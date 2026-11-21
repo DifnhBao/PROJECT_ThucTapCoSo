@@ -22,6 +22,11 @@ AI_Services/.env
 
 # --- Dependencies ---
 /.local-backups/
+/TTCS-PROJECT.zip
+/docs/verification/evidence/
+/docs/audit/evidence/
+/docs/verification/T[01][0-9]*
+/docs/verification/T2[0-5]*
 /AI_Services/pyvenv.cfg
 /Server/public/uploads/temp/
 *.zip

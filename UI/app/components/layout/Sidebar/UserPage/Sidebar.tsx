@@ -21,7 +21,7 @@ export default function Sidebar() {
             pathname === "/Home" ? styles.active : ""
           }`}
         >
-          <RiHome5Fill className={styles.icon} /> Home
+          <RiHome5Fill className={styles.icon} /> Trang chủ
         </Link>
 
         <Link
@@ -30,7 +30,7 @@ export default function Sidebar() {
             pathname.startsWith("/Library") ? styles.active : ""
           }`}
         >
-          <BsHeart className={styles.icon} /> Likes
+          <BsHeart className={styles.icon} /> Yêu thích
         </Link>
 
         <Link
@@ -39,7 +39,7 @@ export default function Sidebar() {
             pathname.startsWith("/Playlist") ? styles.active : ""
           }`}
         >
-          <PiPlaylist className={styles.icon} /> Playlist
+          <PiPlaylist className={styles.icon} /> Danh sách phát
         </Link>
 
 

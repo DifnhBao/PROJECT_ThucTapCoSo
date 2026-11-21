@@ -10,10 +10,25 @@ const closed = (properties) => ({ ...object(properties), additionalProperties: f
 const list = (items) => ({ type: 'array', items });
 const integer = { type: 'integer' }, string = { type: 'string' };
 const song = object({ song_id: integer, title: string, audio_url: { type: 'string', format: 'uri-reference' }, duration: integer, image_url: { type: ['string', 'null'] } }, ['song_id', 'title', 'audio_url']);
+const recommendations = object({ data: list(object({ song: ref('Song'), reason: string }, ['song'])), count: integer }, ['data']);
 const businessDtos = {
   Song: song,
+  RecentlyPlayed: object({ items: list(object({ ...song.properties, artists: list(object({ artist_id: integer, name: string })), lastPlayedAt: { type: 'string', format: 'date-time' } })), nextCursor: { type: ['string', 'null'] }, hasMore: { type: 'boolean' } }),
   SongList: object({ songs: list(ref('Song')), total: integer, page: integer, limit: integer }),
   SongDetail: object({ data: ref('Song') }),
+  SongSubmission: closed({
+    song_id: integer,
+    title: string,
+    duration: { type: ['integer', 'null'] },
+    image_url: { type: ['string', 'null'] },
+    artists: list(object({ artist_id: integer, name: string })),
+    genres: list(object({ genre_id: integer, name: string })),
+    status: { type: 'string', enum: ['pending', 'approved', 'rejected'] },
+    rejection_reason: { type: ['string', 'null'], maxLength: 500 },
+    created_at: { type: 'string', format: 'date-time' },
+    reviewed_at: { type: ['string', 'null'], format: 'date-time' },
+  }),
+  SongSubmissions: object({ data: list(ref('SongSubmission')) }),
   Playlist: object({ playlist_id: integer, name: string, user_id: integer, is_public: { type: 'boolean' }, songs: list(ref('Song')) }, ['playlist_id', 'name']),
   PlaylistDetail: object({ data: ref('Playlist') }),
   PlaylistList: object({ data: list(ref('Playlist')) }),
@@ -25,13 +40,18 @@ const businessDtos = {
   Registration: object({ data: object({ user: ref('User') }) }),
   AdminLogin: object({ admin: ref('User') }),
   Like: object({ liked: { type: 'boolean' }, song_id: integer }),
+  FavoriteBatch: closed({ songIds: list(integer), count: integer }),
   Favorites: object({ data: list(object({ song: ref('Song') }, ['song'])), pagination: object({ total: integer, page: integer, limit: integer, totalPages: integer }) }),
   RatingSummary: object({ song_id: integer, averageRating: { type: 'number' }, totalRatings: integer }),
   Rating: object({ rating: { type: ['number', 'null'] } }),
-  Recommendations: object({ data: list(object({ song: ref('Song'), reason: string }, ['song'])), count: integer }, ['data']),
+  Recommendations: recommendations,
+  RecommendationFeed: object({
+    ...recommendations.properties,
+    mode: { type: 'string', enum: ['cold_start', 'trending', 'personalized'] },
+  }),
   ListeningReceipt: object({ event_id: { type: 'string', format: 'uuid' }, activity_id: string, qualified: { type: 'boolean' }, song_duration: { type: 'number' }, duplicate: { type: 'boolean' } }),
 };
-const dto = { requestRefreshToken: 'SessionRefresh', refreshAdminToken: 'SessionRefresh', getSongList: 'SongList', getSongById: 'SongDetail', getSongPreview: 'SongDetail', getPlaylistDetail: 'PlaylistDetail', getMyPlaylists: 'PlaylistList', getUserProfile: 'UserDetail', getUserProfileByAdmin: 'UserDetail', login: 'Login', loginAdmin: 'AdminLogin', register: 'Registration', toggleLikeSong: 'Like', getLikeStatus: 'Like', getMyFavoriteSongs: 'Favorites', getSongRatingSummary: 'RatingSummary', getMyRating: 'Rating', getSimilarSongs: 'Recommendations', getRecommendationsForUser: 'Recommendations', logActivity: 'ListeningReceipt' };
+const dto = { requestRefreshToken: 'SessionRefresh', refreshAdminToken: 'SessionRefresh', getSongList: 'SongList', getSongById: 'SongDetail', getSongPreview: 'SongDetail', getMySubmissions: 'SongSubmissions', getPlaylistDetail: 'PlaylistDetail', getMyPlaylists: 'PlaylistList', getUserProfile: 'UserDetail', getUserProfileByAdmin: 'UserDetail', login: 'Login', loginAdmin: 'AdminLogin', register: 'Registration', toggleLikeSong: 'Like', getLikeStatus: 'Like', getMyFavoriteSongs: 'Favorites', addFavoriteBatch: 'FavoriteBatch', getSongRatingSummary: 'RatingSummary', getMyRating: 'Rating', getSimilarSongs: 'Recommendations', getRecommendationsForUser: 'RecommendationFeed', logActivity: 'ListeningReceipt', getRecent: 'RecentlyPlayed' };
 function jsonSchema(schema) {
   const result = z.toJSONSchema(schema, { io: 'output', unrepresentable: 'any' });
   delete result.$schema;
@@ -60,7 +80,7 @@ function buildOpenApi() {
         operation.responses[409].description = 'OFFLINE_REBUILD_REQUIRED: use the offline maintenance CLI';
       }
       if (!['get', 'head', 'options'].includes(method)) operation.parameters.push({ name: 'Origin', in: 'header', required: true, schema: { type: 'string', format: 'uri' }, description: 'Exact allowed frontend origin; missing/null/cross-site mutations are rejected' });
-      if (contract.body) operation.requestBody = { required: true, content: { [/(createSong|userUploadSong)/.test(handler) ? 'multipart/form-data' : 'application/json']: { schema: jsonSchema(contract.body) } } };
+      if (contract.body) operation.requestBody = { required: !contract.bodyOptional, content: { [/(createSong|userUploadSong)/.test(handler) ? 'multipart/form-data' : 'application/json']: { schema: jsonSchema(contract.body) } } };
       if (/(createSong|userUploadSong)/.test(handler)) {
         const body = operation.requestBody.content['multipart/form-data'].schema;
         body.properties.audioFile = { type: 'string', format: 'binary' };
@@ -73,6 +93,11 @@ function buildOpenApi() {
       if (handler === 'increaseView') { operation.deprecated = true; delete operation.responses[200]; operation.responses[410] = { description: 'VIEW_ENDPOINT_RETIRED; submit a finalized listening event', content: { 'application/json': { schema: ref('Error') } } }; }
       if (handler === 'addSongToPlaylist') operation.description = 'Owner-only transactional append. Concurrent additions serialize on the parent playlist. Existing song returns409 PLAYLIST_SONG_EXISTS; no position change. Lock contention after bounded retry returns409 PLAYLIST_BUSY.';
       if (handler === 'deletePlaylist') operation.description = 'Owner-only atomic parent and membership deletion. Any failure rolls back both.';
+      if (handler === 'addFavoriteBatch') {
+        operation.description = 'Atomically ensures all requested public songs are favorites for the signed-in account. Replays return the same songIds and count.';
+        operation.responses[400].description += ', or STARTER_SONG_UNAVAILABLE if any song is absent or not public';
+      }
+      if (handler === 'getRecommendationsForUser') operation.description = 'cold_start indicates no personal signals. trending indicates fallback for a user with signals. personalized uses neighbors from the active snapshot.';
       if (handler === 'removeSongFromPlaylist') operation.description = 'Owner-only serialized removal; absent membership returns200. An existing hidden song may be removed.';
       if (/^(createSong|userUploadSong)$/.test(handler)) operation.responses[200] = { ...operation.responses[201], description: 'Completed idempotent replay; no new resource' };
       if (/^(createSong|userUploadSong|uploadAvatar)$/.test(handler)) operation.responses[503] = { description: 'Commit outcome unknown; retry the same Idempotency-Key', content: { 'application/json': { schema: ref('Error') } } };

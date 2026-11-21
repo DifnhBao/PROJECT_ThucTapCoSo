@@ -50,11 +50,13 @@ const getRecommendationsForUser = async (req, res, next) => {
       throw new AppError("ID người dùng không hợp lệ.", 400, 'VALIDATION_ERROR');
     }
 
-    const data = (await recommendationService.getRecommendationsForUser(userId, limit)).map(publicRecommendationItem);
+    const { mode, items } = await recommendationService.getRecommendationFeed(userId, limit);
+    const data = items.map(publicRecommendationItem);
 
     res.status(200).json({
       success: true,
       message: "Lấy danh sách gợi ý cá nhân hóa thành công.",
+      mode,
       count: data.length,
       data
     });

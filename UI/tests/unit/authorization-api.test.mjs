@@ -23,12 +23,13 @@ function loadApi(relativePath, dependencies) {
 test("recommendation client uses /me and retains response mapping", async () => {
   const calls = [];
   const api = loadApi("../../app/features/recommendation/recommendation.api.ts", {
-    "@/app/lib/http": { get: async (url) => { calls.push(url); return { data: { data: [{ song_id: 3 }] } }; } },
+    "@/app/lib/http": { get: async (url) => { calls.push(url); return { data: { mode: "cold_start", data: [{ song_id: 3 }] } }; } },
     "./recommendation.mapper": { mapRawToRecommendationSong: (song) => ({ trackId: song.song_id }) },
   });
-  const songs = await api.getRecommendationsForUser(5);
+  const { mode, songs } = await api.getRecommendationsForUser(5);
   assert.deepEqual(calls, ["/recommendations/me?limit=5"]);
   assert.equal(songs[0].trackId, 3);
+  assert.equal(mode, "cold_start");
 });
 
 test("admin self change sends current password to its own endpoint; reset keeps target endpoint", async () => {

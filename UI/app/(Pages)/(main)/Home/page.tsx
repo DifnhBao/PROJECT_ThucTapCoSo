@@ -19,7 +19,7 @@ export default function ExplorePage() {
     <div id="home" className="home-menu">
       {/* <Banner /> */}
 
-      <h1 className="main-title">Discovery</h1>
+      <h1 className="main-title">Khám phá</h1>
 
       <FeaturedPlaylists onSelect={setSelected} />
     </div>

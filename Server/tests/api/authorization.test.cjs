@@ -24,7 +24,7 @@ before(async () => {
 after(async () => { if (server) await new Promise((resolve) => server.close(resolve)); });
 
 test("recommendations/me uses signed actor identity and old user-ID route is gone", async (t) => {
-  const get = t.mock.method(recommendation, "getRecommendationsForUser", async () => []);
+  const get = t.mock.method(recommendation, "getRecommendationFeed", async () => ({ mode: "cold_start", items: [] }));
   assert.equal((await request("/recommendations/me")).status, 401);
   assert.equal((await request("/recommendations/me?userId=2&limit=3", { headers: cookie("user") })).status, 400);
   assert.equal(get.mock.callCount(), 0);
@@ -32,6 +32,97 @@ test("recommendations/me uses signed actor identity and old user-ID route is gon
   assert.deepEqual(get.mock.calls[0].arguments, [1, 3]);
   assert.equal((await request("/recommendations/users/2", { headers: cookie("user") })).status, 404);
   assert.equal(get.mock.callCount(), 1);
+});
+
+test("my submissions return only the signed-in uploader's tracks, newest first", async (t) => {
+  const fixtures = [
+    { song_id: 1, uploaded_by: 1, status: "pending", rejection_reason: null, reviewed_at: null },
+    { song_id: 2, uploaded_by: 1, status: "approved", rejection_reason: null, reviewed_at: "2026-11-20T01:00:00.000Z" },
+    { song_id: 3, uploaded_by: 1, status: "rejected", rejection_reason: "Thiếu thông tin bản quyền", reviewed_at: "2026-11-20T02:00:00.000Z" },
+    { song_id: 4, uploaded_by: 2, status: "pending", rejection_reason: null, reviewed_at: null },
+  ].map((song) => ({
+    title: `Track ${song.song_id}`,
+    created_at: `2026-11-20T00:0${song.song_id === 3 ? 2 : song.song_id}:00.000Z`,
+    duration: 180,
+    image_url: null,
+    audio_url: "/private-audio",
+    artists: [{ artist_id: 1, name: "Artist" }],
+    genres: [],
+    is_visible: song.status === "approved",
+    ...song,
+  }));
+  const findAll = t.mock.method(Song, "findAll", async ({ where, attributes, order }) => {
+    assert.deepEqual(order, [["created_at", "DESC"], ["song_id", "DESC"]]);
+    return fixtures.filter((song) => song.uploaded_by === where.uploaded_by)
+      .toSorted((a, b) => b.created_at.localeCompare(a.created_at) || b.song_id - a.song_id)
+      .map((song) => ({
+        ...Object.fromEntries(attributes.map((key) => [key, song[key]])),
+        artists: song.artists,
+        genres: song.genres,
+      }));
+  });
+  t.mock.method(Song, "findOne", async ({ where }) =>
+    fixtures.find((song) => Object.entries(where).every(([key, value]) => song[key] === value)) || null);
+
+  const path = "/songs/me/submissions";
+  assert.equal((await request(path)).status, 401);
+  assert.equal((await request(path + "?userId=1", { headers: cookie("user", 2) })).status, 400);
+  assert.equal(findAll.mock.callCount(), 0);
+
+  const owner = await request(path, { headers: cookie("user") });
+  assert.equal(owner.status, 200);
+  assert.equal(owner.headers.get("cache-control"), "private, no-store");
+  const { data } = await owner.json();
+  assert.deepEqual(data.map(({ song_id, status }) => [song_id, status]), [[3, "rejected"], [2, "approved"], [1, "pending"]]);
+  assert.equal(data[0].rejection_reason, "Thiếu thông tin bản quyền");
+  assert.equal(data[0].reviewed_at, fixtures[2].reviewed_at);
+  assert.equal(data[2].reviewed_at, null);
+  assert.deepEqual(data[0].artists, [{ artist_id: 1, name: "Artist" }]);
+  assert.ok(data.every((song) => !("audio_url" in song) && !("uploaded_by" in song)));
+
+  const other = await request(path, { headers: cookie("user", 2) });
+  assert.equal(other.status, 200);
+  assert.deepEqual((await other.json()).data.map((song) => song.song_id), [4]);
+  for (const id of [1, 3]) {
+    assert.equal((await request(`/songs/${id}`, { headers: cookie("user", 2) })).status, 404);
+    assert.equal((await request(`/songs/admin/${id}`, { headers: cookie("user", 2) })).status, 403);
+  }
+});
+
+test("admin moderation validates, saves and clears optional rejection metadata", async (t) => {
+  const songs = new Map([1, 2, 3, 4].map((song_id) => [
+    song_id, { song_id, title: "Fixture", status: "pending", rejection_reason: "Stale reason" },
+  ]));
+  t.mock.method(Song, "findByPk", async (id) => songs.get(id));
+  const update = t.mock.method(Song, "update", async (changes, { where }) => {
+    const song = songs.get(where.song_id);
+    if (song?.status !== where.status) return [0];
+    Object.assign(song, changes);
+    return [1];
+  });
+  const headers = cookie("admin");
+
+  for (const body of [{ rejection_reason: 42 }, { rejection_reason: null }, { rejection_reason: "x".repeat(501) }, { userId: 2 }]) {
+    assert.equal((await request("/songs/1/reject", json("PATCH", body, headers))).status, 400);
+  }
+  assert.equal((await request("/songs/1/reject", json("PATCH", {}, cookie("user")))).status, 403);
+  assert.equal(update.mock.callCount(), 0);
+  assert.equal((await request("/songs/1/reject", json("PATCH", { rejection_reason: "  Thiếu bản quyền  " }, headers))).status, 200);
+  assert.equal(songs.get(1).status, "rejected");
+  assert.equal(songs.get(1).is_visible, false);
+  assert.equal(songs.get(1).rejection_reason, "Thiếu bản quyền");
+  assert.ok(songs.get(1).reviewed_at instanceof Date);
+
+  assert.equal((await request("/songs/2/reject", { method: "PATCH", headers })).status, 200);
+  assert.equal(songs.get(2).rejection_reason, null);
+  assert.equal((await request("/songs/3/reject", json("PATCH", { rejection_reason: "   " }, headers))).status, 200);
+  assert.equal(songs.get(3).rejection_reason, null);
+  assert.equal((await request("/songs/4/approve", { method: "PATCH", headers })).status, 200);
+  assert.equal(songs.get(4).rejection_reason, null);
+  assert.equal(songs.get(4).status, "approved");
+  assert.equal(songs.get(4).is_visible, true);
+  assert.ok(songs.get(4).reviewed_at instanceof Date);
+  assert.equal((await request("/songs/1/approve", { method: "PATCH", headers })).status, 409);
 });
 
 test("signed malformed identity and inconsistent scope/role are rejected before service access", async () => {

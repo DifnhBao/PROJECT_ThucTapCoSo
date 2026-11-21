@@ -4,6 +4,8 @@ const router = express.Router();
 const favoriteController = require("../controllers/favorite.controller");
 const { protect } = require("../midlewares/auth.midleware");
 
+router.post("/batch", protect, favoriteController.addFavoriteBatch);
+
 // Like bài hát
 router.post("/:id/like", protect, favoriteController.toggleLikeSong);
 router.get("/:id/like-status", protect, favoriteController.getLikeStatus);
