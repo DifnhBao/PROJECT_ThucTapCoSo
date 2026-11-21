@@ -6,6 +6,7 @@ import SongSubmissions from "@/app/features/song/components/SongSubmissions";
 import { fetchMySubmissions, submissionsKey } from "@/app/features/song/song.api";
 import { useAuthState } from "@/app/lib/use-auth-state";
 import useSWR from "swr";
+import RecentHistory from "@/app/features/song/components/RecentHistory";
 
 export default function LibraryPage() {
   const { principal, epoch } = useAuthState("user");
@@ -17,7 +18,8 @@ export default function LibraryPage() {
 
   return (
     <div id="library_menu">
-      <h2 className="main-title">Your Library</h2>
+      <h2 className="main-title">Thư viện của bạn</h2>
+      {principal && <RecentHistory key={`${principal.userId}:${epoch}`} userId={principal.userId} epoch={epoch} />}
       <div className="table">
         <div className="table_header">
           <div className="col_index">#</div>

@@ -37,6 +37,6 @@ const contracts = {
   auth: { register: { body: registration }, login: { body: credentials }, loginAdmin: { body: credentials }, requestRefreshToken: {}, refreshAdminToken: {}, logout: {}, logoutAdmin: {} },
   users: { getUserProfile: {}, updateUserProfile: { body: profile }, uploadAvatar: {}, changeUserPassword: { body: z.strictObject({ oldPassword: password, newPassword }) }, getAllUsers: {}, getAllAdmins: {}, getUserProfileByAdmin: {}, updateUserById: { body: profile }, deleteUserById: {}, resetUserPassword: { body: z.strictObject({ newPassword }) }, addNewAdmin: { body: registration } },
   recommendations: { getSimilarSongs: { query: limit }, getRecommendationsForUser: { query: limit }, getSongPairDebug: { query: z.strictObject({ songA: id, songB: id }) }, rebuildSimilarity: { body: z.strictObject({ limit: decimal(integer(1, 100)).optional() }), query: z.strictObject({ limit: decimal(integer(1, 100)).optional() }) } },
-  activity: { logActivity: { body: activity } },
+  activity: { logActivity: { body: activity }, getRecent: { query: z.strictObject({ limit: decimal(integer(1, 100)).default(20), cursor: z.string().max(256).refine((value) => !!require('./recent-cursor').decodeRecentCursor(value)).optional() }) } },
 };
 module.exports = { contracts, id, empty };

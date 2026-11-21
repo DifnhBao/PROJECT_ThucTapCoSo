@@ -12,6 +12,7 @@ const integer = { type: 'integer' }, string = { type: 'string' };
 const song = object({ song_id: integer, title: string, audio_url: { type: 'string', format: 'uri-reference' }, duration: integer, image_url: { type: ['string', 'null'] } }, ['song_id', 'title', 'audio_url']);
 const businessDtos = {
   Song: song,
+  RecentlyPlayed: object({ items: list(object({ ...song.properties, artists: list(object({ artist_id: integer, name: string })), lastPlayedAt: { type: 'string', format: 'date-time' } })), nextCursor: { type: ['string', 'null'] }, hasMore: { type: 'boolean' } }),
   SongList: object({ songs: list(ref('Song')), total: integer, page: integer, limit: integer }),
   SongDetail: object({ data: ref('Song') }),
   SongSubmission: closed({
@@ -44,7 +45,7 @@ const businessDtos = {
   Recommendations: object({ data: list(object({ song: ref('Song'), reason: string }, ['song'])), count: integer }, ['data']),
   ListeningReceipt: object({ event_id: { type: 'string', format: 'uuid' }, activity_id: string, qualified: { type: 'boolean' }, song_duration: { type: 'number' }, duplicate: { type: 'boolean' } }),
 };
-const dto = { requestRefreshToken: 'SessionRefresh', refreshAdminToken: 'SessionRefresh', getSongList: 'SongList', getSongById: 'SongDetail', getSongPreview: 'SongDetail', getMySubmissions: 'SongSubmissions', getPlaylistDetail: 'PlaylistDetail', getMyPlaylists: 'PlaylistList', getUserProfile: 'UserDetail', getUserProfileByAdmin: 'UserDetail', login: 'Login', loginAdmin: 'AdminLogin', register: 'Registration', toggleLikeSong: 'Like', getLikeStatus: 'Like', getMyFavoriteSongs: 'Favorites', getSongRatingSummary: 'RatingSummary', getMyRating: 'Rating', getSimilarSongs: 'Recommendations', getRecommendationsForUser: 'Recommendations', logActivity: 'ListeningReceipt' };
+const dto = { requestRefreshToken: 'SessionRefresh', refreshAdminToken: 'SessionRefresh', getSongList: 'SongList', getSongById: 'SongDetail', getSongPreview: 'SongDetail', getMySubmissions: 'SongSubmissions', getPlaylistDetail: 'PlaylistDetail', getMyPlaylists: 'PlaylistList', getUserProfile: 'UserDetail', getUserProfileByAdmin: 'UserDetail', login: 'Login', loginAdmin: 'AdminLogin', register: 'Registration', toggleLikeSong: 'Like', getLikeStatus: 'Like', getMyFavoriteSongs: 'Favorites', getSongRatingSummary: 'RatingSummary', getMyRating: 'Rating', getSimilarSongs: 'Recommendations', getRecommendationsForUser: 'Recommendations', logActivity: 'ListeningReceipt', getRecent: 'RecentlyPlayed' };
 function jsonSchema(schema) {
   const result = z.toJSONSchema(schema, { io: 'output', unrepresentable: 'any' });
   delete result.$schema;

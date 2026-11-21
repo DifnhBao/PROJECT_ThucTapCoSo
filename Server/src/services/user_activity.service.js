@@ -46,4 +46,32 @@ async function ingestActivity(userId, input) {
     throw error; // DB/commit failures never become a success response.
   }
 }
-module.exports = { ingestActivity, normalizedEvent, digestEvent };
+async function getRecentlyPlayed(userId, { limit = 20, cursor } = {}) {
+  const { QueryTypes } = require('sequelize');
+  const { decodeRecentCursor, encodeRecentCursor } = require('../validation/recent-cursor');
+  const boundary = cursor ? decodeRecentCursor(cursor) : null;
+  if (cursor && !boundary) throw new AppError('Cursor không hợp lệ.', 400, 'VALIDATION_ERROR');
+  // Aggregate before applying the cursor: older plays must not reappear on later pages.
+  // idx_user_song_created covers the owner-scoped grouping and MAX timestamp.
+  const rows = await sequelize.query(`
+    SELECT s.song_id, s.title, s.audio_url, s.image_url, s.duration,
+      DATE_FORMAT(recent.last_played, '%Y-%m-%d %H:%i:%s.%f') AS played_at
+    FROM (SELECT song_id, MAX(created_at) AS last_played
+      FROM UserActivities WHERE user_id = :userId GROUP BY song_id) recent
+    INNER JOIN songs s ON s.song_id = recent.song_id
+    WHERE s.status = 'approved' AND s.is_visible = 1
+      ${boundary ? 'AND (recent.last_played < :time OR (recent.last_played = :time AND s.song_id < :songId))' : ''}
+    ORDER BY recent.last_played DESC, s.song_id DESC LIMIT :take`, {
+    replacements: { userId, take: limit + 1, ...(boundary ? { time: boundary.time, songId: boundary.id } : {}) }, type: QueryTypes.SELECT,
+  });
+  const hasMore = rows.length > limit;
+  const page = rows.slice(0, limit);
+  const { Artist } = require('../models');
+  const songs = page.length ? await Song.findAll({ where: { song_id: page.map((row) => row.song_id) }, attributes: ['song_id'],
+    include: [{ model: Artist, as: 'artists', attributes: ['artist_id', 'name'], through: { attributes: [] } }] }) : [];
+  const artists = new Map(songs.map((song) => [song.song_id, song.toJSON().artists]));
+  const last = page.at(-1);
+  return { items: page.map(({ played_at, ...song }) => ({ ...song, artists: artists.get(song.song_id) || [], lastPlayedAt: played_at.replace(' ', 'T') + 'Z' })),
+    hasMore, nextCursor: hasMore ? encodeRecentCursor(last.played_at, last.song_id) : null };
+}
+module.exports = { ingestActivity, normalizedEvent, digestEvent, getRecentlyPlayed };

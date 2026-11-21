@@ -98,3 +98,25 @@
   background: #fee2e2;
   color: #7f1d1d;
 }
+
+.recent-history ul {
+  list-style: none;
+  padding: 0;
+  border-radius: 1rem;
+  background: var(--tt-surface);
+  overflow: hidden;
+}
+
+.recent-history li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  overflow-wrap: anywhere;
+}
+
+.recent-history li + li { border-top: 1px solid var(--tt-text-muted); }
+.recent-history li button { margin: 0; text-align: left; }
+.recent-history time { color: var(--tt-text-muted); font-size: 0.875rem; }
+.recent-history button:disabled { opacity: 0.6; cursor: wait; }

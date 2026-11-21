@@ -2,6 +2,7 @@ import { ApiError } from '../../lib/api-contract';
 import { apiFetch } from '../../lib/api-transport';
 import { getAuth } from '../../lib/auth-state';
 import type { ListeningEvent } from './listeningSession';
+import { notifyRecentActivity } from './recentActivity';
 const URL = '/api/activity';
 type Pending = { body: string; beaconTried: boolean; epoch: number };
 export class ActivityDelivery {
@@ -17,7 +18,10 @@ export class ActivityDelivery {
           const response = await this.request(URL, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: item.body, signal: AbortSignal.timeout(5000) });
           if (response.status === 200 || response.status === 201) {
             const json = await response.json();
-            if (json.data?.event_id === event.session_id && typeof json.data?.activity_id === 'string') return true;
+            if (json.data?.event_id === event.session_id && typeof json.data?.activity_id === 'string') {
+              if (getAuth('user').epoch === item.epoch) notifyRecentActivity(item.epoch);
+              return true;
+            }
           }
           if (response.status < 500) return false; // No retry for auth/schema/conflict/quota errors.
         } catch (error) { if (error instanceof ApiError && error.status >= 400 && error.status < 500) return false; /* Network error/timeout retries the same event. */ }
